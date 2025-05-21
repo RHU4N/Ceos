@@ -117,9 +117,10 @@ function Funcao() {
               <input
                 type="number"
                 className="form-control"
-                placeholder="x (opcional)"
+                placeholder="x"
                 value={x}
                 onChange={(e) => setX(e.target.value)}
+                required={tipo === "funcao1"}
                 aria-label="Valor de x"
               />
             </div>
