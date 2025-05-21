@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FaBroom } from 'react-icons/fa';
 
 function AnaliseComb() {
   const [tipo, setTipo] = useState('permutacao');
@@ -25,6 +26,15 @@ function AnaliseComb() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClear = () => {
+    setTipo('permutacao');
+    setN('');
+    setK('');
+    setResultado(null);
+    setErro('');
+    setLoading(false);
   };
 
   return (
@@ -64,6 +74,15 @@ function AnaliseComb() {
         </div>
         <button className="btn btn-primary mt-3" type="submit" disabled={loading} aria-busy={loading} aria-label="Calcular análise combinatória">
           {loading ? 'Calculando...' : 'Calcular'}
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary mt-3 ms-2"
+          onClick={handleClear}
+          aria-label="Limpar campos"
+          title="Limpar campos"
+        >
+          <FaBroom />
         </button>
         {resultado !== null && (
           <div className="alert alert-success mt-3" role="status">Resultado: {resultado}</div>

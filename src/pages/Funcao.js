@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { FaBroom } from 'react-icons/fa';
 
 function Funcao() {
   const [tipo, setTipo] = useState("funcao1");
@@ -30,6 +31,17 @@ function Funcao() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClear = () => {
+    setTipo('funcao1');
+    setA('');
+    setB('');
+    setC('');
+    setX('');
+    setResultado(null);
+    setErro('');
+    setLoading(false);
   };
 
   return (
@@ -120,6 +132,15 @@ function Funcao() {
             aria-label="Calcular função"
           >
             {loading ? "Calculando..." : "Calcular"}
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary mt-3 ms-2"
+            onClick={handleClear}
+            aria-label="Limpar campos"
+            title="Limpar campos"
+          >
+            <FaBroom />
           </button>
           {resultado !== null && (
             <div className="alert alert-success mt-3" role="status">
