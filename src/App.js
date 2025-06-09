@@ -11,23 +11,30 @@ import Estatistica from './pages/Estatistica';
 import Footer from './components/Footer';
 import FAQ from './pages/FAQ';
 import Sobre from './components/Sobre';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/matematica" element={<Matematica />} />
-          <Route path="/matematica/funcao" element={<Funcao />} />
-          <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
-          <Route path="/matematica/estatistica" element={<Estatistica />} />
-          <Route path="/faq" element={<FAQ />} />
-        </Routes>
-      </main>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/matematica" element={<Matematica />} />
+            <Route path="/matematica/funcao" element={<Funcao />} />
+            <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
+            <Route path="/matematica/estatistica" element={<Estatistica />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 

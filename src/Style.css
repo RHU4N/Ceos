@@ -157,6 +157,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
+    z-index: 1050;
+    position: relative;
 }
 
 .navbar .dropdown {
@@ -209,6 +211,7 @@ body {
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     min-width: 150px;
+    z-index: 1100;
 }
 
 .submenu a {
@@ -372,6 +375,22 @@ form input:focus {
 .card-affordance:hover, .card-affordance:focus {
   border: 2px solid #1e88e5;
   box-shadow: 0 0 0 0.2rem #007bff33;
+}
+
+/* Ajuste de z-index para dropdown do Navbar e cards de login/cadastro */
+.navbar {
+    z-index: 1050;
+    position: relative;
+}
+
+.submenu {
+    z-index: 1100;
+    position: absolute;
+}
+
+.login-card, .register-card {
+    z-index: 1000;
+    position: relative;
 }
 
 

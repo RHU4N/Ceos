@@ -29,13 +29,17 @@ const Home = () => {
           <h4>Conheça nossas ferramentas</h4>
           <div className="tool-buttons">
             <Link to="/matematica">
-              <button className="tool math-tool">∞ Matemática</button>
+              <button className="tool math-tool">
+                <span style={{marginRight: 8, fontSize: 22}}>&#x2211;</span> {/* Soma Σ para matemática */}
+                Matemática
+              </button>
             </Link>
             <button
               className="tool physics-tool"
               onMouseEnter={() => setHovered('fisica')}
               onMouseLeave={() => setHovered('')}
             >
+              <span style={{marginRight: 8, fontSize: 22}}>&#x269B;</span> {/* Átomo para física */}
               {hovered === 'fisica' ? 'Em breve' : 'Física'}
             </button>
             <button
@@ -43,6 +47,7 @@ const Home = () => {
               onMouseEnter={() => setHovered('quimica')}
               onMouseLeave={() => setHovered('')}
             >
+              <span style={{marginRight: 8, fontSize: 22}}>&#x2697;</span> {/* Tubo de ensaio para química */}
               {hovered === 'quimica' ? 'Em breve' : 'Química'}
             </button>
           </div>
