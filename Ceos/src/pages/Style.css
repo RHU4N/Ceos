@@ -1,0 +1,22 @@
+/* Adicione aqui os estilos necessários para as páginas */
+
+.btn-materia {
+  position: relative;
+  /* ...outros estilos... */
+}
+
+.em-breve-tooltip {
+  position: absolute;
+  left: 50%;
+  top: -30px;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0.95;
+  pointer-events: none;
+}
