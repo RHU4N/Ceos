@@ -47,6 +47,8 @@
     margin: 20px auto;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: static; /* Remova qualquer fixação ou alinhamento forçado */
+    margin-bottom: 100px; /* Adiciona espaço para o footer */
 }
 
 .left-section {
@@ -365,6 +367,17 @@ form input:focus {
     text-align: center;
     padding: 10px;
     width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 999;
+}
+
+/* Adicione espaço extra ao main para não sobrepor o footer */
+main {
+    /* ...existing code... */
+    min-height: calc(100vh - 50px); /* 50px = altura aproximada do footer */
+    /* ...existing code... */
 }
 
 .card-affordance {
@@ -391,6 +404,75 @@ form input:focus {
 .login-card, .register-card {
     z-index: 1000;
     position: relative;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 900px) {
+  .container,
+  .container2 {
+    flex-direction: column;
+    max-width: 98vw;
+    width: 98vw;
+    padding: 10px;
+    height: auto;
+  }
+  .left-section,
+  .right-section {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+  .container2 {
+    padding: 20px 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    padding: 10px 8px;
+    height: auto;
+  }
+  .navbar .logo {
+    font-size: 32px;
+  }
+  .menu {
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    align-items: flex-start;
+  }
+  .menu li {
+    padding: 8px 0;
+  }
+  .buttons {
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .tool {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+  }
+  .container,
+  .container2 {
+    margin: 8px auto;
+    border-radius: 4px;
+    box-shadow: none;
+  }
+  .footer {
+    font-size: 0.95em;
+    padding: 8px;
+  }
+}
+
+/* Corrige overflow do main em telas pequenas */
+main {
+  width: 100vw;
+  box-sizing: border-box;
+  /* ...existing code... */
 }
 
 

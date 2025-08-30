@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Sobre from '../components/Sobre';
 import useScrollToSobre from '../hooks/useScrollToSobre';
 import '../Style.css';
-import Footer from '../components/Footer';
 
 const Home = () => {
   useScrollToSobre();

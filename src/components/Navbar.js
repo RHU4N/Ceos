@@ -149,7 +149,7 @@ function Navbar() {
           </li>
           <li><Link to="/faq">Central de Ajuda</Link></li>
           <li><Link to="#">Planos</Link></li>
-          <li><Link to="/feedback">Feedback</Link></li>
+          {/* <li><Link to="/feedback">Feedback</Link></li> */}
         </ul>
       </nav>
       <div className="buttons">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../Style.css';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaUser, FaPhone } from 'react-icons/fa';
 

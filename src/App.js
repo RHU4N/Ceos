@@ -10,10 +10,9 @@ import AnaliseComb from './pages/AnaliseComb';
 import Estatistica from './pages/Estatistica';
 import Footer from './components/Footer';
 import FAQ from './pages/FAQ';
-import Sobre from './components/Sobre';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Feedback from './pages/Feedback';
+// import Feedback from './pages/Feedback';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -31,7 +30,7 @@ function App() {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/feedback" element={<Feedback />} />
+            {/* <Route path="/feedback" element={<Feedback />} /> */}
           </Routes>
         </main>
         <Footer />
