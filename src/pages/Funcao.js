@@ -59,10 +59,10 @@ function Funcao() {
           </li>
         </ol>
       </nav>
-      <div className="container mt-5 row aling-items-center justify-content-center">
+      <div className="container mt-5 row align-items-center justify-content-center">
         <h2 className="mb-4 text-center">Função</h2>
         <form
-          className="card p-4 shadow-sm"
+          className="card p-4 shadow-sm col-12 col-md-10 col-lg-8 mx-auto"
           onSubmit={handleSubmit}
           aria-label="Formulário de função"
         >
@@ -155,7 +155,7 @@ function Funcao() {
             </div>
           )}
         </form>
-        <div className="mt-3 text-muted small">
+        <div className="mt-3 text-muted small text-center">
           Preencha os campos e clique em Calcular para ver o resultado.
         </div>
       </div>

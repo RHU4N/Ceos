@@ -13,11 +13,11 @@ function Matematica() {
           </li>
         </ol>
       </nav>
-    <div className="container mt-5 row aling-items-center justify-content-center">
+    <div className="container mt-5 row align-items-center justify-content-center">
       <h2 className="mb-4 text-center">Matemática</h2>
       <p className="text-muted mb-4 text-center">Escolha uma das áreas para acessar as fórmulas e ferramentas:</p>
-      <div className="row g-4">
-        <div className="col-md-4">
+      <div className="row g-4 justify-content-center">
+        <div className="col-12 col-sm-6 col-md-4">
           <Link to="/matematica/funcao" className="text-decoration-none">
             <div className="card h-100 shadow-sm card-affordance" tabIndex={0} title="Clique para ver funções">
               <div className="card-body text-center">
@@ -27,7 +27,7 @@ function Matematica() {
             </div>
           </Link>
         </div>
-        <div className="col-md-4">
+        <div className="col-12 col-sm-6 col-md-4">
           <Link to="/matematica/analise-combinatoria" className="text-decoration-none">
             <div className="card h-100 shadow-sm card-affordance" tabIndex={0} title="Clique para ver análise combinatória">
               <div className="card-body text-center">
@@ -37,7 +37,7 @@ function Matematica() {
             </div>
           </Link>
         </div>
-        <div className="col-md-4">
+        <div className="col-12 col-sm-6 col-md-4">
           <Link to="/matematica/estatistica" className="text-decoration-none">
             <div className="card h-100 shadow-sm card-affordance" tabIndex={0} title="Clique para ver estatística">
               <div className="card-body text-center">

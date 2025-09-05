@@ -38,8 +38,8 @@ const Login = () => {
 
   return (
     <main>
-      <div className="container-fluid py-5 d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
-        <div className="card p-4 shadow login-card" style={{ maxWidth: 400, width: '100%' }}>
+      <div className="centered-auth-container">
+        <div className="card p-4 shadow login-card col-12 col-sm-10 col-md-8 col-lg-5" style={{ maxWidth: 400, width: '100%' }}>
           <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }}>Entrar na sua conta</h3>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email" className="form-label fw-bold">E-mail</label>

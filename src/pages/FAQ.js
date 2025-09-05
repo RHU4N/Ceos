@@ -12,9 +12,9 @@ const FAQ = () => {
           </li>
         </ol>
       </nav>
-    <div className="container mt-5 row">
+    <div className="container mt-5 row justify-content-center">
     <h1 className="mb-4 text-center display-5">FAQ</h1>
-      <div className="accordion" id="accordionExample">
+      <div className="accordion col-12 col-md-10 col-lg-8 mx-auto" id="accordionExample">
         <div className="accordion-item">
           <h2 className="accordion-header">
             <button

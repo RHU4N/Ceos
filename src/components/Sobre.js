@@ -2,7 +2,7 @@ import React from 'react';
 import '../Style.css';
 
 const Sobre = () => (
-  <section id="sobre-nos" className='float-md-end'>
+  <section id="sobre-nos" className='float-md-end container-fluid px-2 px-md-4'>
     <h1>Sobre Nós</h1>
     <p>
       Somos um grupo de estudantes apaixonados por ciência, tecnologia e educação, unidos pelo objetivo de facilitar o acesso ao conhecimento. No Céos, acreditamos que aprender deve ser uma experiência acessível, clara e prática para todos. Nossa missão é ajudar estudantes, professores e entusiastas das áreas de Física, Química e Matemática a encontrar e aplicar fórmulas e cálculos de maneira rápida, eficiente e descomplicada.

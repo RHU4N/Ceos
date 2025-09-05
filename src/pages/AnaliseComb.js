@@ -52,9 +52,9 @@ function AnaliseComb() {
           </li>
         </ol>
       </nav>
-    <div className="container mt-5 row">
+    <div className="container mt-5 row justify-content-center">
       <h2 className="mb-4 text-center">Análise Combinatória</h2>
-      <form className="card p-4 shadow-sm" onSubmit={handleSubmit} aria-label="Formulário de análise combinatória">
+      <form className="card p-4 shadow-sm col-12 col-md-10 col-lg-8 mx-auto" onSubmit={handleSubmit} aria-label="Formulário de análise combinatória">
         <div className="mb-3">
           <label className="form-label">Tipo</label>
           <select className="form-select" value={tipo} onChange={e => setTipo(e.target.value)}>
@@ -89,7 +89,7 @@ function AnaliseComb() {
         )}
         {erro && <div className="alert alert-danger mt-3" role="alert">{erro}</div>}
       </form>
-      <div className="mt-3 text-muted small">Preencha os campos e clique em Calcular para ver o resultado.</div>
+      <div className="mt-3 text-muted small text-center">Preencha os campos e clique em Calcular para ver o resultado.</div>
     </div>
     </>
   );

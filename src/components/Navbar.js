@@ -134,8 +134,8 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <img src="/logo.png" alt="Logo Céos" style={{ height: '72px', width: '72px' }} />
-        <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }} className='display-3'>Céos</Link>
+        <img src="/logo.png" alt="Logo Céos" style={{ height: '48px', width: '48px', maxWidth: '12vw', minWidth: 32 }} />
+        <Link to="/" style={{ color: 'inherit', textDecoration: 'none', fontSize: '2rem' }} className='display-3'>Céos</Link>
       </div>
       <nav>
         <ul className="menu">

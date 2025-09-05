@@ -375,11 +375,25 @@ form input:focus {
 
 /* Adicione espaço extra ao main para não sobrepor o footer */
 main {
-    /* ...existing code... */
-    min-height: calc(100vh - 50px); /* 50px = altura aproximada do footer */
-    /* ...existing code... */
+    min-height: calc(100vh - 60px);
+    width: 100vw;
+    box-sizing: border-box;
+    padding-bottom: 60px; /* Garante espaço para o footer fixo */
+    padding-top: 70px; /* Garante espaço para o navbar fixo */
+    display: block;
 }
 
+/* Estilo dos cards de login e cadastro */
+.login-card,
+.register-card {
+    width: 100%;
+    max-width: 400px;
+    min-width: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Estilo das cards de affordance */
 .card-affordance {
   cursor: pointer;
   border: 2px solid transparent;
@@ -406,15 +420,65 @@ main {
     position: relative;
 }
 
-/* Responsividade para telas menores */
+/* Centralização vertical para login/cadastro */
+.centered-auth-container {
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-top: 32px;    /* Espaço do topo para não grudar no navbar */
+  padding-bottom: 80px; /* Espaço do rodapé para não grudar no footer */
+}
+
+/* Ajuste para o main ocupar o espaço entre navbar e footer */
+main {
+  min-height: calc(100vh - 60px - 70px); /* 60px footer, 70px navbar */
+  width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+  background: transparent;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 600px) {
+  .centered-auth-container {
+    padding-top: 16px;
+    padding-bottom: 100px;
+  }
+  main {
+    min-height: calc(100vh - 80px - 56px); /* 80px footer, 56px navbar (aprox) */
+  }
+}
+
+/* Ajuste para telas pequenas */
+@media (max-width: 600px) {
+  .centered-auth-container {
+    min-height: calc(100vh - 80px - 56px); /* 80px footer, 56px navbar (aprox) */
+  }
+}
+
+@media (max-width: 1200px) {
+  .container2 {
+    max-width: 98vw;
+    padding: 24px 8px;
+  }
+}
+
 @media (max-width: 900px) {
   .container,
   .container2 {
     flex-direction: column;
-    max-width: 98vw;
-    width: 98vw;
+    max-width: 100vw;
+    width: 100vw;
     padding: 10px;
     height: auto;
+    min-width: 0;
   }
   .left-section,
   .right-section {
@@ -424,6 +488,15 @@ main {
   }
   .container2 {
     padding: 20px 8px;
+  }
+  .menu li {
+    min-width: 140px;
+    max-width: 140px;
+    width: 140px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -445,6 +518,13 @@ main {
   }
   .menu li {
     padding: 8px 0;
+    min-width: 140px;
+    max-width: 140px;
+    width: 140px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
   }
   .buttons {
     flex-direction: column;
@@ -452,27 +532,82 @@ main {
     margin-top: 8px;
   }
   .tool {
-    width: 100%;
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
     font-size: 16px;
     padding: 12px;
+    box-sizing: border-box;
+  }
+  .tool-buttons {
+    width: 100%;
+    align-items: center;
   }
   .container,
   .container2 {
     margin: 8px auto;
     border-radius: 4px;
     box-shadow: none;
+    padding: 8px;
   }
   .footer {
     font-size: 0.95em;
     padding: 8px;
   }
+  .left-section h2 {
+    font-size: 22px;
+  }
+  .right-section h4 {
+    font-size: 18px;
+  }
+  main {
+    padding-bottom: 80px !important; /* Aumenta o espaço para o footer em telas pequenas */
+  }
 }
 
-/* Corrige overflow do main em telas pequenas */
+@media (max-width: 400px) {
+  .navbar .logo {
+    font-size: 22px;
+  }
+  .footer {
+    font-size: 0.85em;
+    padding: 6px;
+  }
+  .container,
+  .container2 {
+    padding: 4px;
+  }
+}
+
+/* Garante que os cards de login/cadastro fiquem centralizados e responsivos */
+.login-card, .register-card {
+  width: 100%;
+  max-width: 400px;
+  min-width: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 500px) {
+  .login-card, .register-card {
+    max-width: 98vw;
+    padding: 8px !important;
+  }
+}
+
+/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
+  min-height: calc(100vh - 60px);
   width: 100vw;
   box-sizing: border-box;
-  /* ...existing code... */
+}
+  
+
+/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
+main {
+  min-height: calc(100vh - 60px);
+  width: 100vw;
+  box-sizing: border-box;
 }
 
 
