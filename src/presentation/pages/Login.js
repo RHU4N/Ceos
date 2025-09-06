@@ -1,9 +1,11 @@
 import React from 'react';
 import '../components/Style.css'; // <-- ajuste para importar o CSS de componentes globais
-import axios from 'axios';
+// import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LoginUser from '../../domain/usecases/LoginUser';
+import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 
 const Login = () => {
@@ -18,20 +20,14 @@ const Login = () => {
     e.preventDefault();
     setErro('');
     setLoading(true);
+    const userRepository = new UserApiRepository();
+    const loginUser = new LoginUser(userRepository);
     try {
-      const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
-      const res = await axios.post(`${apiUrl}/user/login`, { email, senha });
-      const { token } = res.data;
-      // Buscar dados do usuário
-      const userRes = await axios.get(`${apiUrl}/user`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      // Encontrar usuário pelo email
-      const userData = userRes.data.find(u => u.email === email);
-      login(userData, token);
+      const { user, token } = await loginUser.execute({ email, senha });
+      login(user, token);
       navigate('/');
     } catch (err) {
-      setErro(err.response?.data?.error || 'Erro ao fazer login.');
+      setErro(err.message || 'Erro ao fazer login.');
     } finally {
       setLoading(false);
     }
@@ -46,12 +42,12 @@ const Login = () => {
             <label htmlFor="email" className="form-label fw-bold">E-mail</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaEnvelope /></span>
-              <input type="email" id="email" name="email" placeholder="Digite seu e-mail" className="form-control" value={email} onChange={e => setEmail(e.target.value)} required />
+              <input type="email" id="email" name="email" placeholder="Digite seu e-mail" className="form-control" value={email} onChange={e => setEmail(e.target.value)} required disabled={loading} />
             </div>
             <label htmlFor="senha" className="form-label fw-bold">Senha</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaLock /></span>
-              <input type="password" id="senha" name="senha" placeholder="Digite sua senha" className="form-control" value={senha} onChange={e => setSenha(e.target.value)} required />
+              <input type="password" id="senha" name="senha" placeholder="Digite sua senha" className="form-control" value={senha} onChange={e => setSenha(e.target.value)} required disabled={loading} />
             </div>
             <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</button>
             {erro && <div className="alert alert-danger mt-2">{erro}</div>}

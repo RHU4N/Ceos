@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
+
+import MathApiRepository from '../../infrastructure/api/MathApiRepository';
+import CalcularFuncao from '../../domain/usecases/CalcularFuncao';
 
 function Funcao() {
   const [tipo, setTipo] = useState("funcao1");
@@ -18,18 +21,18 @@ function Funcao() {
     setErro("");
     setResultado(null);
     setLoading(true);
+    const mathRepository = new MathApiRepository();
+    const calcularFuncao = new CalcularFuncao(mathRepository);
     try {
-      const apiUrl = process.env.REACT_APP_API_MATH_URL;
-      let url = `${apiUrl}/funcao/${tipo}`;
       let data = { a: Number(a), b: Number(b) };
       if (tipo === "funcao2") {
         data.c = Number(c);
       }
       if (x !== "") data.x = Number(x);
-      const res = await axios.post(url, data);
-      setResultado(res.data.resultado);
+      const resultado = await calcularFuncao.execute({ tipo, data });
+      setResultado(resultado);
     } catch (err) {
-      setErro(err.response?.data?.error || "Erro ao calcular");
+      setErro(err.message || "Erro ao calcular");
     } finally {
       setLoading(false);
     }

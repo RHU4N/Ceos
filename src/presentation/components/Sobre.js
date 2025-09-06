@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Style.css';
+import './Style.css';
 
 const Sobre = () => (
   <section id="sobre-nos" className='float-md-end container-fluid px-2 px-md-4'>

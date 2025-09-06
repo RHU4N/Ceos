@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
+import ForgotPasswordUseCase from '../../domain/usecases/ForgotPassword';
+import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -15,9 +17,10 @@ const ForgotPassword = () => {
     setErro('');
     setMensagem('');
     setLoading(true);
+    const userRepository = new UserApiRepository();
+    const forgotPassword = new ForgotPasswordUseCase(userRepository);
     try {
-      const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
-      await axios.post(`${apiUrl}/user/forgot-password`, { email });
+      await forgotPassword.execute(email);
       setMensagem('Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.');
     } catch (err) {
       setErro('Erro ao solicitar recuperação de senha.');

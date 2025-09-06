@@ -2,18 +2,18 @@ import React from 'react';
 import './App.css';
 import './Style.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Matematica from './pages/Matematica';
-import Funcao from './pages/Funcao';
-import AnaliseComb from './pages/AnaliseComb';
-import Estatistica from './pages/Estatistica';
-import Footer from './components/Footer';
-import FAQ from './pages/FAQ';
-import Login from './pages/Login';
-import Register from './pages/Register';
-// import Feedback from './pages/Feedback';
-import { AuthProvider } from './context/AuthContext';
+import Navbar from './presentation/components/Navbar';
+import Home from './presentation/pages/Home';
+import Matematica from './presentation/pages/Matematica';
+import Funcao from './presentation/pages/Funcao';
+import AnaliseComb from './presentation/pages/AnaliseComb';
+import Estatistica from './presentation/pages/Estatistica';
+import Footer from './presentation/components/Footer';
+import FAQ from './presentation/pages/FAQ';
+import Login from './presentation/pages/Login';
+import Register from './presentation/pages/Register';
+// import Feedback from './presentation/pages/Feedback';
+import { AuthProvider } from './presentation/context/AuthContext';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import '../Style.css';
+import { Link, useLocation } from 'react-router-dom';
+import './Style.css';
 import { useAuth } from '../context/AuthContext';
 import { FaUserCircle, FaEdit, FaTrash, FaEnvelope, FaLock } from 'react-icons/fa';
 import axios from 'axios';
@@ -119,6 +119,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
 }
 
 function Navbar() {
+  const location = useLocation();
   const { user, logout, login } = useAuth();
   const [showModal, setShowModal] = useState(false);
 
@@ -142,7 +143,7 @@ function Navbar() {
           <li className="dropdown">
             <span>Ambiente de Estudo ▼</span>
             <ul className="submenu">
-              <li className='active'><Link to="/matematica">Matemática</Link></li>
+              <li className={location.pathname.startsWith('/matematica') ? 'active' : ''}><Link to="/matematica">Matemática</Link></li>
               <li><Link to="#" disabled>Química</Link></li>
               <li><Link to="#" disabled>Física</Link></li>
             </ul>

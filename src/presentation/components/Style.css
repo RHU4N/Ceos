@@ -1,3 +1,14 @@
+/* Destaque para item ativo do submenu */
+.submenu .active > a,
+.submenu .active,
+.submenu li:first-child > a,
+.submenu li:first-child {
+  background: var(--color-purple-bg, #a883ee);
+  color: #fff !important;
+  border-radius: 4px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px #a883ee33;
+}
 /* TODO: Transferir os estilos CSS corretos para este arquivo.
     - Organizar os seletores e classes conforme a estrutura dos componentes.
     - Remover estilos duplicados ou não utilizados.

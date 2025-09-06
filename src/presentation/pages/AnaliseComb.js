@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
+
+import MathApiRepository from '../../infrastructure/api/MathApiRepository';
+import CalcularAnaliseComb from '../../domain/usecases/CalcularAnaliseComb';
 
 function AnaliseComb() {
   const [tipo, setTipo] = useState('permutacao');
@@ -16,18 +19,15 @@ function AnaliseComb() {
     setErro('');
     setResultado(null);
     setLoading(true);
+    const mathRepository = new MathApiRepository();
+    const calcularAnaliseComb = new CalcularAnaliseComb(mathRepository);
     try {
-      const apiUrl = process.env.REACT_APP_API_MATH_URL;
-      if (!apiUrl) {
-        throw new Error('A variável de ambiente REACT_APP_API_MATH_URL não está definida. Reinicie o servidor após editar o .env.');
-      }
-      let url = `${apiUrl}/analise/${tipo}`;
       let data = { n: Number(n) };
       if (k !== '') data.k = Number(k);
-      const res = await axios.post(url, data);
-      setResultado(res.data.resultado);
+      const resultado = await calcularAnaliseComb.execute({ tipo, data });
+      setResultado(resultado);
     } catch (err) {
-      setErro(err.response?.data?.error || err.message || 'Erro ao calcular');
+      setErro(err.message || 'Erro ao calcular');
     } finally {
       setLoading(false);
     }

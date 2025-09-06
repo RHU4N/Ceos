@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './Style.css';
-import axios from 'axios';
+// import axios from 'axios';
 // import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import User from '../../domain/entities/User';
+import RegisterUser from '../../domain/usecases/RegisterUser';
+import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { FaEnvelope, FaLock, FaUser, FaPhone } from 'react-icons/fa';
 
 const Register = () => {
@@ -13,25 +16,23 @@ const Register = () => {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   // const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setErro('');
     setSucesso('');
-    if (senha !== confirmarSenha) {
-      setErro('As senhas não coincidem.');
-      return;
-    }
-    if (!telefone) {
-      setErro('O telefone é obrigatório.');
-      return;
-    }
+    setLoading(true);
+    const userRepository = new UserApiRepository();
+    const registerUser = new RegisterUser(userRepository);
     try {
-      const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
-      await axios.post(`${apiUrl}/user`, {
-        nome, email, senha, telefone, assinante: false, historico: []
+      const user = new User({ nome, email, telefone, senha });
+      await registerUser.execute({
+        ...user,
+        confirmarSenha
       });
       setSucesso('Cadastro realizado com sucesso! Redirecionando para login...');
       setNome(''); setEmail(''); setTelefone(''); setSenha(''); setConfirmarSenha('');
@@ -39,7 +40,9 @@ const Register = () => {
         navigate('/login');
       }, 1500);
     } catch (err) {
-      setErro(err.response?.data?.error || 'Erro ao cadastrar.');
+      setErro(err.message || 'Erro ao cadastrar.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,29 +55,29 @@ const Register = () => {
             <label htmlFor="nome" className="form-label fw-bold">Nome completo</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaUser /></span>
-              <input type="text" id="nome" value={nome} onChange={e => setNome(e.target.value)} className="form-control" placeholder="Digite seu nome" required />
+              <input type="text" id="nome" value={nome} onChange={e => setNome(e.target.value)} className="form-control" placeholder="Digite seu nome" required disabled={loading} />
             </div>
             <label htmlFor="email" className="form-label fw-bold">E-mail</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaEnvelope /></span>
-              <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="form-control" placeholder="Digite seu e-mail" required />
+              <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="form-control" placeholder="Digite seu e-mail" required disabled={loading} />
             </div>
             <label htmlFor="telefone" className="form-label fw-bold">Telefone</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaPhone /></span>
-              <input type="text" id="telefone" value={telefone} onChange={e => setTelefone(e.target.value)} className="form-control" placeholder="(xx) xxxxx-xxxx" required />
+              <input type="text" id="telefone" value={telefone} onChange={e => setTelefone(e.target.value)} className="form-control" placeholder="(xx) xxxxx-xxxx" required disabled={loading} />
             </div>
             <label htmlFor="senha" className="form-label fw-bold">Senha</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaLock /></span>
-              <input type="password" id="senha" value={senha} onChange={e => setSenha(e.target.value)} className="form-control" placeholder="Crie uma senha" required />
+              <input type="password" id="senha" value={senha} onChange={e => setSenha(e.target.value)} className="form-control" placeholder="Crie uma senha" required disabled={loading} />
             </div>
             <label htmlFor="confirmarSenha" className="form-label fw-bold">Confirmar senha</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaLock /></span>
-              <input type="password" id="confirmarSenha" value={confirmarSenha} onChange={e => setConfirmarSenha(e.target.value)} className="form-control" placeholder="Repita a senha" required />
+              <input type="password" id="confirmarSenha" value={confirmarSenha} onChange={e => setConfirmarSenha(e.target.value)} className="form-control" placeholder="Repita a senha" required disabled={loading} />
             </div>
-            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold">Cadastrar</button>
+            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading}>{loading ? 'Cadastrando...' : 'Cadastrar'}</button>
             {sucesso && <div className="alert alert-success mt-2">{sucesso}</div>}
             {erro && <div className="alert alert-danger mt-2">{erro}</div>}
           </form>

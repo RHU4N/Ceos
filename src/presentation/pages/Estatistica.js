@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
+
+import MathApiRepository from '../../infrastructure/api/MathApiRepository';
+import CalcularEstatistica from '../../domain/usecases/CalcularEstatistica';
 
 function Estatistica() {
   const [tipo, setTipo] = useState('media');
@@ -14,14 +17,14 @@ function Estatistica() {
     setErro('');
     setResultado(null);
     setLoading(true);
+    const mathRepository = new MathApiRepository();
+    const calcularEstatistica = new CalcularEstatistica(mathRepository);
     try {
-      const apiUrl = process.env.REACT_APP_API_MATH_URL;
-      let url = `${apiUrl}/estatistica/${tipo}`;
       let data = { numeros: numeros.split(',').map(Number) };
-      const res = await axios.post(url, data);
-      setResultado(res.data.resultado);
+      const resultado = await calcularEstatistica.execute({ tipo, data });
+      setResultado(resultado);
     } catch (err) {
-      setErro(err.response?.data?.error || 'Erro ao calcular');
+      setErro(err.message || 'Erro ao calcular');
     } finally {
       setLoading(false);
     }
