@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sobre from '../components/Sobre';
 import useScrollToSobre from '../hooks/useScrollToSobre';
-import '../Style.css';
+import './Style.css'; // <-- ajuste para importar o CSS correto da página
 
 const Home = () => {
   useScrollToSobre();

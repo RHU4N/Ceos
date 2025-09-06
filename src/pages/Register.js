@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Style.css';
+import './Style.css';
 import axios from 'axios';
 // import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +29,8 @@ const Register = () => {
       return;
     }
     try {
-      await axios.post('https://loginapiceos.onrender.com/user', {
+      const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
+      await axios.post(`${apiUrl}/user`, {
         nome, email, senha, telefone, assinante: false, historico: []
       });
       setSucesso('Cadastro realizado com sucesso! Redirecionando para login...');
@@ -44,7 +45,7 @@ const Register = () => {
 
   return (
     <main>
-      <div className="container-fluid py-5 d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
+      <div className="centered-auth-container">
         <div className="card p-4 shadow register-card" style={{ maxWidth: 400, width: '100%' }}>
           <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }}>Criar nova conta</h3>
           <form onSubmit={handleSubmit}>

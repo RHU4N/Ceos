@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { FaBroom } from 'react-icons/fa';
+import { FaWandMagicSparkles } from 'react-icons/fa6';
+import './Style.css'; // <-- ajuste para importar o CSS correto da página
 
 function AnaliseComb() {
   const [tipo, setTipo] = useState('permutacao');
@@ -16,13 +17,17 @@ function AnaliseComb() {
     setResultado(null);
     setLoading(true);
     try {
-      let url = `https://mathapi.onrender.com/analise/${tipo}`;
+      const apiUrl = process.env.REACT_APP_API_MATH_URL;
+      if (!apiUrl) {
+        throw new Error('A variável de ambiente REACT_APP_API_MATH_URL não está definida. Reinicie o servidor após editar o .env.');
+      }
+      let url = `${apiUrl}/analise/${tipo}`;
       let data = { n: Number(n) };
       if (k !== '') data.k = Number(k);
       const res = await axios.post(url, data);
       setResultado(res.data.resultado);
     } catch (err) {
-      setErro(err.response?.data?.error || 'Erro ao calcular');
+      setErro(err.response?.data?.error || err.message || 'Erro ao calcular');
     } finally {
       setLoading(false);
     }
@@ -57,7 +62,7 @@ function AnaliseComb() {
       <form className="card p-4 shadow-sm col-12 col-md-10 col-lg-8 mx-auto" onSubmit={handleSubmit} aria-label="Formulário de análise combinatória">
         <div className="mb-3">
           <label className="form-label">Tipo</label>
-          <select className="form-select" value={tipo} onChange={e => setTipo(e.target.value)}>
+          <select className="form-select" value={tipo} onChange={e => setTipo(e.target.value)} disabled={loading}>
             <option value="permutacao">Permutação</option>
             <option value="combinacao">Combinação</option>
             <option value="arranjo">Arranjo</option>
@@ -66,24 +71,35 @@ function AnaliseComb() {
         </div>
         <div className="row g-2">
           <div className="col">
-            <input type="number" className="form-control" placeholder="n" value={n} onChange={e => setN(e.target.value)} required aria-label="Valor de n" />
+            <input type="number" className="form-control" placeholder="n" value={n} onChange={e => setN(e.target.value)} required aria-label="Valor de n" disabled={loading} />
           </div>
           <div className="col">
-            <input type="number" className="form-control" placeholder="k (opcional)" value={k} onChange={e => setK(e.target.value)} aria-label="Valor de k" />
+            <input type="number" className="form-control" placeholder="k (opcional)" value={k} onChange={e => setK(e.target.value)} aria-label="Valor de k" disabled={loading} />
           </div>
         </div>
         <button className="btn btn-primary mt-3" type="submit" disabled={loading} aria-busy={loading} aria-label="Calcular análise combinatória">
           {loading ? 'Calculando...' : 'Calcular'}
         </button>
-        <button
-          type="button"
-          className="btn btn-secondary mt-3 ms-2"
-          onClick={handleClear}
-          aria-label="Limpar campos"
-          title="Limpar campos"
-        >
-          <FaBroom />
-        </button>
+        <div className="d-flex justify-content-center">
+          <button
+            type="button"
+            className="btn btn-secondary mt-3 ms-2"
+            onClick={handleClear}
+            aria-label="Limpar campos"
+            title="Limpar campos"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 6,
+              fontWeight: 600,
+              width: '120px'
+            }}
+          >
+            <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
+            <span style={{ fontSize: 15 }}>Limpar</span>
+          </button>
+        </div>
         {resultado !== null && (
           <div className="alert alert-success mt-3" role="status">Resultado: {resultado}</div>
         )}

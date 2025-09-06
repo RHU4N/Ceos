@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
-import '../Style.css';
+import './Style.css'; // <-- ajuste para importar o CSS correto da página
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -16,9 +16,8 @@ const ForgotPassword = () => {
     setMensagem('');
     setLoading(true);
     try {
-      // Aqui você pode implementar o envio de e-mail para recuperação de senha
-      // Exemplo fictício:
-      await axios.post('https://loginapiceos.onrender.com/user/forgot-password', { email });
+      const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
+      await axios.post(`${apiUrl}/user/forgot-password`, { email });
       setMensagem('Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.');
     } catch (err) {
       setErro('Erro ao solicitar recuperação de senha.');

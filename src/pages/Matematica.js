@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Style.css'; // <-- ajuste para importar o CSS correto da página
 
 function Matematica() {
   return (

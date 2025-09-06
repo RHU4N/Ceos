@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Style.css';
+import '../components/Style.css'; // <-- ajuste para importar o CSS de componentes globais
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,10 +19,11 @@ const Login = () => {
     setErro('');
     setLoading(true);
     try {
-      const res = await axios.post('https://loginapiceos.onrender.com/user/login', { email, senha });
+      const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
+      const res = await axios.post(`${apiUrl}/user/login`, { email, senha });
       const { token } = res.data;
       // Buscar dados do usuário
-      const userRes = await axios.get('https://loginapiceos.onrender.com/user', {
+      const userRes = await axios.get(`${apiUrl}/user`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Encontrar usuário pelo email

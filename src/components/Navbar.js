@@ -40,7 +40,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
         setLoading(false);
         return;
       }
-      await axios.put(`https://loginapiceos.onrender.com/user/${user._id}`, {
+      await axios.put(`${process.env.REACT_APP_API_LOGIN_URL}/user/${user._id}`, {
         nome, email, telefone, senha: senha || undefined, senhaAtual: senha ? senhaAtual : undefined, assinante: user.assinante, historico: user.historico
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -62,7 +62,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('ceos_token');
-      await axios.delete(`https://loginapiceos.onrender.com/user/${user._id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_LOGIN_URL}/user/${user._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       onDelete();

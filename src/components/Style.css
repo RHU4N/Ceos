@@ -3,3 +3,90 @@
     - Remover estilos duplicados ou não utilizados.
     - Garantir que as importações deste arquivo estejam corretas nos componentes React.
 */
+
+/* Estilos globais de componentes reutilizáveis */
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(to right, var(--color-secondary), #00acc1);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    z-index: 1050;
+    position: relative;
+}
+.navbar .dropdown { text-decoration: none; color: var(--color-secondary-light); font-weight: bold; }
+.navbar .logo { font-size: 50px; font-family: 'Times New Roman', Times, serif; font-weight: bold; }
+
+/* Menu */
+.menu { list-style: none; display: flex; gap: 20px; padding: 0; margin: 0 auto; }
+.menu li { position: relative; padding: 10px 15px; }
+.menu a { text-decoration: none; color: var(--color-secondary-light); font-weight: bold; display: block; }
+.submenu { display: none; position: absolute; top: 100%; left: 0; background: white; color: var(--color-primary); list-style: none; padding: 0; margin: 0; border-radius: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); min-width: 150px; z-index: 1100; }
+.submenu a { color: var(--color-text); padding: 10px; display: block; text-align: left; }
+.dropdown:hover .submenu { display: block; }
+
+/* Botões globais */
+.buttons { display: flex; gap: 10px; }
+.buttons .btn { padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; text-align: center; display: inline-block; }
+.btn-light { background: white; color: var(--color-secondary); border: 1px solid var(--color-secondary); }
+.btn-light:hover { background: var(--color-footer-dark); color: #ffffff; border: 1px solid #10385a; }
+.btn-dark { background: var(--color-purple-bg); color: white; border: 1px solid var(--color-purple-light); }
+.btn-dark:hover { background: var(--color-purple-dark); color: var(--color-footer-light); border: 1px solid rgb(49, 40, 59); }
+
+/* Footer */
+.footer {
+    background: var(--color-footer);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 2000;
+    pointer-events: auto;
+}
+
+/* Cards de login/cadastro */
+.centered-auth-container {
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: calc(100vh - 70px);
+  padding-top: 32px;
+  padding-bottom: 70px;
+}
+.login-card,
+.register-card {
+  width: 100%;
+  max-width: 400px;
+  min-width: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+  z-index: 1000;
+  position: relative;
+}
+
+/* Responsividade para componentes */
+@media (max-width: 600px) {
+  .navbar { flex-direction: column; padding: 10px 8px; height: auto; }
+  .navbar .logo { font-size: 32px; }
+  .menu { flex-direction: column; gap: 8px; margin: 0; padding: 0; align-items: flex-start; }
+  .menu li { padding: 8px 0; min-width: 140px; max-width: 140px; width: 140px; justify-content: center; text-align: center; display: flex; align-items: center; }
+  .buttons { flex-direction: column; gap: 6px; margin-top: 8px; }
+  .footer { font-size: 0.95em; padding: 8px; }
+  .login-card, .register-card { max-width: 98vw; padding: 8px !important; }
+}
+@media (max-width: 400px) {
+  .navbar .logo { font-size: 22px; }
+  .footer { font-size: 0.85em; padding: 6px; }
+}
+@media (max-width: 500px) {
+  .login-card, .register-card { max-width: 98vw; padding: 8px !important; }
+}
