@@ -23,11 +23,11 @@ export default class UserApiRepository extends UserRepository {
 	async login({ email, senha }) {
 		const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
 		const res = await axios.post(`${apiUrl}/auth/login`, { email, senha });
-		//const { token } = res.data;
-		//const userRes = await axios.get(`${apiUrl}/auth`, {
-			//headers: { Authorization: `Bearer ${token}` }
-		//});
+		const { token } = res.data;
+		const userRes = await axios.get(`${apiUrl}/auth`, {
+			headers: { Authorization: `Bearer ${token}` }
+		});
 		const userData = userRes.data.find(u => u.email === email);
-		return { user: userData};
+		return { user: userData, token};
 	}
 }
