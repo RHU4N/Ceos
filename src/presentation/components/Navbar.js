@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Style.css';
 import { useAuth } from '../context/AuthContext';
+import { useLoading } from '../context/LoadingContext';
 import { FaUserCircle, FaEdit, FaTrash, FaEnvelope, FaLock } from 'react-icons/fa';
 import axios from 'axios';
 
@@ -121,6 +122,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
 function Navbar() {
   const location = useLocation();
   const { user, logout, login } = useAuth();
+  const { loading } = useLoading();
   const [showModal, setShowModal] = useState(false);
 
   const handleUpdate = (newUser) => {
@@ -132,37 +134,108 @@ function Navbar() {
     setShowModal(false);
   };
 
+  // Helper to prevent navigation/click if loading
+  const preventIfLoading = (e) => {
+    if (loading) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    return true;
+  };
+
   return (
     <header className="navbar">
       <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <img src="/logo.png" alt="Logo Céos" style={{ height: '48px', width: '48px', maxWidth: '12vw', minWidth: 32 }} />
-        <Link to="/" style={{ color: 'inherit', textDecoration: 'none', fontSize: '2rem' }} className='display-3'>Céos</Link>
+        <Link
+          to="/"
+          style={{ color: 'inherit', textDecoration: 'none', fontSize: '2rem', pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+          className='display-3'
+          tabIndex={loading ? -1 : 0}
+          onClick={preventIfLoading}
+        >
+          <img src="/logo.png" alt="Logo Céos" style={{ height: '48px', width: '48px', maxWidth: '12vw', minWidth: 32, pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }} />
+          Céos
+        </Link>
       </div>
       <nav>
         <ul className="menu">
-          <li className="dropdown">
+          <li className="dropdown" style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}>
             <span>Ambiente de Estudo ▼</span>
             <ul className="submenu">
-              <li className={location.pathname.startsWith('/matematica') ? 'active' : ''}><Link to="/matematica">Matemática</Link></li>
-              <li><Link to="#" disabled>Química</Link></li>
-              <li><Link to="#" disabled>Física</Link></li>
+              <li className={location.pathname.startsWith('/matematica') ? 'active' : ''}>
+                <Link
+                  to="/matematica"
+                  tabIndex={loading ? -1 : 0}
+                  style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+                  onClick={preventIfLoading}
+                >
+                  Matemática
+                </Link>
+              </li>
+              <li>
+                <Link to="#" disabled tabIndex={-1} style={{ opacity: 0.5, pointerEvents: 'none' }}>Química</Link>
+              </li>
+              <li>
+                <Link to="#" disabled tabIndex={-1} style={{ opacity: 0.5, pointerEvents: 'none' }}>Física</Link>
+              </li>
             </ul>
           </li>
-          <li><Link to="/faq">Central de Ajuda</Link></li>
-          <li><Link to="#">Planos</Link></li>
+          <li>
+            <Link
+              to="/faq"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={preventIfLoading}
+            >
+              Central de Ajuda
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="#"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={preventIfLoading}
+            >
+              Planos
+            </Link>
+          </li>
           {/* <li><Link to="/feedback">Feedback</Link></li> */}
         </ul>
       </nav>
       <div className="buttons">
         {!user ? (
           <>
-            <Link to="/login" className="btn btn-light">Entrar</Link>
-            <Link to="/register" className="btn btn-dark">Cadastre-se</Link>
+            <Link
+              to="/login"
+              className="btn btn-light"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={preventIfLoading}
+            >
+              Entrar
+            </Link>
+            <Link
+              to="/register"
+              className="btn btn-dark"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={preventIfLoading}
+            >
+              Cadastre-se
+            </Link>
           </>
         ) : (
           <div className="d-flex align-items-center gap-2">
             <FaUserCircle size={32} />
-            <span style={{cursor:'pointer', fontWeight:600, display:'flex', alignItems:'center', gap:4}} onClick={()=>setShowModal(true)} title="Editar perfil">
+            <span
+              style={{cursor:'pointer', fontWeight:600, display:'flex', alignItems:'center', gap:4, pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined}}
+              onClick={() => !loading && setShowModal(true)}
+              title="Editar perfil"
+              tabIndex={loading ? -1 : 0}
+              aria-disabled={loading}
+            >
               {user.nome}
               <FaEdit style={{fontSize:20, marginLeft:6, color:'#007bff', background:'#e9f2ff', borderRadius:'50%', padding:3, boxShadow:'0 1px 4px #007bff33'}}/>
             </span>
@@ -172,6 +245,8 @@ function Navbar() {
               onMouseOver={e => { e.target.style.background = '#dc3545'; e.target.style.color = 'white'; }}
               onMouseOut={e => { e.target.style.background = 'white'; e.target.style.color = '#dc3545'; }}
               onClick={logout}
+              disabled={loading}
+              tabIndex={loading ? -1 : 0}
             >
               Sair
             </button>

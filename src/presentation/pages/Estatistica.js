@@ -4,19 +4,21 @@ import { FaWandMagicSparkles } from 'react-icons/fa6';
 
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularEstatistica from '../../domain/usecases/CalcularEstatistica';
+import { useLoading } from '../context/LoadingContext';
 
 function Estatistica() {
   const [tipo, setTipo] = useState('media');
   const [numeros, setNumeros] = useState('');
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro('');
     setResultado(null);
     setLoading(true);
+    document.body.classList.add('loading-global');
     const mathRepository = new MathApiRepository();
     const calcularEstatistica = new CalcularEstatistica(mathRepository);
     try {
@@ -27,6 +29,7 @@ function Estatistica() {
       setErro(err.message || 'Erro ao calcular');
     } finally {
       setLoading(false);
+      document.body.classList.remove('loading-global');
     }
   };
 
@@ -43,10 +46,20 @@ function Estatistica() {
     <nav aria-label="breadcrumb" className='nav justify-content-center'>
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="/">Home</a>
+            <a
+              href="/"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={e => loading && e.preventDefault()}
+            >Home</a>
           </li>
           <li class="breadcrumb-item">
-            <a href="/matematica">Matematica</a>
+            <a
+              href="/matematica"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={e => loading && e.preventDefault()}
+            >Matematica</a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Estatísticas

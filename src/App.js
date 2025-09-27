@@ -14,27 +14,30 @@ import Login from './presentation/pages/Login';
 import Register from './presentation/pages/Register';
 // import Feedback from './presentation/pages/Feedback';
 import { AuthProvider } from './presentation/context/AuthContext';
+import { LoadingProvider } from './presentation/context/LoadingContext';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/matematica" element={<Matematica />} />
-            <Route path="/matematica/funcao" element={<Funcao />} />
-            <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
-            <Route path="/matematica/estatistica" element={<Estatistica />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            {/* <Route path="/feedback" element={<Feedback />} /> */}
-          </Routes>
-        </main>
-        <Footer />
-      </Router>
+      <LoadingProvider>
+        <Router>
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/matematica" element={<Matematica />} />
+              <Route path="/matematica/funcao" element={<Funcao />} />
+              <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
+              <Route path="/matematica/estatistica" element={<Estatistica />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              {/* <Route path="/feedback" element={<Feedback />} /> */}
+            </Routes>
+          </main>
+          <Footer />
+        </Router>
+      </LoadingProvider>
     </AuthProvider>
   );
 }

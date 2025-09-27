@@ -7,12 +7,13 @@ import { useAuth } from '../context/AuthContext';
 import LoginUser from '../../domain/usecases/LoginUser';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { useLoading } from '../context/LoadingContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -20,6 +21,7 @@ const Login = () => {
     e.preventDefault();
     setErro('');
     setLoading(true);
+    document.body.classList.add('loading-global');
     const userRepository = new UserApiRepository();
     const loginUser = new LoginUser(userRepository);
     try {
@@ -30,6 +32,7 @@ const Login = () => {
       setErro(err.message || 'Erro ao fazer login.');
     } finally {
       setLoading(false);
+      document.body.classList.remove('loading-global');
     }
   };
 
@@ -63,7 +66,15 @@ const Login = () => {
               Esqueci minha senha
             </button>
             <span className="mx-2">|</span>
-            <a href="/register" className="text-decoration-none">Não tem conta? Cadastre-se</a>
+            <a
+              href="/register"
+              className="text-decoration-none"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={e => loading && e.preventDefault()}
+            >
+              Não tem conta? Cadastre-se
+            </a>
           </div>
         </div>
       </div>

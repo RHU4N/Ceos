@@ -628,6 +628,13 @@ main {
   box-sizing: border-box;
 }
 
+body.loading-global button,
+body.loading-global .btn {
+  pointer-events: none !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
 
 
 

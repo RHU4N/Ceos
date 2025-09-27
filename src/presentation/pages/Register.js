@@ -7,6 +7,7 @@ import User from '../../domain/entities/User';
 import RegisterUser from '../../domain/usecases/RegisterUser';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { FaEnvelope, FaLock, FaUser, FaPhone } from 'react-icons/fa';
+import { useLoading } from '../context/LoadingContext';
 
 const Register = () => {
   const [nome, setNome] = useState('');
@@ -16,7 +17,7 @@ const Register = () => {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
   // const { login } = useAuth();
 
@@ -26,6 +27,7 @@ const Register = () => {
     setErro('');
     setSucesso('');
     setLoading(true);
+    document.body.classList.add('loading-global');
     const userRepository = new UserApiRepository();
     const registerUser = new RegisterUser(userRepository);
     try {
@@ -43,6 +45,7 @@ const Register = () => {
       setErro(err.message || 'Erro ao cadastrar.');
     } finally {
       setLoading(false);
+      document.body.classList.remove('loading-global');
     }
   };
 
@@ -82,7 +85,15 @@ const Register = () => {
             {erro && <div className="alert alert-danger mt-2">{erro}</div>}
           </form>
           <div className="mt-3 text-center small">
-            <a href="/login" className="text-decoration-none">Já tem conta? Entrar</a>
+            <a
+              href="/login"
+              className="text-decoration-none"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={e => loading && e.preventDefault()}
+            >
+              Já tem conta? Entrar
+            </a>
           </div>
         </div>
       </div>

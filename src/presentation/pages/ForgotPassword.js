@@ -5,18 +5,20 @@ import { FaEnvelope } from 'react-icons/fa';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
 import ForgotPasswordUseCase from '../../domain/usecases/ForgotPassword';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
+import { useLoading } from '../context/LoadingContext';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [erro, setErro] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro('');
     setMensagem('');
     setLoading(true);
+    document.body.classList.add('loading-global');
     const userRepository = new UserApiRepository();
     const forgotPassword = new ForgotPasswordUseCase(userRepository);
     try {
@@ -26,6 +28,7 @@ const ForgotPassword = () => {
       setErro('Erro ao solicitar recuperação de senha.');
     } finally {
       setLoading(false);
+      document.body.classList.remove('loading-global');
     }
   };
 
