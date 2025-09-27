@@ -101,7 +101,7 @@ function AnaliseComb() {
           </button>
         </div>
         {resultado !== null && (
-          <div className="alert alert-success mt-3" role="status">Resultado: {resultado}</div>
+          <div className="alert alert-success mt-3" role="status">{resultado}</div>
         )}
         {erro && <div className="alert alert-danger mt-3" role="alert">{erro}</div>}
       </form>
