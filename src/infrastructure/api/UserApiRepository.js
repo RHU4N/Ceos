@@ -28,6 +28,6 @@ export default class UserApiRepository extends UserRepository {
 			//headers: { Authorization: `Bearer ${token}` }
 		//});
 		const userData = userRes.data.find(u => u.email === email);
-		return { user: userData, token };
+		return { user: userData};
 	}
 }
