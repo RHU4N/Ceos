@@ -41,10 +41,10 @@ export default class MathApiRepository extends MathRepository {
     const mapAnaliseTipo = (t) => {
       if (!t) return '';
       const lower = String(t).toLowerCase();
-      if (lower === 'permutacao') return 'fatorial';
+        if (lower === 'permutacao') return 'fatorial';
       if (lower === 'combinacao') return 'combinacao';
-      if (lower === 'arranjo') return 'arranjo';
-      if (lower === 'arranjorep' || lower === 'arranjoRep'.toLowerCase()) return 'arranjo';
+        if (lower === 'arranjo') return 'arranjo';
+        if (lower === 'arranjorep' || lower === 'arranjorep') return 'arranjorep';
       return lower;
     };
 
