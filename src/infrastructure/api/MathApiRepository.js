@@ -2,8 +2,10 @@
 import MathRepository from '../../domain/repositories/MathRepository';
 import axios from 'axios';
 
-// Use the conventional CRA env var name; fallback to localhost
-const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL || 'http://localhost:8080';
+
+const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
+ 
+// const apiURL = 'http://localhost:8080'
 
 function mapFuncaoTipo(frontTipo) {
   // frontend used 'funcao1' and 'funcao2' — map to router 'linear' and 'quadratica'

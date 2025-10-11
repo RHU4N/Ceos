@@ -1,15 +1,16 @@
 import UserRepository from '../../domain/repositories/UserRepository';
 import axios from 'axios';
 
+const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
+// const apiURL = 'http://localhost:8081';
+
 export default class UserApiRepository extends UserRepository {
 	async forgotPassword(email) {
-		const apiUrl = process.env.REACT_APP_API_LOGIN_URL || 'http://localhost:8081';
 		await axios.post(`${apiUrl}/auth/forgot-password`, { email });
 		return true;
 	}
 
 	async register(userData) {
-		const apiUrl = process.env.REACT_APP_API_LOGIN_URL || 'http://localhost:8081';
 		const response = await axios.post(`${apiUrl}/users`, {
 			nome: userData.nome,
 			email: userData.email,
@@ -22,7 +23,6 @@ export default class UserApiRepository extends UserRepository {
 	}
 
 	async login({ email, senha }) {
-		const apiUrl = process.env.REACT_APP_API_LOGIN_URL || 'http://localhost:8081';
 		const res = await axios.post(`${apiUrl}/auth/login`, { email, senha });
 		const { token } = res.data;
 		const userRes = await axios.get(`${apiUrl}/users`, {
