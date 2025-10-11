@@ -1,6 +1,6 @@
 // Implementação do MathRepository usando axios
 import MathRepository from '../../domain/repositories/MathRepository';
-import axios from 'axios';
+import apiClient from './apiClient';
 
 
 const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
@@ -20,7 +20,7 @@ export default class MathApiRepository extends MathRepository {
   async calcularFuncao(params) {
     const tipo = mapFuncaoTipo(params.tipo);
     const url = `${apiUrl}/funcao/${tipo}`;
-    const res = await axios.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
+  const res = await apiClient.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
     if (!res || res.status >= 400) {
       throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
     }
@@ -31,7 +31,7 @@ export default class MathApiRepository extends MathRepository {
     const url = `${apiUrl}/estatistica/${params.tipo}`;
     // backend expects { valores: [...] } whereas front passes { numeros: [...] }
     const payload = params.data && params.data.numeros ? { valores: params.data.numeros } : params.data;
-    const res = await axios.post(url, payload, { headers: { 'Content-Type': 'application/json' } });
+  const res = await apiClient.post(url, payload, { headers: { 'Content-Type': 'application/json' } });
     if (!res || res.status >= 400) {
       throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
     }
@@ -52,7 +52,7 @@ export default class MathApiRepository extends MathRepository {
 
     const tipo = mapAnaliseTipo(params.tipo);
     const url = `${apiUrl}/analise/${tipo}`;
-    const res = await axios.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
+  const res = await apiClient.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
     if (!res || res.status >= 400) {
       throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
     }

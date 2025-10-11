@@ -1,8 +1,9 @@
 import UserRepository from '../../domain/repositories/UserRepository';
 import axios from 'axios';
+import apiClient from './apiClient';
 
-const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
-// const apiURL = 'http://localhost:8081';
+// const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
+const apiUrl = 'http://localhost:8081';
 
 export default class UserApiRepository extends UserRepository {
 	async forgotPassword(email) {
@@ -23,11 +24,11 @@ export default class UserApiRepository extends UserRepository {
 	}
 
 	async login({ email, senha }) {
-		const res = await axios.post(`${apiUrl}/auth/login`, { email, senha });
-		const { token } = res.data;
-		const userRes = await axios.get(`${apiUrl}/users`, {
-			headers: { Authorization: `Bearer ${token}` }
-		});
+			const res = await apiClient.post(`${apiUrl}/auth/login`, { email, senha });
+			const { token } = res.data;
+			// store token temporarily so apiClient will include it for subsequent user fetch
+			localStorage.setItem('ceos_token', token);
+			const userRes = await apiClient.get(`${apiUrl}/users`);
 		const userData = userRes.data.find(u => u.email === email);
 		return { user: userData, token };
 	}
