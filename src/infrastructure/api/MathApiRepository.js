@@ -27,7 +27,9 @@ export default class MathApiRepository extends MathRepository {
   }
   async calcularEstatistica(params) {
     const url = `${apiUrl}/estatistica/${params.tipo}`;
-    const res = await axios.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
+    // backend expects { valores: [...] } whereas front passes { numeros: [...] }
+    const payload = params.data && params.data.numeros ? { valores: params.data.numeros } : params.data;
+    const res = await axios.post(url, payload, { headers: { 'Content-Type': 'application/json' } });
     if (!res || res.status >= 400) {
       throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
     }
@@ -35,7 +37,19 @@ export default class MathApiRepository extends MathRepository {
   }
 
   async calcularAnaliseComb(params) {
-    const url = `${apiUrl}/analise/${params.tipo}`;
+    // map frontend types to backend supported types
+    const mapAnaliseTipo = (t) => {
+      if (!t) return '';
+      const lower = String(t).toLowerCase();
+      if (lower === 'permutacao') return 'fatorial';
+      if (lower === 'combinacao') return 'combinacao';
+      if (lower === 'arranjo') return 'arranjo';
+      if (lower === 'arranjorep' || lower === 'arranjoRep'.toLowerCase()) return 'arranjo';
+      return lower;
+    };
+
+    const tipo = mapAnaliseTipo(params.tipo);
+    const url = `${apiUrl}/analise/${tipo}`;
     const res = await axios.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
     if (!res || res.status >= 400) {
       throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
