@@ -34,21 +34,35 @@ export function AuthProvider({ children }) {
   };
 
   const handleLogout = useCallback(() => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('ceos_user');
-    localStorage.removeItem('ceos_token');
-    if (logoutTimerRef.current) {
-      clearTimeout(logoutTimerRef.current);
-      logoutTimerRef.current = null;
-    }
-    // navigate to login page
-    try {
-      // AuthProvider may be mounted above Router. Use window.location to ensure redirect works.
-      window.location.href = '/login';
-    } catch (e) {
-      // navigate may not be available in some test environments
-    }
+    // Best-effort: notify backend to remove token server-side, but always clear client
+    (async () => {
+      try {
+        const storedToken = localStorage.getItem('ceos_token');
+        if (storedToken) {
+          await axios.post('http://localhost:8081/auth/logout', {}, {
+            headers: { Authorization: `Bearer ${storedToken}` },
+            timeout: 3000
+          });
+        }
+      } catch (err) {
+        // ignore errors and proceed to clear client state
+      } finally {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('ceos_user');
+        localStorage.removeItem('ceos_token');
+        if (logoutTimerRef.current) {
+          clearTimeout(logoutTimerRef.current);
+          logoutTimerRef.current = null;
+        }
+        // navigate to login page
+        try {
+          window.location.href = '/login';
+        } catch (e) {
+          // navigate may not be available in some test environments
+        }
+      }
+    })();
   }, []);
 
   const logout = () => handleLogout();
