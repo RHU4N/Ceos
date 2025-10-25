@@ -4,8 +4,7 @@ import apiClient from './apiClient';
 
 
 const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
- 
-// const apiURL = 'http://localhost:8080'
+// const apiUrl = 'http://localhost:8080'
 
 function mapFuncaoTipo(frontTipo) {
   // frontend used 'funcao1' and 'funcao2' — map to router 'linear' and 'quadratica'
