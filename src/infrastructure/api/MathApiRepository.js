@@ -3,7 +3,7 @@ import MathRepository from '../../domain/repositories/MathRepository';
 import apiClient from './apiClient';
 
 
-const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
+const apiUrl = process.env.REACT_APP_MATH_API_URL 
 // const apiUrl = 'http://localhost:8080'
 
 function mapFuncaoTipo(frontTipo) {
