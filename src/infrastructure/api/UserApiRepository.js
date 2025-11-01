@@ -32,4 +32,24 @@ export default class UserApiRepository extends UserRepository {
 		const userData = userRes.data.find(u => u.email === email);
 		return { user: userData, token };
 	}
+
+	async logout() {
+		try {
+			await apiClient.post(`${apiUrl}/auth/logout`);
+		} catch (err) {
+			// ignore server errors on logout
+		}
+		try {
+			localStorage.removeItem('ceos_token');
+			localStorage.removeItem('ceos_user');
+		} catch (e) {}
+		return true;
+	}
+
+	async exportHistorico(format = 'json') {
+		const res = await apiClient.get(`${apiUrl}/historico/export?format=${encodeURIComponent(format)}`, {
+			responseType: format === 'json' ? 'json' : 'blob'
+		});
+		return res.data;
+	}
 }
