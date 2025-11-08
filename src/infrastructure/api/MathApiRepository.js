@@ -23,8 +23,27 @@ export default class MathApiRepository extends MathRepository {
     if (!res || res.status >= 400) {
       throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
     }
-    // backend returns { tipo, resultado }
-    return res.data.resultado ?? res.data;
+    // Normalize possible backend response shapes into a simple value or array
+    const data = res.data;
+    if (data == null) return data;
+    // Common normalized fields used across implementations: resultado, result, value, raizes, raiz
+    if (typeof data === 'number' || typeof data === 'string' || Array.isArray(data)) return data;
+    if (data.resultado !== undefined) {
+      const r = data.resultado;
+      if (r == null) return r;
+      if (typeof r === 'number' || typeof r === 'string' || Array.isArray(r)) return r;
+      if (r.value !== undefined) return r.value;
+      if (r.result !== undefined) return r.result;
+      if (r.raizes !== undefined) return r.raizes;
+      if (r.raiz !== undefined) return r.raiz;
+      return r; // object fallback
+    }
+    if (data.result !== undefined) return data.result;
+    if (data.value !== undefined) return data.value;
+    if (data.raizes !== undefined) return data.raizes;
+    if (data.raiz !== undefined) return data.raiz;
+    // fallback to returning whole payload
+    return data;
   }
   async calcularEstatistica(params) {
     const url = `${apiUrl}/estatistica/${params.tipo}`;
