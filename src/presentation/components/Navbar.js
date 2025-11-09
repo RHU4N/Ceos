@@ -430,7 +430,8 @@ function Navbar() {
           style={{
             color: "inherit",
             textDecoration: "none",
-            fontSize: "2rem",
+            fontSize: "3.5rem",
+            fontFamily: 'Times New Roman',
             pointerEvents: loading ? "none" : undefined,
             opacity: loading ? 0.6 : undefined,
           }}
@@ -442,8 +443,8 @@ function Navbar() {
             src="/logo.png"
             alt="Logo Céos"
             style={{
-              height: "48px",
-              width: "48px",
+              height: "4.9rem",
+              width: "4.9rem",
               maxWidth: "12vw",
               minWidth: 32,
               pointerEvents: loading ? "none" : undefined,

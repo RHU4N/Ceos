@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Sobre from '../components/Sobre';
 import useScrollToSobre from '../hooks/useScrollToSobre';
@@ -6,10 +6,12 @@ import './Style.css'; // <-- ajuste para importar o CSS correto da página
 
 const Home = () => {
   useScrollToSobre();
-  const [hovered, setHovered] = useState('');
-
   return (
     <>
+      <div className="banner">
+        <h1>Torne-se Premium! Veja nosso planos</h1>
+        <button className="banner-btn">Saiba Mais</button>
+      </div>
       <div className="container">
         <div className="left-section">
           <h2>
@@ -33,21 +35,13 @@ const Home = () => {
                 Matemática
               </button>
             </Link>
-            <button
-              className="tool physics-tool"
-              onMouseEnter={() => setHovered('fisica')}
-              onMouseLeave={() => setHovered('')}
-            >
+            <button className="tool physics-tool">
               <span style={{marginRight: 8, fontSize: 22}}>&#x269B;</span> {/* Átomo para física */}
-              {hovered === 'fisica' ? 'Em breve' : 'Física'}
+              Física
             </button>
-            <button
-              className="tool chemistry-tool"
-              onMouseEnter={() => setHovered('quimica')}
-              onMouseLeave={() => setHovered('')}
-            >
+            <button className="tool chemistry-tool">
               <span style={{marginRight: 8, fontSize: 22}}>&#x2697;</span> {/* Tubo de ensaio para química */}
-              {hovered === 'quimica' ? 'Em breve' : 'Química'}
+              Química
             </button>
           </div>
         </div>

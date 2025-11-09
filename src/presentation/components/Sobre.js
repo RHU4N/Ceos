@@ -1,8 +1,9 @@
 import React from 'react';
+import { motion } from "framer-motion"
 import './Style.css';
 
 const Sobre = () => (
-  <section id="sobre-nos" className='float-md-end container-fluid px-2 px-md-4'>
+  <motion.section id="sobre-nos" className='about' initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true, amount: 0.2 }}>
     <h1>Sobre Nós</h1>
     <p>
       Somos um grupo de estudantes apaixonados por ciência, tecnologia e educação, unidos pelo objetivo de facilitar o acesso ao conhecimento. No Céos, acreditamos que aprender deve ser uma experiência acessível, clara e prática para todos. Nossa missão é ajudar estudantes, professores e entusiastas das áreas de Física, Química e Matemática a encontrar e aplicar fórmulas e cálculos de maneira rápida, eficiente e descomplicada.
@@ -13,7 +14,7 @@ const Sobre = () => (
     <p>
       Explore, aprenda e simplifique seus cálculos conosco! Estamos sempre em busca de melhorias e novas funcionalidades, porque acreditamos que juntos podemos transformar a educação em algo ainda mais acessível e inspirador.
     </p>
-  </section>
+  </motion.section>
 );
 
 export default Sobre;
