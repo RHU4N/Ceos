@@ -6,6 +6,7 @@ import './Style.css'; // <-- ajuste para importar o CSS correto da página
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularFuncao from '../../domain/usecases/CalcularFuncao';
 import { useLoading } from '../context/LoadingContext';
+import { speak } from '../../hooks/useTTS';
 
 function Funcao() {
   const [tipo, setTipo] = useState("funcao1");
@@ -189,7 +190,16 @@ function Funcao() {
           <select
             className="form-select"
             value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
+            onChange={(e) => { setTipo(e.target.value); try { speak(`Tipo selecionado: ${e.target.options[e.target.selectedIndex].text}`); } catch (err) {} }}
+            onMouseEnter={() => speak('Tipo de função')}
+            onFocus={() => speak('Tipo de função')}
+            onKeyUp={(e) => {
+              try {
+                const sel = e.target;
+                const text = sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].text;
+                if (text) speak(text);
+              } catch (err) {}
+            }}
           >
             <option value="funcao1">1º Grau (ax + b)</option>
             <option value="funcao2">2º Grau (ax² + bx + c)</option>

@@ -66,6 +66,7 @@ function Estatistica() {
               style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
               onClick={e => loading && e.preventDefault()}
               onMouseEnter={() => speakText("Ir para Home")}
+              onFocus={() => speakText("Ir para Home")}
             >Home</a>
           </li>
 
@@ -76,6 +77,7 @@ function Estatistica() {
               style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
               onClick={e => loading && e.preventDefault()}
               onMouseEnter={() => speakText("Ir para Matemática")}
+              onFocus={() => speakText("Ir para Matemática")}
             >Matemática</a>
           </li>
 
@@ -89,7 +91,7 @@ function Estatistica() {
       <div className="container mt-5">
         <div className="row justify-content-center">
 
-          <h2 className="mb-4 text-center" onMouseEnter={() => speakText("Estatística")}>Estatística</h2>
+          <h2 className="mb-4 text-center" onMouseEnter={() => speakText("Estatística")} onFocus={() => speakText("Estatística")}>Estatística</h2>
 
           <form
             className="op-card p-4 col-12 col-md-10 col-lg-8"
@@ -102,8 +104,16 @@ function Estatistica() {
                 className="form-select"
                 value={tipo}
                 onChange={e => { const novo = e.target.value; setTipo(novo); const frases = { media: "Você selecionou média.", mediana: "Você selecionou mediana.", moda: "Você selecionou moda." }; speakText(frases[novo]); }}
-                disabled={loading}
-                onMouseEnter={() => speakText("Selecionar tipo de cálculo")}
+                  disabled={loading}
+                  onMouseEnter={() => speakText("Selecionar tipo de cálculo")}
+                  onFocus={() => speakText("Selecionar tipo de cálculo")}
+                  onKeyUp={(e) => {
+                    try {
+                      const sel = e.target;
+                      const text = sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].text;
+                      if (text) speakText(text);
+                    } catch (err) {}
+                  }}
               >
                 <option value="media">Média</option>
                 <option value="mediana">Mediana</option>
@@ -122,6 +132,7 @@ function Estatistica() {
                 aria-label="Números para estatística"
                 disabled={loading}
                 onMouseEnter={() => speakText("Digite os números separados por vírgula")}
+                onFocus={() => speakText("Digite os números separados por vírgula")}
               />
             </div>
 
@@ -132,6 +143,7 @@ function Estatistica() {
               aria-busy={loading}
               aria-label="Calcular estatística"
               onMouseEnter={() => speakText("Botão calcular")}
+              onFocus={() => speakText("Botão calcular")}
             >
               {loading ? 'Calculando...' : 'Calcular'}
             </button>
@@ -144,6 +156,7 @@ function Estatistica() {
                 aria-label="Limpar campos"
                 title="Limpar campos"
                 onMouseEnter={() => speakText("Botão limpar campos")}
+                onFocus={() => speakText("Botão limpar campos")}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -159,17 +172,17 @@ function Estatistica() {
             </div>
 
             {resultado !== null && (
-              <div className="alert alert-success mt-3" role="status" onMouseEnter={() => speakText(Array.isArray(resultado) ? `Resultado: ${resultado.join(", ")}` : `Resultado: ${resultado}`)}>
+              <div className="alert alert-success mt-3" role="status" onMouseEnter={() => speakText(Array.isArray(resultado) ? `Resultado: ${resultado.join(", ")}` : `Resultado: ${resultado}`)} onFocus={() => speakText(Array.isArray(resultado) ? `Resultado: ${resultado.join(", ")}` : `Resultado: ${resultado}`)}>
                 Resultado: {Array.isArray(resultado) ? resultado.join(', ') : resultado}
               </div>
             )}
 
             {erro && (
-              <div className="alert alert-danger mt-3" role="alert" onMouseEnter={() => speakText("Erro ao calcular")}>{erro}</div>
+              <div className="alert alert-danger mt-3" role="alert" onMouseEnter={() => speakText("Erro ao calcular")} onFocus={() => speakText("Erro ao calcular")} >{erro}</div>
             )}
           </form>
 
-          <div className="mt-3 text-muted small text-center" onMouseEnter={() => speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado")}>
+          <div className="mt-3 text-muted small text-center" onMouseEnter={() => speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado")} onFocus={() => speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado") }>
             Digite os números separados por vírgula e clique em Calcular para ver o resultado.
           </div>
         </div>

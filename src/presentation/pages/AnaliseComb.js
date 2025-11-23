@@ -66,6 +66,7 @@ function AnaliseComb() {
               style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
               onClick={e => loading && e.preventDefault()}
               onMouseEnter={() => speak("Voltar para Home")}
+              onFocus={() => speak("Voltar para Home")}
             >Home</a>
           </li>
 
@@ -76,6 +77,7 @@ function AnaliseComb() {
               style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
               onClick={e => loading && e.preventDefault()}
               onMouseEnter={() => speak("Voltar para Matemática")}
+              onFocus={() => speak("Voltar para Matemática")}
             >Matemática</a>
           </li>
 
@@ -85,11 +87,10 @@ function AnaliseComb() {
         </ol>
       </nav>
 
-      {/* ESTRUTURA CORRIGIDA */}
       <div className="container mt-5">
         <div className="row justify-content-center">
 
-          <h2 className="mb-4 text-center" onMouseEnter={() => speak("Análise combinatória")}>Análise Combinatória</h2>
+          <h2 className="mb-4 text-center" onMouseEnter={() => speak("Análise combinatória")} onFocus={() => speak("Análise combinatória")}>Análise Combinatória</h2>
 
           <form
             className="op-card p-4 col-12 col-md-10 col-lg-8"
@@ -104,6 +105,14 @@ function AnaliseComb() {
                 onChange={e => { setTipo(e.target.value); speak(`Tipo de cálculo alterado para ${e.target.value}`); }}
                 disabled={loading}
                 onMouseEnter={() => speak("Lista de tipos de cálculo")}
+                onFocus={() => speak("Lista de tipos de cálculo")}
+                onKeyUp={(e) => {
+                  try {
+                    const sel = e.target;
+                    const text = sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].text;
+                    if (text) speak(text);
+                  } catch (err) {}
+                }}
               >
                 <option value="permutacao">Permutação</option>
                 <option value="combinacao">Combinação</option>
@@ -124,6 +133,7 @@ function AnaliseComb() {
                   aria-label="Valor de n"
                   disabled={loading}
                   onMouseEnter={() => speak("Campo N, número total de elementos")}
+                  onFocus={() => speak("Campo N, número total de elementos")}
                 />
               </div>
 
@@ -137,6 +147,7 @@ function AnaliseComb() {
                   aria-label="Valor de k"
                   disabled={loading}
                   onMouseEnter={() => speak("Campo K, quantidade de escolhas")}
+                  onFocus={() => speak("Campo K, quantidade de escolhas")}
                 />
               </div>
             </div>
@@ -148,6 +159,7 @@ function AnaliseComb() {
               aria-busy={loading}
               aria-label="Calcular análise combinatória"
               onMouseEnter={() => speak("Calcular")}
+              onFocus={() => speak("Calcular")}
             >
               {loading ? 'Calculando...' : 'Calcular'}
             </button>
@@ -160,6 +172,7 @@ function AnaliseComb() {
                 aria-label="Limpar campos"
                 title="Limpar campos"
                 onMouseEnter={() => speak("Limpar campos")}
+                onFocus={() => speak("Limpar campos")}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -175,19 +188,19 @@ function AnaliseComb() {
             </div>
 
             {resultado !== null && (
-              <div className="alert alert-success mt-3" role="status" onMouseEnter={() => speak(`Resultado: ${resultado}`)}>
+              <div className="alert alert-success mt-3" role="status" onMouseEnter={() => speak(`Resultado: ${resultado}`)} onFocus={() => speak(`Resultado: ${resultado}`)}>
                 {resultado}
               </div>
             )}
 
             {erro && (
-              <div className="alert alert-danger mt-3" role="alert" onMouseEnter={() => speak(`Erro: ${erro}`)}>
+              <div className="alert alert-danger mt-3" role="alert" onMouseEnter={() => speak(`Erro: ${erro}`)} onFocus={() => speak(`Erro: ${erro}`)}>
                 {erro}
               </div>
             )}
           </form>
 
-          <div className="mt-3 text-muted small text-center" onMouseEnter={() => speak("Preencha os campos e clique em Calcular para ver o resultado")}>
+          <div className="mt-3 text-muted small text-center" onMouseEnter={() => speak("Preencha os campos e clique em Calcular para ver o resultado")} onFocus={() => speak("Preencha os campos e clique em Calcular para ver o resultado") }>
             Preencha os campos e clique em Calcular para ver o resultado.
           </div>
         </div>

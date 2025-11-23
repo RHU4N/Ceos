@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 import axios from "axios";
 import { createPortal } from "react-dom";
-import { speak, toggleTTS, ttsEnabled } from "../../hooks/useTTS";
+import { speak, useTTS } from "../../hooks/useTTS";
 
 function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
   const [nome, setNome] = useState(user?.nome || "");
@@ -400,6 +400,7 @@ function Navbar() {
   const { user, logout, login } = useAuth();
   const { loading } = useLoading();
   const [showModal, setShowModal] = useState(false);
+  const { enabled: ttsEnabled, toggle: toggleTTS } = useTTS();
 
   const handleUpdate = (newUser) => {
     login(newUser, localStorage.getItem("ceos_token"));
@@ -470,6 +471,8 @@ function Navbar() {
           >
             <span
               onMouseEnter={() => !loading && speak("Ambiente de estudo")}
+              onFocus={() => !loading && speak("Ambiente de estudo")}
+              tabIndex={loading ? -1 : 0}
             >
               Ambiente de Estudo ▼
             </span>
@@ -492,6 +495,7 @@ function Navbar() {
                     speak("Matemática");
                   }}
                   onMouseEnter={() => !loading && speak("Matemática")}
+                  onFocus={() => !loading && speak("Matemática")}
                 >
                   Matemática
                 </Link>
@@ -504,6 +508,7 @@ function Navbar() {
                   tabIndex={-1}
                   style={{ opacity: 0.5, pointerEvents: "none" }}
                   onMouseEnter={() => speak("Química")}
+                  onFocus={() => speak("Química")}
                 >
                   Química
                 </Link>
@@ -516,6 +521,7 @@ function Navbar() {
                   tabIndex={-1}
                   style={{ opacity: 0.5, pointerEvents: "none" }}
                   onMouseEnter={() => speak("Física")}
+                  onFocus={() => speak("Física")}
                 >
                   Física
                 </Link>
@@ -536,6 +542,7 @@ function Navbar() {
                 speak("Central de ajuda");
               }}
               onMouseEnter={() => !loading && speak("Central de ajuda")}
+              onFocus={() => !loading && speak("Central de ajuda")}
             >
               Central de Ajuda
             </Link>
@@ -554,6 +561,7 @@ function Navbar() {
                 speak("Planos");
               }}
               onMouseEnter={() => !loading && speak("Planos")}
+              onFocus={() => !loading && speak("Planos")}
             >
               Planos
             </Link>
@@ -567,10 +575,9 @@ function Navbar() {
             <button
               onClick={() => {
                 toggleTTS();
-                
               }}
               onMouseEnter={() => !loading && speak("Alternar leitor de voz")}
-            
+              onFocus={() => !loading && speak("Alternar leitor de voz")}
             >
               {ttsEnabled ? "TTS: ON" : "TTS: OFF"}
             </button>
@@ -586,6 +593,7 @@ function Navbar() {
               }}
               onClick={preventIfLoading}   // MANTIDO
               onMouseEnter={() => !loading && speak("Entrar")} // ADICIONADO
+              onFocus={() => !loading && speak("Entrar")}
             >
               Entrar
             </Link>
@@ -601,6 +609,7 @@ function Navbar() {
               }}
               onClick={preventIfLoading}  // MANTIDO
               onMouseEnter={() => !loading && speak("Cadastre-se")} // ADICIONADO
+              onFocus={() => !loading && speak("Cadastre-se")}
             >
               Cadastre-se
             </Link>
@@ -610,7 +619,7 @@ function Navbar() {
             <FaUserCircle size={32} />
 
             {/* NOME DO USUÁRIO */}
-            <span
+              <span
               style={{
                 cursor: "pointer",
                 fontWeight: 600,
@@ -622,6 +631,7 @@ function Navbar() {
               }}
               onClick={() => !loading && setShowModal(true)}   // MANTIDO
               onMouseEnter={() => !loading && speak("Editar perfil")} // ADICIONADO
+              onFocus={() => !loading && speak("Editar perfil")}
               title="Editar perfil"
               tabIndex={loading ? -1 : 0}
               aria-disabled={loading}

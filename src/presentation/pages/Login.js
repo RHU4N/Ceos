@@ -8,6 +8,7 @@ import LoginUser from '../../domain/usecases/LoginUser';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { useLoading } from '../context/LoadingContext';
+import { speak } from '../../hooks/useTTS';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,20 +41,20 @@ const Login = () => {
     <main>
       <div className="centered-auth-container">
         <div className="card p-4 shadow login-card col-12 col-sm-10 col-md-8 col-lg-5" style={{ maxWidth: 400, width: '100%' }}>
-          <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }}>Entrar na sua conta</h3>
+          <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }} onMouseEnter={() => speak('Entrar na sua conta')} onFocus={() => speak('Entrar na sua conta')}>Entrar na sua conta</h3>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email" className="form-label fw-bold">E-mail</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaEnvelope /></span>
-              <input type="email" id="email" name="email" placeholder="Digite seu e-mail" className="form-control" value={email} onChange={e => setEmail(e.target.value)} required disabled={loading} />
+              <input type="email" id="email" name="email" placeholder="Digite seu e-mail" className="form-control" value={email} onChange={e => setEmail(e.target.value)} required disabled={loading} onMouseEnter={() => speak('Campo e-mail')} onFocus={() => speak('Campo e-mail')} />
             </div>
             <label htmlFor="senha" className="form-label fw-bold">Senha</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaLock /></span>
-              <input type="password" id="senha" name="senha" placeholder="Digite sua senha" className="form-control" value={senha} onChange={e => setSenha(e.target.value)} required disabled={loading} />
+              <input type="password" id="senha" name="senha" placeholder="Digite sua senha" className="form-control" value={senha} onChange={e => setSenha(e.target.value)} required disabled={loading} onMouseEnter={() => speak('Campo senha')} onFocus={() => speak('Campo senha')} />
             </div>
-            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</button>
-            {erro && <div className="alert alert-danger mt-2">{erro}</div>}
+            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading} onMouseEnter={() => speak('Entrar')} onFocus={() => speak('Entrar')}>{loading ? 'Entrando...' : 'Entrar'}</button>
+            {erro && <div className="alert alert-danger mt-2" onMouseEnter={() => speak('Erro ao fazer login')} onFocus={() => speak('Erro ao fazer login')}>{erro}</div>}
           </form>
           <div className="mt-3 text-center small">
             <button
@@ -61,7 +62,9 @@ const Login = () => {
               className="btn btn-link text-decoration-none p-0"
               style={{ boxShadow: 'none' }}
               tabIndex={0}
-              onClick={e => e.preventDefault()}
+              onClick={e => { e.preventDefault(); speak('Esqueci minha senha'); }}
+              onMouseEnter={() => speak('Esqueci minha senha')}
+              onFocus={() => speak('Esqueci minha senha')}
             >
               Esqueci minha senha
             </button>
@@ -72,6 +75,8 @@ const Login = () => {
               tabIndex={loading ? -1 : 0}
               style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
               onClick={e => loading && e.preventDefault()}
+              onMouseEnter={() => speak('Não tem conta? Cadastre-se')}
+              onFocus={() => speak('Não tem conta? Cadastre-se')}
             >
               Não tem conta? Cadastre-se
             </a>
