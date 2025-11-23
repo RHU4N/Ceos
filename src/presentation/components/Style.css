@@ -17,6 +17,11 @@
 
 /* Estilos globais de componentes reutilizáveis */
 
+:root {
+  /* Ajuste o valor se quiser mais/menos espaço sob o header */
+  --navbar-height: 96px;
+}
+
 /* Navbar */
 .navbar {
   background: var(--color-secondary);
@@ -24,7 +29,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 40px;
+  padding: 12px 40px; /* comfortable vertical padding */
+  min-height: var(--navbar-height);
   z-index: 1050;
   position: fixed;
   top: 0;
@@ -122,10 +128,16 @@
   justify-content: center;
   box-sizing: border-box;
   min-height: auto;
-  /* ensure auth forms are visually below fixed navbar; fallback to 72px */
-  margin-top: calc(var(--navbar-height, 72px) + 8px);
+  /* keep auth container layout neutral; spacing handled by `main` */
+  margin-top: 0;
   padding-top: 12px;
   padding-bottom: 48px;
+}
+
+/* Ensure the page content is pushed below the fixed navbar */
+main {
+  /* increase top padding so banner/content sits further below header */
+  padding-top: calc(var(--navbar-height) + 24px);
 }
 .login-card,
 .register-card {

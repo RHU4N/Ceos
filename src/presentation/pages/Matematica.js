@@ -27,53 +27,27 @@ function Matematica() {
   <div className="row g-4 justify-content-center">
 
     {/* CARD 1 */}
-    <div className="col-12 col-sm-6 col-md-4 d-flex justify-content-center">
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
       <Link to="/matematica/funcao" className="text-decoration-none">
-        <div className="card shadow-sm card-affordance" tabIndex={0} title="Clique para ver funções" style={{ maxWidth: "260px" }}>
+        <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver funções">
           <div className="card-body text-center">
             <h5 className="card-title">Função</h5>
 
-            <img
-              src="/image.png"
-              alt="funções"
-              style={{
-                height: "15rem",
-                width: "15rem",
-                maxWidth: "25vw",
-                minWidth: 32,
-                pointerEvents: "none",
-                borderRadius: 18,
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.22)",
-              }}
-            />
+            <img src="/image.png" alt="funções" className="card-image" />
 
-            <p className="card-text mt-2">
-              Cálculos e fórmulas de funções matemáticas.
-            </p>
+            <p className="card-text mt-2">Cálculos e fórmulas de funções matemáticas.</p>
           </div>
         </div>
       </Link>
     </div>
 
     {/* CARD 2 */}
-    <div className="col-12 col-sm-6 col-md-4 d-flex justify-content-center">
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
       <Link to="/matematica/analise-combinatoria" className="text-decoration-none">
-        <div className="card shadow-sm card-affordance" tabIndex={0} title="Clique para ver análise combinatória" style={{ maxWidth: "260px" }}>
+        <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver análise combinatória">
           <div className="card-body text-center">
             <h5 className="card-title">Análise Combinatória</h5>
-            <img
-              src="/analisecombinatoria.png"
-              alt="analise combinatória"
-              style={{
-                height: "15rem",
-                width: "15rem",
-                maxWidth: "25vw",
-                minWidth: 32,
-                pointerEvents: "none",
-                borderRadius: 18,
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.22)",
-              }}
-            />
+            <img src="/analisecombinatoria.png" alt="analise combinatória" className="card-image" />
             <p className="card-text">Permutação, combinação e arranjo.</p>
           </div>
         </div>
@@ -81,24 +55,12 @@ function Matematica() {
     </div>
 
     {/* CARD 3 */}
-    <div className="col-12 col-sm-6 col-md-4 d-flex justify-content-center">
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
       <Link to="/matematica/estatistica" className="text-decoration-none">
-        <div className="card shadow-sm card-affordance" tabIndex={0} title="Clique para ver estatística" style={{ maxWidth: "260px" }}>
+        <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver estatística">
           <div className="card-body text-center">
             <h5 className="card-title">Estatística</h5>
-            <img
-              src="/estatistica.png"
-              alt="estatística"
-              style={{
-                height: "15rem",
-                width: "15rem",
-                maxWidth: "25vw",
-                minWidth: 32,
-                pointerEvents: "none",
-                borderRadius: 18,
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.22)",
-              }}
-            />
+            <img src="/estatistica.png" alt="estatística" className="card-image" />
             <p className="card-text">Média, mediana e moda.</p>
           </div>
         </div>

@@ -27,7 +27,8 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
   const errorTimerRef = useRef(null);
 
   // base URL fallback
-  const baseUrl = process.env.REACT_APP_API_LOGIN_URL || "http://localhost:8081";
+  const baseUrl =
+    process.env.REACT_APP_API_LOGIN_URL || "http://localhost:8081";
 
   // Impede scroll do body quando o modal está aberto
   useEffect(() => {
@@ -433,7 +434,7 @@ function Navbar() {
             color: "inherit",
             textDecoration: "none",
             fontSize: "3.5rem",
-            fontFamily: 'Times New Roman',
+            fontFamily: "Times New Roman",
             pointerEvents: loading ? "none" : undefined,
             opacity: loading ? 0.6 : undefined,
           }}
@@ -443,7 +444,6 @@ function Navbar() {
             preventIfLoading(e);
             speak("Página inicial");
           }}
-
         >
           <img
             src="/logo.png"
@@ -590,8 +590,11 @@ function Navbar() {
               style={{
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
+                borderRadius: 5,
+                padding: '8px 14px',
+                transition: 'all 0.12s ease',
               }}
-              onClick={preventIfLoading}   // MANTIDO
+              onClick={preventIfLoading} // MANTIDO
               onMouseEnter={() => !loading && speak("Entrar")} // ADICIONADO
               onFocus={() => !loading && speak("Entrar")}
             >
@@ -606,8 +609,11 @@ function Navbar() {
               style={{
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
+                borderRadius: 5,
+                padding: '8px 14px',
+                transition: 'all 0.12s ease',
               }}
-              onClick={preventIfLoading}  // MANTIDO
+              onClick={preventIfLoading} // MANTIDO
               onMouseEnter={() => !loading && speak("Cadastre-se")} // ADICIONADO
               onFocus={() => !loading && speak("Cadastre-se")}
             >
@@ -619,7 +625,7 @@ function Navbar() {
             <FaUserCircle size={32} />
 
             {/* NOME DO USUÁRIO */}
-              <span
+            <span
               style={{
                 cursor: "pointer",
                 fontWeight: 600,
@@ -629,7 +635,7 @@ function Navbar() {
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
               }}
-              onClick={() => !loading && setShowModal(true)}   // MANTIDO
+              onClick={() => !loading && setShowModal(true)} // MANTIDO
               onMouseEnter={() => !loading && speak("Editar perfil")} // ADICIONADO
               onFocus={() => !loading && speak("Editar perfil")}
               title="Editar perfil"
@@ -667,7 +673,7 @@ function Navbar() {
                 e.target.style.background = "white";
                 e.target.style.color = "#dc3545";
               }}
-              onClick={logout}  // MANTIDO
+              onClick={logout} // MANTIDO
               onMouseEnter={() => !loading && speak("Sair")} // ADICIONADO
               disabled={loading}
               tabIndex={loading ? -1 : 0}
@@ -685,7 +691,6 @@ function Navbar() {
           </div>
         )}
       </div>
-
     </header>
   );
 }

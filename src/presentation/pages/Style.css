@@ -119,25 +119,24 @@
 .chemistry {background: linear-gradient(90deg, #662d91, #b833ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;}
 .ceos { color: var(--color-secondary); font-weight: bold; }
 .right-section { flex: 1 1 300px; text-align: center; box-sizing: border-box; }
-.tool-buttons { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.tool-buttons { display: flex; flex-direction: column; gap: 15px; align-items: center; }
 .tool {
-  padding: 12px 18px;
-  font-size: clamp(0.95rem, 2vw, 1.125rem);
+  padding: 15px;
+  font-size: 18px;
   font-weight: bold;
   color: white;
   border: none;
-  border-radius: 8px;
-  width: clamp(160px, 45%, 220px);
-  min-width: 140px;
+  border-radius: 5px;
+  width: 220px;
   cursor: pointer;
   box-sizing: border-box;
 }
 .math-tool { background: var(--color-light); border: 3px solid var(--color-accent); color: var(--color-accent); }
-.math-tool:hover { background: linear-gradient(90deg, #ff6600, #ffcc00) border-box; color: var(--color-light); border: 3px solid transparent; transition: 0.5s;}
+.math-tool:hover { background: linear-gradient(90deg, #ff6600, #ffcc00); color: var(--color-light); border: 3px solid transparent; transition: 0.5s;}
 .physics-tool { background: var(--color-light); border: 3px solid var(--color-success); color: var(--color-success); }
-.physics-tool:hover { background: linear-gradient(90deg, #00c672, #66ffb3) border-box; color: var(--color-light); border: 3px solid transparent; transition: 0.5s;}
+.physics-tool:hover { background: linear-gradient(90deg, #00c672, #66ffb3); color: var(--color-light); border: 3px solid transparent; transition: 0.5s;}
 .chemistry-tool { background: var(--color-light); border: 3px solid var(--color-purple); color: var(--color-purple);}
-.chemistry-tool:hover { background: linear-gradient(90deg, #662d91, #b833ff) border-box; color: var(--color-light); border: 3px solid transparent; transition: 0.5s; }
+.chemistry-tool:hover { background: linear-gradient(90deg, #662d91, #b833ff); color: var(--color-light); border: 3px solid transparent; transition: 0.5s; }
 
 /* Página Matematica: cards */
 .card {
@@ -152,6 +151,47 @@
   padding: 1rem;
   box-sizing: border-box;
 }
+
+/* Equal-height cards: use flex column and make body expand */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+}
+
+/* math-card constrains width while allowing height to stretch */
+.math-card { max-width: 260px; width: 100%; }
+/* Force consistent card height on larger screens */
+.math-card { min-height: 420px; }
+
+/* Ensure column wrappers center the card but allow it to stretch vertically */
+.row.g-4.justify-content-center > .col-12,
+.row.g-4.justify-content-center > .col-sm-6,
+.row.g-4.justify-content-center > .col-md-4 {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* Card images: responsive and clipped inside card */
+.card-image {
+  width: 100%;
+  height: auto;
+  max-height: 14rem;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+}
+
+.card { overflow: hidden; }
 
 /* Camada da borda */
 .card::before {
@@ -368,6 +408,9 @@ main .grid {
   .container, .container2 { flex-direction: column; max-width: 100vw; width: 100vw; padding: 10px; height: auto; min-width: 0; }
   .left-section, .right-section { width: 100%; padding: 0; text-align: center; }
   .container2 { padding: 20px 8px; }
+}
+@media (max-width: 600px) {
+  .math-card { min-height: auto; }
 }
 @media (max-width: 600px) {
   .tool { width: min(92%, 220px); font-size: 16px; padding: 12px; box-sizing: border-box; }
