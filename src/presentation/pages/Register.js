@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './Style.css';
+import '../components/Style.css'; // use component styles for auth pages (avoid page styles meant for Matemática)
 // import axios from 'axios';
 // import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import User from '../../domain/entities/User';
 import RegisterUser from '../../domain/usecases/RegisterUser';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
@@ -86,17 +86,17 @@ const Register = () => {
             {erro && <div className="alert alert-danger mt-2" onMouseEnter={() => speak('Erro ao cadastrar')} onFocus={() => speak('Erro ao cadastrar')}>{erro}</div>}
           </form>
           <div className="mt-3 text-center small">
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="text-decoration-none"
               tabIndex={loading ? -1 : 0}
               style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
               onClick={e => loading && e.preventDefault()}
-              onMouseEnter={() => speak('Já tem conta? Entrar')}
-              onFocus={() => speak('Já tem conta? Entrar')}
+              onMouseEnter={() => !loading && speak('Já tem conta? Entrar')}
+              onFocus={() => !loading && speak('Já tem conta? Entrar')}
             >
               Já tem conta? Entrar
-            </a>
+            </Link>
           </div>
         </div>
       </div>
