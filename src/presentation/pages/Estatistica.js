@@ -4,8 +4,6 @@ import { FaWandMagicSparkles } from 'react-icons/fa6';
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularEstatistica from '../../domain/usecases/CalcularEstatistica';
 import { useLoading } from '../context/LoadingContext';
-
-// ⬅️ IMPORTANDO TTS
 import { speak as speakText } from "../../hooks/useTTS";
 
 function Estatistica() {
@@ -59,162 +57,122 @@ function Estatistica() {
 
   return (
     <>
-      <nav aria-label="breadcrumb" className="nav justify-content-center">
+      <nav aria-label="breadcrumb" className='nav justify-content-center'>
         <ol className="breadcrumb">
-
           <li className="breadcrumb-item">
             <a
               href="/"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={e => loading && e.preventDefault()}
               onMouseEnter={() => speakText("Ir para Home")}
-            >
-              Home
-            </a>
+            >Home</a>
           </li>
 
           <li className="breadcrumb-item">
             <a
               href="/matematica"
+              tabIndex={loading ? -1 : 0}
+              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+              onClick={e => loading && e.preventDefault()}
               onMouseEnter={() => speakText("Ir para Matemática")}
-            >
-              Matemática
-            </a>
+            >Matemática</a>
           </li>
 
-          <li
-            className="breadcrumb-item active"
-            aria-current="page"
-            onMouseEnter={() => speakText("Página Estatística")}
-          >
+          <li className="breadcrumb-item active" aria-current="page">
             Estatísticas
           </li>
         </ol>
       </nav>
 
-      <div className="container mt-5 row justify-content-center">
+      {/* ESTRUTURA CORRIGIDA */}
+      <div className="container mt-5">
+        <div className="row justify-content-center">
 
-        <h2
-          className="mb-4 text-center"
-          onMouseEnter={() => speakText("Estatística")}
-        >
-          Estatística
-        </h2>
+          <h2 className="mb-4 text-center" onMouseEnter={() => speakText("Estatística")}>Estatística</h2>
 
-        <form
-          className="card p-4 shadow-sm col-12 col-md-10 col-lg-8 mx-auto"
-          onSubmit={handleSubmit}
-        >
-
-          {/* SELECT */}
-          <div className="mb-3">
-            <label className="form-label">Tipo</label>
-
-            <select
-              className="form-select"
-              value={tipo}
-              onMouseEnter={() => speakText("Selecionar tipo de cálculo")}
-              onChange={(e) => {
-                const novo = e.target.value;
-                setTipo(novo);
-
-                const frases = {
-                  media: "Você selecionou média.",
-                  mediana: "Você selecionou mediana.",
-                  moda: "Você selecionou moda."
-                };
-
-                speakText(frases[novo]);
-              }}
-              disabled={loading}
-            >
-              <option value="media">Média</option>
-              <option value="mediana">Mediana</option>
-              <option value="moda">Moda</option>
-            </select>
-          </div>
-
-          {/* INPUT DE NÚMEROS */}
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Números separados por vírgula. Exemplo: 1,2,3"
-              value={numeros}
-              onMouseEnter={() => speakText("Digite os números separados por vírgula")}
-              onChange={(e) => setNumeros(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </div>
-
-          {/* BOTÃO CALCULAR */}
-          <button
-            className="btn btn-primary"
-            type="submit"
-            disabled={loading}
-            onMouseEnter={() => speakText("Botão calcular")}
+          <form
+            className="op-card p-4 col-12 col-md-10 col-lg-8"
+            onSubmit={handleSubmit}
+            aria-label="Formulário de estatística"
           >
-            {loading ? 'Calculando...' : 'Calcular'}
-          </button>
+            <div className="mb-3">
+              <label className="form-label">Tipo</label>
+              <select
+                className="form-select"
+                value={tipo}
+                onChange={e => { const novo = e.target.value; setTipo(novo); const frases = { media: "Você selecionou média.", mediana: "Você selecionou mediana.", moda: "Você selecionou moda." }; speakText(frases[novo]); }}
+                disabled={loading}
+                onMouseEnter={() => speakText("Selecionar tipo de cálculo")}
+              >
+                <option value="media">Média</option>
+                <option value="mediana">Mediana</option>
+                <option value="moda">Moda</option>
+              </select>
+            </div>
 
-          {/* BOTÃO LIMPAR */}
-          <div className="d-flex justify-content-center">
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Números separados por vírgula (ex: 1,2,3)"
+                value={numeros}
+                onChange={e => setNumeros(e.target.value)}
+                required
+                aria-label="Números para estatística"
+                disabled={loading}
+                onMouseEnter={() => speakText("Digite os números separados por vírgula")}
+              />
+            </div>
+
             <button
-              type="button"
-              className="btn btn-secondary ms-2"
-              onClick={handleClear}
-              onMouseEnter={() => speakText("Botão limpar campos")}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 6,
-                fontWeight: 600,
-                width: '120px'
-              }}
+              className="btn btn-primary"
+              type="submit"
+              disabled={loading}
+              aria-busy={loading}
+              aria-label="Calcular estatística"
+              onMouseEnter={() => speakText("Botão calcular")}
             >
-              <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
-              <span style={{ fontSize: 15 }}>Limpar</span>
+              {loading ? 'Calculando...' : 'Calcular'}
             </button>
+
+            <div className="d-flex justify-content-center">
+              <button
+                type="button"
+                className="btn btn-secondary ms-2"
+                onClick={handleClear}
+                aria-label="Limpar campos"
+                title="Limpar campos"
+                onMouseEnter={() => speakText("Botão limpar campos")}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  fontWeight: 600,
+                  width: '120px'
+                }}
+              >
+                <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
+                <span style={{ fontSize: 15 }}>Limpar</span>
+              </button>
+            </div>
+
+            {resultado !== null && (
+              <div className="alert alert-success mt-3" role="status" onMouseEnter={() => speakText(Array.isArray(resultado) ? `Resultado: ${resultado.join(", ")}` : `Resultado: ${resultado}`)}>
+                Resultado: {Array.isArray(resultado) ? resultado.join(', ') : resultado}
+              </div>
+            )}
+
+            {erro && (
+              <div className="alert alert-danger mt-3" role="alert" onMouseEnter={() => speakText("Erro ao calcular")}>{erro}</div>
+            )}
+          </form>
+
+          <div className="mt-3 text-muted small text-center" onMouseEnter={() => speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado")}>
+            Digite os números separados por vírgula e clique em Calcular para ver o resultado.
           </div>
-
-          {/* RESULTADO */}
-          {resultado !== null && (
-            <div
-              className="alert alert-success mt-3"
-              onMouseEnter={() =>
-                speakText(
-                  Array.isArray(resultado)
-                    ? `Resultado: ${resultado.join(", ")}`
-                    : `Resultado: ${resultado}`
-                )
-              }
-            >
-              Resultado: {Array.isArray(resultado) ? resultado.join(', ') : resultado}
-            </div>
-          )}
-
-          {/* ERRO */}
-          {erro && (
-            <div
-              className="alert alert-danger mt-3"
-              onMouseEnter={() => speakText("Erro ao calcular")}
-            >
-              {erro}
-            </div>
-          )}
-
-        </form>
-
-        {/* TEXTO INFORMATIVO */}
-        <div
-          className="mt-3 text-muted small text-center"
-          onMouseEnter={() =>
-            speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado")
-          }
-        >
-          Digite os números separados por vírgula e clique em Calcular para ver o resultado.
         </div>
-
       </div>
     </>
   );
