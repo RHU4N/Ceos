@@ -144,185 +144,220 @@ function Funcao() {
 
   return (
     <>
-      <nav aria-label="breadcrumb" className='nav justify-content-center'>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a
-              href="/"
-              tabIndex={loading ? -1 : 0}
-              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
-              onClick={e => loading && e.preventDefault()}
-            >Home</a>
-          </li>
-          <li class="breadcrumb-item">
-            <a
-              href="/matematica"
-              tabIndex={loading ? -1 : 0}
-              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
-              onClick={e => loading && e.preventDefault()}
-            >Matematica</a>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Funções
-          </li>
-        </ol>
-      </nav>
-      <div className="container mt-5 row align-items-center justify-content-center">
-        <h2 className="mb-4 text-center">Função</h2>
-        <form
-          className="card p-4 shadow-sm col-12 col-md-10 col-lg-8 mx-auto"
-          onSubmit={handleSubmit}
-          aria-label="Formulário de função"
-        >
-          <div className="mb-3">
-            <label className="form-label">Tipo de Função</label>
-            <select
-              className="form-select"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-            >
-              <option value="funcao1">1º Grau (ax + b)</option>
-              <option value="funcao2">2º Grau (ax² + bx + c)</option>
-            </select>
+<nav aria-label="breadcrumb" className="nav justify-content-center">
+  <ol className="breadcrumb">
+    <li className="breadcrumb-item">
+      <a
+        href="/"
+        tabIndex={loading ? -1 : 0}
+        style={{ pointerEvents: loading ? "none" : undefined, opacity: loading ? 0.6 : undefined }}
+        onClick={e => loading && e.preventDefault()}
+      >
+        Home
+      </a>
+    </li>
+    <li className="breadcrumb-item">
+      <a
+        href="/matematica"
+        tabIndex={loading ? -1 : 0}
+        style={{ pointerEvents: loading ? "none" : undefined, opacity: loading ? 0.6 : undefined }}
+        onClick={e => loading && e.preventDefault()}
+      >
+        Matemática
+      </a>
+    </li>
+    <li className="breadcrumb-item active" aria-current="page">
+      Funções
+    </li>
+  </ol>
+</nav>
+
+<div className="container mt-4">
+  <div className="row justify-content-center">
+    <div className="col-12 text-center">
+      <h2 className="mb-4">Função</h2>
+    </div>
+
+    <div className="col-12 col-md-10 col-lg-8">
+      <form
+        className="op-card p-4 shadow-sm mx-auto"
+        onSubmit={handleSubmit}
+        aria-label="Formulário de função"
+      >
+        <div className="mb-3">
+          <label className="form-label">Tipo de Função</label>
+          <select
+            className="form-select"
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+          >
+            <option value="funcao1">1º Grau (ax + b)</option>
+            <option value="funcao2">2º Grau (ax² + bx + c)</option>
+          </select>
+        </div>
+
+        <div className="row g-2">
+          <div className="col">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="a"
+              value={a}
+              onChange={(e) => setA(e.target.value)}
+              required
+              aria-label="Coeficiente a"
+              disabled={loading}
+            />
           </div>
-          <div className="row g-2">
+
+          <div className="col">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="b"
+              value={b}
+              onChange={(e) => setB(e.target.value)}
+              required
+              aria-label="Coeficiente b"
+              disabled={loading}
+            />
+          </div>
+
+          {tipo === "funcao2" && (
             <div className="col">
               <input
                 type="number"
                 className="form-control"
-                placeholder="a"
-                value={a}
-                onChange={(e) => setA(e.target.value)}
+                placeholder="c"
+                value={c}
+                onChange={(e) => setC(e.target.value)}
                 required
-                aria-label="Coeficiente a"
+                aria-label="Coeficiente c"
                 disabled={loading}
               />
             </div>
-            <div className="col">
-              <input
-                type="number"
-                className="form-control"
-                placeholder="b"
-                value={b}
-                onChange={(e) => setB(e.target.value)}
-                required
-                aria-label="Coeficiente b"
-                disabled={loading}
-              />
-            </div>
-            {tipo === "funcao2" && (
-              <div className="col">
-                <input
-                  type="number"
-                  className="form-control"
-                  placeholder="c"
-                  value={c}
-                  onChange={(e) => setC(e.target.value)}
-                  required
-                  aria-label="Coeficiente c"
-                  disabled={loading}
-                />
+          )}
+
+          <div className="col">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="x"
+              value={x}
+              onChange={(e) => setX(e.target.value)}
+              aria-label="Valor de x"
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        <button
+          className="btn btn-primary mt-3 w-100"
+          type="submit"
+          disabled={loading}
+          aria-busy={loading}
+        >
+          {loading ? "Calculando..." : "Calcular"}
+        </button>
+
+        <div className="d-flex justify-content-center">
+          <button
+            type="button"
+            className="btn btn-secondary mt-3"
+            onClick={handleClear}
+            aria-label="Limpar campos"
+            title="Limpar campos"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+              fontWeight: 600,
+              width: "140px"
+            }}
+          >
+            <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
+            <span style={{ fontSize: 15 }}>Limpar</span>
+          </button>
+        </div>
+
+        {resultado !== null && (
+          <div className="alert alert-success mt-3">
+            Resultado:{" "}
+            {(() => {
+              if (Array.isArray(resultado)) {
+                return resultado.map((r) => {
+                  if (r?.real !== undefined && r?.imag !== undefined) {
+                    return `${r.real}${r.imag >= 0 ? "+" : ""}${r.imag}i`;
+                  }
+                  return String(r);
+                }).join(", ");
+              }
+
+              if (resultado && typeof resultado === "object") {
+                if (resultado.raizes) {
+                  return resultado.raizes.join(", ");
+                }
+                if (resultado.value !== undefined) return String(resultado.value);
+                if (resultado.result !== undefined) return String(resultado.result);
+                return JSON.stringify(resultado);
+              }
+
+              return String(resultado);
+            })()}
+          </div>
+        )}
+
+        {explanation && (
+          <div className="card mt-3 p-3">
+            <h5>{explanation.title}</h5>
+            {explanation.formula && (
+              <div>
+                <strong>Fórmula:</strong> <code>{explanation.formula}</code>
               </div>
             )}
-            <div className="col">
-              <input
-                type="number"
-                className="form-control"
-                placeholder="x"
-                value={x}
-                onChange={(e) => setX(e.target.value)}
-                // x é opcional — o backend resolve quando ausente
-                // não marcar como required para permitir resolver raízes quando x não fornecido
-                aria-label="Valor de x"
-                disabled={loading}
-              />
-            </div>
+            {explanation.substituted && (
+              <div>
+                <strong>Substituição:</strong> <code>{explanation.substituted}</code>
+              </div>
+            )}
+            {explanation.delta && (
+              <div>
+                <strong>Delta:</strong> <code>{explanation.delta}</code>
+              </div>
+            )}
+            {explanation.roots && (
+              <div>
+                <strong>Raízes:</strong> {explanation.roots}
+              </div>
+            )}
+            {explanation.value !== undefined && (
+              <div>
+                <strong>Resultado:</strong> {explanation.value}
+              </div>
+            )}
+            {explanation.explanation && (
+              <div className="mt-2">
+                <em>{explanation.explanation}</em>
+              </div>
+            )}
           </div>
-          <button
-            className="btn btn-primary mt-3"
-            type="submit"
-            disabled={loading}
-            aria-busy={loading}
-            aria-label="Calcular função"
-          >
-            {loading ? "Calculando..." : "Calcular"}
-          </button>
-          <div className="d-flex justify-content-center">
-            <button
-              type="button"
-              className="btn btn-secondary mt-3 ms-2"
-              onClick={handleClear}
-              aria-label="Limpar campos"
-              title="Limpar campos"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 6,
-                fontWeight: 600,
-                width: '120px'
-              }}
-            >
-              <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
-              <span style={{ fontSize: 15 }}>Limpar</span>
-            </button>
+        )}
+
+        {erro && (
+          <div className="alert alert-danger mt-3" role="alert">
+            {erro}
           </div>
-          {resultado !== null && (
-            <div className="alert alert-success mt-3" role="status">
-              Resultado: {" "}
-              {(() => {
-                // resultado can be number, string, array, or object with { raizes, value, delta }
-                if (Array.isArray(resultado)) {
-                  // format array of primitives or complex objects
-                  return resultado.map((r) => {
-                    if (r && typeof r === 'object' && r.real !== undefined && r.imag !== undefined) {
-                      return `${r.real}${r.imag >= 0 ? '+' : ''}${r.imag}i`;
-                    }
-                    return String(r);
-                  }).join(', ');
-                }
-                if (resultado && typeof resultado === 'object') {
-                  if (resultado.raizes) {
-                    const arr = resultado.raizes;
-                    return arr.map((r) => {
-                      if (r && typeof r === 'object' && r.real !== undefined && r.imag !== undefined) {
-                        return `${r.real}${r.imag >= 0 ? '+' : ''}${r.imag}i`;
-                      }
-                      return String(r);
-                    }).join(', ');
-                  }
-                  if (resultado.value !== undefined) return String(resultado.value);
-                  if (resultado.result !== undefined) return String(resultado.result);
-                  if (resultado.delta !== undefined && resultado.raizes) {
-                    return `Δ = ${resultado.delta}; Raízes: ${resultado.raizes.join(', ')}`;
-                  }
-                  return JSON.stringify(resultado);
-                }
-                return String(resultado);
-              })()}
-            </div>
-          )}
-          {explanation && (
-            <div className="card mt-3 p-3">
-              <h5>{explanation.title}</h5>
-              {explanation.formula && <div><strong>Fórmula:</strong> <code>{explanation.formula}</code></div>}
-              {explanation.substituted && <div><strong>Substituição:</strong> <code>{explanation.substituted}</code></div>}
-              {explanation.delta && <div><strong>Delta:</strong> <code>{explanation.delta}</code></div>}
-              {explanation.roots && <div><strong>Raízes:</strong> {explanation.roots}</div>}
-              {explanation.value !== undefined && <div><strong>Resultado:</strong> {explanation.value}</div>}
-              {explanation.explanation && <div className="mt-2"><em>{explanation.explanation}</em></div>}
-            </div>
-          )}
-          {erro && (
-            <div className="alert alert-danger mt-3" role="alert">
-              {erro}
-            </div>
-          )}
-        </form>
-        <div className="mt-3 text-muted small text-center">
-          Preencha os campos e clique em Calcular para ver o resultado.
-        </div>
+        )}
+      </form>
+
+      <div className="mt-3 text-muted small text-center">
+        Preencha os campos e clique em Calcular para ver o resultado.
       </div>
+    </div>
+  </div>
+</div>
+
     </>
   );
 }

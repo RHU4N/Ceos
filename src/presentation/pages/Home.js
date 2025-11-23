@@ -12,7 +12,7 @@ const Home = () => {
         <h1>Torne-se Premium! Veja nosso planos</h1>
         <button className="banner-btn">Saiba Mais</button>
       </div>
-      <div className="container">
+      <div className="page-container">
         <div className="left-section">
           <h2>
             Descubra mais sobre

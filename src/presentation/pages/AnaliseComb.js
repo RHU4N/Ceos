@@ -48,78 +48,130 @@ function AnaliseComb() {
   return (
     <>
     <nav aria-label="breadcrumb" className='nav justify-content-center'>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a
-              href="/"
-              tabIndex={loading ? -1 : 0}
-              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
-              onClick={e => loading && e.preventDefault()}
-            >Home</a>
-          </li>
-          <li class="breadcrumb-item">
-            <a
-              href="/matematica"
-              tabIndex={loading ? -1 : 0}
-              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
-              onClick={e => loading && e.preventDefault()}
-            >Matematica</a>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Análise Combinatória
-          </li>
-        </ol>
-      </nav>
-    <div className="container mt-5 row justify-content-center">
-      <h2 className="mb-4 text-center">Análise Combinatória</h2>
-      <form className="card p-4 shadow-sm col-12 col-md-10 col-lg-8 mx-auto" onSubmit={handleSubmit} aria-label="Formulário de análise combinatória">
-        <div className="mb-3">
-          <label className="form-label">Tipo</label>
-          <select className="form-select" value={tipo} onChange={e => setTipo(e.target.value)} disabled={loading}>
-            <option value="permutacao">Permutação</option>
-            <option value="combinacao">Combinação</option>
-            <option value="arranjo">Arranjo</option>
-            <option value="arranjoRep">Arranjo com Repetição</option>
-          </select>
+  <ol className="breadcrumb">
+    <li className="breadcrumb-item">
+      <a
+        href="/"
+        tabIndex={loading ? -1 : 0}
+        style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+        onClick={e => loading && e.preventDefault()}
+      >Home</a>
+    </li>
+
+    <li className="breadcrumb-item">
+      <a
+        href="/matematica"
+        tabIndex={loading ? -1 : 0}
+        style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+        onClick={e => loading && e.preventDefault()}
+      >Matemática</a>
+    </li>
+
+    <li className="breadcrumb-item active" aria-current="page">
+      Análise Combinatória
+    </li>
+  </ol>
+</nav>
+
+{/* ESTRUTURA CORRIGIDA */}
+<div className="container mt-5">
+  <div className="row justify-content-center">
+
+    <h2 className="mb-4 text-center">Análise Combinatória</h2>
+
+    <form
+      className="op-card p-4 col-12 col-md-10 col-lg-8"
+      onSubmit={handleSubmit}
+      aria-label="Formulário de análise combinatória"
+    >
+      <div className="mb-3">
+        <label className="form-label">Tipo</label>
+        <select
+          className="form-select"
+          value={tipo}
+          onChange={e => setTipo(e.target.value)}
+          disabled={loading}
+        >
+          <option value="permutacao">Permutação</option>
+          <option value="combinacao">Combinação</option>
+          <option value="arranjo">Arranjo</option>
+          <option value="arranjoRep">Arranjo com Repetição</option>
+        </select>
+      </div>
+
+      <div className="row g-2">
+        <div className="col">
+          <input
+            type="number"
+            className="form-control"
+            placeholder="n"
+            value={n}
+            onChange={e => setN(e.target.value)}
+            required
+            aria-label="Valor de n"
+            disabled={loading}
+          />
         </div>
-        <div className="row g-2">
-          <div className="col">
-            <input type="number" className="form-control" placeholder="n" value={n} onChange={e => setN(e.target.value)} required aria-label="Valor de n" disabled={loading} />
-          </div>
-          <div className="col">
-            <input type="number" className="form-control" placeholder="k (opcional)" value={k} onChange={e => setK(e.target.value)} aria-label="Valor de k" disabled={loading} />
-          </div>
+
+        <div className="col">
+          <input
+            type="number"
+            className="form-control"
+            placeholder="k (opcional)"
+            value={k}
+            onChange={e => setK(e.target.value)}
+            aria-label="Valor de k"
+            disabled={loading}
+          />
         </div>
-        <button className="btn btn-primary mt-3" type="submit" disabled={loading} aria-busy={loading} aria-label="Calcular análise combinatória">
-          {loading ? 'Calculando...' : 'Calcular'}
+      </div>
+
+      <button
+        className="btn btn-primary mt-3"
+        type="submit"
+        disabled={loading}
+        aria-busy={loading}
+        aria-label="Calcular análise combinatória"
+      >
+        {loading ? 'Calculando...' : 'Calcular'}
+      </button>
+
+      <div className="d-flex justify-content-center">
+        <button
+          type="button"
+          className="btn btn-secondary mt-3 ms-2"
+          onClick={handleClear}
+          aria-label="Limpar campos"
+          title="Limpar campos"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            fontWeight: 600,
+            width: '120px'
+          }}
+        >
+          <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
+          <span style={{ fontSize: 15 }}>Limpar</span>
         </button>
-        <div className="d-flex justify-content-center">
-          <button
-            type="button"
-            className="btn btn-secondary mt-3 ms-2"
-            onClick={handleClear}
-            aria-label="Limpar campos"
-            title="Limpar campos"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-              fontWeight: 600,
-              width: '120px'
-            }}
-          >
-            <FaWandMagicSparkles style={{ fontSize: 22, color: "#a883ee" }} />
-            <span style={{ fontSize: 15 }}>Limpar</span>
-          </button>
-        </div>
-        {resultado !== null && (
-          <div className="alert alert-success mt-3" role="status">{resultado}</div>
-        )}
-        {erro && <div className="alert alert-danger mt-3" role="alert">{erro}</div>}
-      </form>
-      <div className="mt-3 text-muted small text-center">Preencha os campos e clique em Calcular para ver o resultado.</div>
+      </div>
+
+      {resultado !== null && (
+        <div className="alert alert-success mt-3" role="status">{resultado}</div>
+      )}
+
+      {erro && (
+        <div className="alert alert-danger mt-3" role="alert">{erro}</div>
+      )}
+    </form>
+
+    <div className="mt-3 text-muted small text-center">
+      Preencha os campos e clique em Calcular para ver o resultado.
     </div>
+  </div>
+</div>
+
     </>
   );
 }
