@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import axios from "axios";
 import { createPortal } from "react-dom";
+import { speak, useTTS } from "../../hooks/useTTS";
 
 function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
   const [nome, setNome] = useState(user?.nome || "");
@@ -26,7 +27,8 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
   const errorTimerRef = useRef(null);
 
   // base URL fallback
-  const baseUrl = process.env.REACT_APP_API_LOGIN_URL || "http://localhost:8081";
+  const baseUrl =
+    process.env.REACT_APP_API_LOGIN_URL || "http://localhost:8081";
 
   // Impede scroll do body quando o modal está aberto
   useEffect(() => {
@@ -399,6 +401,9 @@ function Navbar() {
   const { user, logout, login } = useAuth();
   const { loading } = useLoading();
   const [showModal, setShowModal] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { enabled: ttsEnabled, toggle: toggleTTS } = useTTS();
+ 
 
   const handleUpdate = (newUser) => {
     login(newUser, localStorage.getItem("ceos_token"));
@@ -419,8 +424,28 @@ function Navbar() {
     return true;
   };
 
+  // Add a small scroll listener to apply a "scrolled" class when the page is scrolled.
+  // Only active on wider screens (desktop) where the navbar is sticky.
+  useEffect(() => {
+    function onScroll() {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth < 900) {
+        setScrolled(false);
+        return;
+      }
+      setScrolled(window.scrollY > 24);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
   return (
-    <header className="navbar">
+    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div
         className="logo"
         style={{ display: "flex", alignItems: "center", gap: "12px" }}
@@ -430,20 +455,24 @@ function Navbar() {
           style={{
             color: "inherit",
             textDecoration: "none",
-            fontSize: "2rem",
+            fontSize: "3.5rem",
+            fontFamily: "Times New Roman",
             pointerEvents: loading ? "none" : undefined,
             opacity: loading ? 0.6 : undefined,
           }}
           className="display-3"
           tabIndex={loading ? -1 : 0}
-          onClick={preventIfLoading}
+          onClick={(e) => {
+            preventIfLoading(e);
+            speak("Página inicial");
+          }}
         >
           <img
             src="/logo.png"
             alt="Logo Céos"
             style={{
-              height: "48px",
-              width: "48px",
+              height: "4.9rem",
+              width: "4.9rem",
               maxWidth: "12vw",
               minWidth: 32,
               pointerEvents: loading ? "none" : undefined,
@@ -462,7 +491,14 @@ function Navbar() {
               opacity: loading ? 0.6 : undefined,
             }}
           >
-            <span>Ambiente de Estudo ▼</span>
+            <span
+              onMouseEnter={() => !loading && speak("Ambiente de estudo")}
+              onFocus={() => !loading && speak("Ambiente de estudo")}
+              tabIndex={loading ? -1 : 0}
+            >
+              Ambiente de Estudo ▼
+            </span>
+
             <ul className="submenu">
               <li
                 className={
@@ -476,33 +512,57 @@ function Navbar() {
                     pointerEvents: loading ? "none" : undefined,
                     opacity: loading ? 0.6 : undefined,
                   }}
-                  onClick={preventIfLoading}
+                  onClick={(e) => {
+                    preventIfLoading(e);
+                    speak("Matemática");
+                  }}
+                  onMouseEnter={() => !loading && speak("Matemática")}
+                  onFocus={() => !loading && speak("Matemática")}
                 >
                   Matemática
                 </Link>
               </li>
-              <li>
+
+              <li className={location.pathname.startsWith('/quimica') ? 'active' : ''}>
                 <Link
-                  to="#"
-                  disabled
-                  tabIndex={-1}
-                  style={{ opacity: 0.5, pointerEvents: "none" }}
+                  to="/quimica"
+                  tabIndex={loading ? -1 : 0}
+                  style={{
+                    pointerEvents: loading ? 'none' : undefined,
+                    opacity: loading ? 0.6 : undefined,
+                  }}
+                  onClick={(e) => {
+                    preventIfLoading(e);
+                    speak('Química');
+                  }}
+                  onMouseEnter={() => !loading && speak('Química')}
+                  onFocus={() => !loading && speak('Química')}
                 >
                   Química
                 </Link>
               </li>
-              <li>
+
+              <li className={location.pathname.startsWith('/fisica') ? 'active' : ''}>
                 <Link
-                  to="#"
-                  disabled
-                  tabIndex={-1}
-                  style={{ opacity: 0.5, pointerEvents: "none" }}
+                  to="/fisica"
+                  tabIndex={loading ? -1 : 0}
+                  style={{
+                    pointerEvents: loading ? 'none' : undefined,
+                    opacity: loading ? 0.6 : undefined,
+                  }}
+                  onClick={(e) => {
+                    preventIfLoading(e);
+                    speak('Física');
+                  }}
+                  onMouseEnter={() => !loading && speak('Física')}
+                  onFocus={() => !loading && speak('Física')}
                 >
                   Física
                 </Link>
               </li>
             </ul>
           </li>
+
           <li>
             <Link
               to="/faq"
@@ -511,11 +571,17 @@ function Navbar() {
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
               }}
-              onClick={preventIfLoading}
+              onClick={(e) => {
+                preventIfLoading(e);
+                speak("Central de ajuda");
+              }}
+              onMouseEnter={() => !loading && speak("Central de ajuda")}
+              onFocus={() => !loading && speak("Central de ajuda")}
             >
               Central de Ajuda
             </Link>
           </li>
+
           <li>
             <Link
               to="#"
@@ -524,17 +590,33 @@ function Navbar() {
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
               }}
-              onClick={preventIfLoading}
+              onClick={(e) => {
+                preventIfLoading(e);
+                speak("Planos");
+              }}
+              onMouseEnter={() => !loading && speak("Planos")}
+              onFocus={() => !loading && speak("Planos")}
             >
               Planos
             </Link>
           </li>
-          {/* <li><Link to="/feedback">Feedback</Link></li> */}
         </ul>
       </nav>
+
       <div className="buttons">
         {!user ? (
           <>
+            <button
+              onClick={() => {
+                toggleTTS();
+              }}
+              onMouseEnter={() => !loading && speak("Alternar leitor de voz")}
+              onFocus={() => !loading && speak("Alternar leitor de voz")}
+            >
+              {ttsEnabled ? "TTS: ON" : "TTS: OFF"}
+            </button>
+
+            {/* ENTRAR */}
             <Link
               to="/login"
               className="btn btn-light"
@@ -542,11 +624,18 @@ function Navbar() {
               style={{
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
+                borderRadius: 5,
+                padding: '8px 14px',
+                transition: 'all 0.12s ease',
               }}
-              onClick={preventIfLoading}
+              onClick={preventIfLoading} // MANTIDO
+              onMouseEnter={() => !loading && speak("Entrar")} // ADICIONADO
+              onFocus={() => !loading && speak("Entrar")}
             >
               Entrar
             </Link>
+
+            {/* CADASTRE-SE */}
             <Link
               to="/register"
               className="btn btn-dark"
@@ -554,8 +643,13 @@ function Navbar() {
               style={{
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
+                borderRadius: 5,
+                padding: '8px 14px',
+                transition: 'all 0.12s ease',
               }}
-              onClick={preventIfLoading}
+              onClick={preventIfLoading} // MANTIDO
+              onMouseEnter={() => !loading && speak("Cadastre-se")} // ADICIONADO
+              onFocus={() => !loading && speak("Cadastre-se")}
             >
               Cadastre-se
             </Link>
@@ -563,6 +657,8 @@ function Navbar() {
         ) : (
           <div className="d-flex align-items-center gap-2">
             <FaUserCircle size={32} />
+
+            {/* NOME DO USUÁRIO */}
             <span
               style={{
                 cursor: "pointer",
@@ -573,7 +669,9 @@ function Navbar() {
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
               }}
-              onClick={() => !loading && setShowModal(true)}
+              onClick={() => !loading && setShowModal(true)} // MANTIDO
+              onMouseEnter={() => !loading && speak("Editar perfil")} // ADICIONADO
+              onFocus={() => !loading && speak("Editar perfil")}
               title="Editar perfil"
               tabIndex={loading ? -1 : 0}
               aria-disabled={loading}
@@ -591,6 +689,8 @@ function Navbar() {
                 }}
               />
             </span>
+
+            {/* BOTÃO SAIR */}
             <button
               className="btn btn-outline-secondary btn-sm ms-2 btn-sair-ceos"
               style={{
@@ -607,12 +707,14 @@ function Navbar() {
                 e.target.style.background = "white";
                 e.target.style.color = "#dc3545";
               }}
-              onClick={logout}
+              onClick={logout} // MANTIDO
+              onMouseEnter={() => !loading && speak("Sair")} // ADICIONADO
               disabled={loading}
               tabIndex={loading ? -1 : 0}
             >
               Sair
             </button>
+
             <EditProfileModal
               show={showModal}
               onClose={() => setShowModal(false)}

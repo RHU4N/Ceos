@@ -1,0 +1,97 @@
+/* Responsive helpers and overrides to ensure better behavior on small screens */
+
+/* Make images and media scale */
+img, svg, picture, video, .card-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Container spacing and fluid widths */
+.container, .container2, .page-container, .container-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: clamp(0.5rem, 3vw, 1.5rem);
+  padding-right: clamp(0.5rem, 3vw, 1.5rem);
+}
+
+/* Allow menus and button groups to wrap instead of overflowing */
+.navbar, .menu, .buttons, .tool-buttons {
+  flex-wrap: wrap;
+}
+.menu {
+  justify-content: center;
+}
+
+/* Make interactive elements easier to tap on small screens */
+button, .btn, .tool, .op-card .btn-primary, input[type="text"], .form-control {
+  touch-action: manipulation;
+}
+
+/* At smaller breakpoints, stack and full-width as necessary */
+@media (max-width: 900px) {
+  .menu { width: 100%; gap: 8px; }
+  .menu li { width: auto; min-width: 0; }
+  .buttons { width: 100%; justify-content: center; }
+  .buttons .btn { display: inline-block; }
+  .page-container { padding: 1rem; gap: 1rem; }
+  .footer { position: relative !important; } /* avoid fixed footer overlay on smaller screens */
+}
+
+@media (max-width: 600px) {
+  .navbar { padding: 10px 12px; align-items: center; }
+  .navbar .logo { text-align: center; width: 100%; }
+  .menu { flex-direction: column; align-items: center; gap: 6px; }
+  .buttons { flex-direction: column; gap: 8px; width: 100%; }
+  .tool { width: 100%; max-width: 520px; }
+  .op-card { padding: 20px; width: 100%; box-sizing: border-box; }
+  .left-section, .right-section { width: 100%; padding-left: 8px; padding-right: 8px; text-align: center; }
+  .banner { flex-direction: column; gap: 12px; padding-left: 1rem; padding-right: 1rem; }
+}
+
+@media (max-width: 420px) {
+  .menu li { padding: 6px 10px; }
+  .navbar .logo { font-size: 1.25rem; }
+  .footer { font-size: 0.85rem; padding: 8px; }
+}
+
+/* Hamburger button styles */
+.hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  margin-left: 12px;
+  cursor: pointer;
+}
+.hamburger-box {
+  width: 28px;
+  height: 18px;
+  display: inline-block;
+  position: relative;
+}
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  width: 28px;
+  height: 3px;
+  background-color: var(--color-light, #fff);
+  border-radius: 3px;
+  position: absolute;
+  left: 0;
+  transition: transform 200ms ease, top 200ms ease, opacity 200ms ease;
+}
+.hamburger-inner { top: 50%; transform: translateY(-50%); }
+.hamburger-inner::before { content: ""; top: -8px; }
+.hamburger-inner::after { content: ""; top: 8px; }
+
+/* show hamburger on small screens */
+@media (max-width: 900px) {
+  .hamburger { display: inline-block; }
+  .menu { display: none; }
+  .menu.open { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+}
+
+
+/* Small utility: limit long text wrapping inside buttons/links */
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

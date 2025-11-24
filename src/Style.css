@@ -1,9 +1,12 @@
 /* Variáveis globais de cor */
 :root {
+  --color-banner-bg: rgb(255, 255, 1);
   --color-primary: #007BFF;
   --color-primary-dark: #0056b3;
   --color-secondary: #1e88e5;
-  --color-secondary-light: #51a1f7;
+  --color-secondary-light: #e0edfc;
+  --color-terciary-light: #42a9fd;
+  --color-light: #ffffff;
   --color-accent: #ff6600;
   --color-success: #00c672;
   --color-purple: #662d91;
@@ -17,7 +20,7 @@
   --color-footer-light: #e7c2ff;
   --color-border: #ddd;
   --color-list-bg: #f4f4f4;
-  --color-list-hover: #e9e9e9;
+  --color-list-hover: #fdfdfd6c;
   --color-shadow: rgba(0, 0, 0, 0.1);
 }
 
@@ -53,14 +56,13 @@ li {
     justify-content: space-between;
     margin: 10px 0;
     padding: 10px;
-    background: var(--color-list-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 5px;
+    border-radius: 50px;
     transition: background 0.3s;
 }
 
 li:hover {
-    background: var(--color-list-hover);
+    background: var(--color-terciary-light);
+    transition: 0.5s;
 }
 
 /* Botão padrão global */
@@ -124,9 +126,9 @@ form input:focus {
 
 /* Logo "Céos" alinhado à esquerda */
 .navbar .logo {
-    font-size: 50px;
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: bold;
+  font-size: clamp(1rem, 2.6vw, 1.8rem);
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
 }
 
 /* Menu centralizado */
@@ -201,26 +203,21 @@ form input:focus {
 .btn-light {
     background: white;
     color: #1e88e5;
-    border: 1px solid #1e88e5;
 }
 
 .btn-light:hover {
     background: #145d9c;
     color: #ffffff;
-    border: 1px solid #10385a;
-
 }
 
 .btn-dark {
     background: rgb(159, 92, 235);
     color: white;
-    border: 1px solid #a883ee;
 }
 
 .btn-dark:hover {
     background: rgb(47, 14, 90);
     color: #e7c2ff;
-    border: 1px solid rgb(49, 40, 59);
 }
 
 /* ==========================
@@ -242,7 +239,7 @@ form input:focus {
 /* Adicione espaço extra ao main para não sobrepor o footer */
 main {
     min-height: calc(100vh - 60px);
-    width: 100vw;
+    width: 100%;
     box-sizing: border-box;
     padding-bottom: 60px; /* Garante espaço para o footer fixo */
     padding-top: 70px; /* Garante espaço para o navbar fixo */
@@ -252,7 +249,7 @@ main {
 /* Ajuste para o main ocupar o espaço entre navbar e footer */
 main {
   min-height: calc(100vh - 70px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -267,7 +264,7 @@ main {
 /* Centralização vertical para login/cadastro */
 .centered-auth-container {
   width: 100%;
-  max-width: 100vw;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,7 +294,7 @@ main {
     padding-bottom: 90px; /* Espaço extra para o footer em telas pequenas */
   }
   .login-card, .register-card {
-    max-width: 98vw;
+    max-width: 98%;
     padding: 8px !important;
   }
   main {
@@ -308,7 +305,7 @@ main {
 
 @media (max-width: 1200px) {
   .container2 {
-    max-width: 98vw;
+    max-width: 98%;
     padding: 24px 8px;
   }
 }
@@ -317,8 +314,8 @@ main {
   .container,
   .container2 {
     flex-direction: column;
-    max-width: 100vw;
-    width: 100vw;
+    max-width: 100%;
+    width: 100%;
     padding: 10px;
     height: auto;
     min-width: 0;
@@ -375,8 +372,8 @@ main {
     margin-top: 8px;
   }
   .tool {
-    width: 220px;
-    min-width: 220px;
+    width: min(92%, 220px);
+    min-width: 140px;
     max-width: 220px;
     font-size: 16px;
     padding: 12px;
@@ -433,7 +430,7 @@ main {
 
 @media (max-width: 500px) {
   .login-card, .register-card {
-    max-width: 98vw;
+    max-width: 98%;
     padding: 8px !important;
   }
 }
@@ -441,7 +438,7 @@ main {
 /* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
   min-height: calc(100vh - 60px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   min-width: 0;
   margin: 0 auto;
@@ -450,7 +447,7 @@ main {
 
 @media (max-width: 500px) {
   .login-card, .register-card {
-    max-width: 98vw;
+    max-width: 98%;
     padding: 8px !important;
   }
 }
@@ -458,7 +455,7 @@ main {
 /* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
   min-height: calc(100vh - 60px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
 }
   
@@ -466,7 +463,7 @@ main {
 /* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
   min-height: calc(100vh - 60px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -475,8 +472,8 @@ main {
   .container,
   .container2 {
     flex-direction: column;
-    max-width: 100vw;
-    width: 100vw;
+    max-width: 100%;
+    width: 100%;
     padding: 10px;
     height: auto;
     min-width: 0;
@@ -591,7 +588,7 @@ main {
 
 @media (max-width: 500px) {
   .login-card, .register-card {
-    max-width: 98vw;
+    max-width: 98%;
     padding: 8px !important;
   }
 }
@@ -599,7 +596,7 @@ main {
 /* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
   min-height: calc(100vh - 60px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   min-width: 0;
   margin: 0 auto;
@@ -608,7 +605,7 @@ main {
 
 @media (max-width: 500px) {
   .login-card, .register-card {
-    max-width: 98vw;
+    max-width: 98%;
     padding: 8px !important;
   }
 }
@@ -616,7 +613,7 @@ main {
 /* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
   min-height: calc(100vh - 60px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
 }
   
@@ -624,7 +621,7 @@ main {
 /* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
 main {
   min-height: calc(100vh - 60px);
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
 }
 
