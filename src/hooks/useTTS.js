@@ -54,4 +54,5 @@ export function useTTS() {
   return { enabled: state, toggle: toggleTTS, speak, stop };
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default { isEnabled, toggleTTS, speak, stop, subscribe, useTTS };

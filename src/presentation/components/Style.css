@@ -19,26 +19,42 @@
 
 :root {
   /* Ajuste o valor se quiser mais/menos espaço sob o header */
-  --navbar-height: 96px;
+  --navbar-height: 72px; /* default - modest height */
+  --navbar-padding-vertical: 10px;
 }
 
-/* Navbar */
-.navbar {
-  background: var(--color-secondary);
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 40px; /* comfortable vertical padding */
-  min-height: var(--navbar-height);
-  z-index: 1050;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  box-shadow: 0px 4px 6px var(--color-light);
+/* Reduce header height progressively on narrower screens */
+@media (max-width: 1200px) {
+  :root { --navbar-height: 68px; --navbar-padding-vertical: 8px; }
 }
+@media (max-width: 900px) {
+  :root { --navbar-height: 60px; --navbar-padding-vertical: 6px; }
+}
+@media (max-width: 600px) {
+  :root { --navbar-height: 52px; --navbar-padding-vertical: 6px; }
+}
+
+/* Override inline styles from Navbar.js to prevent header from occupying too much vertical space */
+.navbar .logo > a {
+  font-size: clamp(1rem, 2.4vw, 1.6rem) !important;
+  line-height: 1 !important;
+}
+.navbar .logo img {
+  height: clamp(2.2rem, 5.5vw, 3.2rem) !important;
+  width: auto !important;
+  max-width: 14vw !important;
+}
+
+/* Tighter navbar padding on small screens */
+@media (max-width: 900px) {
+  .navbar { padding: 8px 16px; }
+}
+@media (max-width: 600px) {
+  .navbar { padding: 6px 12px; }
+  .navbar .logo img { height: 2.2rem !important; }
+  .navbar .logo > a { font-size: 1.05rem !important; }
+}
+
 .navbar .dropdown { text-decoration: none; color: var(--color-light); font-weight: bold; }
 .navbar .logo { font-size: clamp(1rem, 2.6vw, 1.8rem); font-family: 'Times New Roman', Times, serif; font-weight: bold; }
 
@@ -135,9 +151,53 @@
 }
 
 /* Ensure the page content is pushed below the fixed navbar */
+.navbar {
+  background: var(--color-secondary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--navbar-padding-vertical) 24px;
+  min-height: var(--navbar-height);
+  z-index: 1050;
+  position: relative; /* default: scrolls with page on small screens */
+  box-shadow: 0px 4px 6px var(--color-light);
+}
+
+/* Smooth transitions when header changes (padding, blur, shadow) */
+.navbar {
+  transition: padding 220ms ease, box-shadow 220ms ease, backdrop-filter 220ms ease, background-color 220ms ease;
+}
+
+/* Scrolled / compact variant */
+.navbar--scrolled {
+  padding: calc(var(--navbar-padding-vertical) - 4px) 20px !important;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.12) !important;
+  backdrop-filter: saturate(140%) blur(8px) !important;
+}
+
 main {
-  /* increase top padding so banner/content sits further below header */
-  padding-top: calc(var(--navbar-height) + 24px);
+  /* default: no extra padding when navbar is in flow */
+  padding-top: 0;
+}
+
+/* On larger screens, make navbar sticky and ensure content sits below it */
+@media (min-width: 900px) {
+  .navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    backdrop-filter: saturate(120%) blur(6px);
+  }
+  main {
+    padding-top: calc(var(--navbar-height) + 12px);
+  }
+  /* Position submenus below the sticky header */
+  .submenu {
+    top: calc(var(--navbar-height) + 8px);
+  }
 }
 .login-card,
 .register-card {

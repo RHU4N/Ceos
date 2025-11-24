@@ -401,7 +401,9 @@ function Navbar() {
   const { user, logout, login } = useAuth();
   const { loading } = useLoading();
   const [showModal, setShowModal] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { enabled: ttsEnabled, toggle: toggleTTS } = useTTS();
+ 
 
   const handleUpdate = (newUser) => {
     login(newUser, localStorage.getItem("ceos_token"));
@@ -422,8 +424,28 @@ function Navbar() {
     return true;
   };
 
+  // Add a small scroll listener to apply a "scrolled" class when the page is scrolled.
+  // Only active on wider screens (desktop) where the navbar is sticky.
+  useEffect(() => {
+    function onScroll() {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth < 900) {
+        setScrolled(false);
+        return;
+      }
+      setScrolled(window.scrollY > 24);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
   return (
-    <header className="navbar">
+    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div
         className="logo"
         style={{ display: "flex", alignItems: "center", gap: "12px" }}
