@@ -3,7 +3,7 @@ import { speak } from "../../hooks/useTTS";
 
 const FAQ = () => {
   return (
-    <>
+    <div className="faq-page">
       <nav aria-label="breadcrumb" className="nav justify-content-center">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
@@ -207,7 +207,7 @@ const FAQ = () => {
 
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
