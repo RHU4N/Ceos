@@ -49,14 +49,18 @@ const Home = () => {
                 Matemática
               </button>
             </Link>
-            <button className="tool physics-tool" onMouseEnter={() => speak('Física')} onFocus={() => speak('Física')}>
-              <span style={{marginRight: 8, fontSize: 22}}>&#x269B;</span> {/* Átomo para física */}
-              Física
-            </button>
-            <button className="tool chemistry-tool" onMouseEnter={() => speak('Química')} onFocus={() => speak('Química')}>
-              <span style={{marginRight: 8, fontSize: 22}}>&#x2697;</span> {/* Tubo de ensaio para química */}
-              Química
-            </button>
+            <Link to="/fisica" onMouseEnter={() => speak('Navegar para Física')} onFocus={() => speak('Navegar para Física')}>
+              <button className="tool physics-tool" onMouseEnter={() => speak('Física')} onFocus={() => speak('Física')}>
+                <span style={{marginRight: 8, fontSize: 22}}>&#x269B;</span> {/* Átomo para física */}
+                Física
+              </button>
+            </Link>
+            <Link to="/quimica" onMouseEnter={() => speak('Navegar para Química')} onFocus={() => speak('Navegar para Química')}>
+              <button className="tool chemistry-tool" onMouseEnter={() => speak('Química')} onFocus={() => speak('Química')}>
+                <span style={{marginRight: 8, fontSize: 22}}>&#x2697;</span> {/* Tubo de ensaio para química */}
+                Química
+              </button>
+            </Link>
           </div>
         </div>
       </div>

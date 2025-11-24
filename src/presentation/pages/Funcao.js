@@ -319,7 +319,7 @@ function Funcao() {
         )}
 
         {explanation && (
-          <div className="card mt-3 p-3">
+          <div className="card mt-3 p-3 math-explain">
             <h5>{explanation.title}</h5>
             {explanation.formula && (
               <div>

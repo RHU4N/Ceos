@@ -523,27 +523,39 @@ function Navbar() {
                 </Link>
               </li>
 
-              <li>
+              <li className={location.pathname.startsWith('/quimica') ? 'active' : ''}>
                 <Link
-                  to="#"
-                  disabled
-                  tabIndex={-1}
-                  style={{ opacity: 0.5, pointerEvents: "none" }}
-                  onMouseEnter={() => speak("Química")}
-                  onFocus={() => speak("Química")}
+                  to="/quimica"
+                  tabIndex={loading ? -1 : 0}
+                  style={{
+                    pointerEvents: loading ? 'none' : undefined,
+                    opacity: loading ? 0.6 : undefined,
+                  }}
+                  onClick={(e) => {
+                    preventIfLoading(e);
+                    speak('Química');
+                  }}
+                  onMouseEnter={() => !loading && speak('Química')}
+                  onFocus={() => !loading && speak('Química')}
                 >
                   Química
                 </Link>
               </li>
 
-              <li>
+              <li className={location.pathname.startsWith('/fisica') ? 'active' : ''}>
                 <Link
-                  to="#"
-                  disabled
-                  tabIndex={-1}
-                  style={{ opacity: 0.5, pointerEvents: "none" }}
-                  onMouseEnter={() => speak("Física")}
-                  onFocus={() => speak("Física")}
+                  to="/fisica"
+                  tabIndex={loading ? -1 : 0}
+                  style={{
+                    pointerEvents: loading ? 'none' : undefined,
+                    opacity: loading ? 0.6 : undefined,
+                  }}
+                  onClick={(e) => {
+                    preventIfLoading(e);
+                    speak('Física');
+                  }}
+                  onMouseEnter={() => !loading && speak('Física')}
+                  onFocus={() => !loading && speak('Física')}
                 >
                   Física
                 </Link>

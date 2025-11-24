@@ -185,9 +185,30 @@
 .left-section { flex: 1 1 420px; padding-right: 1rem; box-sizing: border-box; }
 .left-section h2 { font-size: clamp(1.2rem, 3.6vw, 2.4rem); line-height: 1.3; }
 .left-section p { margin-top: 12px; font-size: clamp(1rem, 2.2vw, 1.25rem); color: #444; }
-.math { background: linear-gradient(90deg, #ff6600, #ffcc00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
-.physics { background: linear-gradient(90deg, #00c672, #66ffb3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
-.chemistry {background: linear-gradient(90deg, #662d91, #b833ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;}
+.math {
+  background: linear-gradient(90deg, #ff6600, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: bold;
+}
+.physics {
+  background: linear-gradient(90deg, #00c672, #66ffb3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: bold;
+}
+.chemistry {
+  background: linear-gradient(90deg, #662d91, #b833ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: bold;
+}
 .ceos { color: var(--color-secondary); font-weight: bold; }
 .right-section { flex: 1 1 300px; text-align: center; box-sizing: border-box; }
 .tool-buttons { display: flex; flex-direction: column; gap: 15px; align-items: center; }
@@ -242,6 +263,10 @@
 /* Force consistent card height on larger screens */
 .math-card { min-height: 420px; }
 
+/* Física card variant: same sizing but green gradient */
+.physics-card { max-width: 260px; width: 100%; }
+.physics-card { min-height: 420px; }
+
 /* Ensure column wrappers center the card but allow it to stretch vertically */
 .row.g-4.justify-content-center > .col-12,
 .row.g-4.justify-content-center > .col-sm-6,
@@ -275,10 +300,18 @@
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
   opacity: 0;
   transition: 0.4s ease;
+}
+
+/* Override border gradient for physics cards */
+.physics-card::before {
+  background: linear-gradient(90deg, #00c672, #66ffb3);
 }
 
 /* Ensure decorative overlay doesn't block clicks */
@@ -291,7 +324,117 @@
 }
 
 .card:hover .card-title{
-  background: linear-gradient(90deg, #ff6600, #ffcc00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg, #ff6600, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Physics card title gradient on hover */
+.physics-card:hover .card-title{
+  background: linear-gradient(90deg, #00c672, #66ffb3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Química card variant: purple gradient */
+.chemistry-card { max-width: 260px; width: 100%; }
+.chemistry-card { min-height: 420px; }
+.chemistry-card::before { background: linear-gradient(90deg, #662d91, #b833ff); }
+.chemistry-card:hover .card-title {
+  background: linear-gradient(90deg, #662d91, #b833ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Explanation card variant using chemistry gradient */
+.chemistry-explain::before {
+  background: linear-gradient(90deg, #662d91, #b833ff);
+}
+.chemistry-explain .card-title {
+  background: linear-gradient(90deg, #662d91, #b833ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Force purple gradient on hover for explanation cards to override generic orange hover */
+.chemistry-explain:hover .card-title {
+  background: linear-gradient(90deg, #662d91, #b833ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Math and Physics explanation variants */
+.math-explain::before {
+  background: linear-gradient(90deg, #ff6600, #ffcc00);
+}
+.math-explain .card-title {
+  background: linear-gradient(90deg, #ff6600, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.math-explain:hover .card-title {
+  background: linear-gradient(90deg, #ff6600, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.physics-explain::before {
+  background: linear-gradient(90deg, #00c672, #66ffb3);
+}
+.physics-explain .card-title {
+  background: linear-gradient(90deg, #00c672, #66ffb3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.physics-explain:hover .card-title {
+  background: linear-gradient(90deg, #00c672, #66ffb3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Card específico para a página de Soluções: permitir largura maior e menor altura */
+.solucoes-card {
+  max-width: 420px; /* mais largo que o chemistry-card padrão */
+  min-height: 220px; /* altura reduzida para evitar excesso de espaço vertical */
+  width: 100%;
+}
+
+/* Em telas maiores, centralizar melhor o card dentro da coluna */
+@media (min-width: 900px) {
+  .row.g-4.justify-content-center > .col-12.col-sm-8.col-md-6 {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+  }
+}
+
+/* Disabled card style for placeholders */
+.card-disabled {
+  opacity: 0.48;
+  filter: grayscale(40%);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.card-disabled .card-title,
+.card-disabled .card-text {
+  color: #666 !important;
 }
 
 /* Ensure interactive elements inside auth cards are on top and clickable */

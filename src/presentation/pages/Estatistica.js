@@ -55,6 +55,36 @@ function Estatistica() {
     speakText("Campos limpos.");
   };
 
+  const examples = {
+    media: { numeros: '1,2,3,4', result: '2.5', formula: 'média = soma / n' },
+    mediana: { numeros: '1,3,5,7,9', result: '5', formula: 'mediana = valor central ordenado' },
+    moda: { numeros: '1,2,2,3', result: '2', formula: 'moda = valor mais frequente' }
+  };
+
+  const fillExample = (key) => {
+    const ex = examples[key] || {};
+    setTipo(key);
+    setNumeros(ex.numeros || '');
+    speakText('Exemplo copiado. ' + (ex.formula || ''));
+  };
+
+  const renderExplanation = (key) => {
+    const ex = examples[key];
+    if (!ex) return null;
+    return (
+      <div className="card mt-3 math-explain">
+        <div className="card-body">
+          <h6 className="card-title">Como a conta é feita</h6>
+          <p><strong>Fórmula:</strong> {ex.formula}</p>
+          <p><strong>Exemplo:</strong> {ex.numeros} → <em>{ex.result}</em></p>
+          <div className="d-flex gap-2">
+            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <nav aria-label="breadcrumb" className='nav justify-content-center'>
@@ -180,6 +210,7 @@ function Estatistica() {
             {erro && (
               <div className="alert alert-danger mt-3" role="alert" onMouseEnter={() => speakText("Erro ao calcular")} onFocus={() => speakText("Erro ao calcular")} >{erro}</div>
             )}
+            {renderExplanation(tipo)}
           </form>
 
           <div className="mt-3 text-muted small text-center" onMouseEnter={() => speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado")} onFocus={() => speakText("Digite os números separados por vírgula e clique em Calcular para ver o resultado") }>

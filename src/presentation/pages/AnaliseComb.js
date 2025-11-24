@@ -55,6 +55,38 @@ function AnaliseComb() {
     speak("Campos limpos");
   };
 
+  const examples = {
+    permutacao: { n: 5, k: undefined, result: '120', formula: 'P(n) = n!' },
+    combinacao: { n: 5, k: 2, result: '10', formula: 'C(n,k) = n! / (k! (n-k)!)' },
+    arranjo: { n: 5, k: 2, result: '20', formula: 'A(n,k) = n! / (n-k)!' },
+    arranjoRep: { n: 3, k: 2, result: '9', formula: 'A_rep = n^k' }
+  };
+
+  const fillExample = (key) => {
+    const ex = examples[key] || {};
+    setTipo(key);
+    if (ex.n !== undefined) setN(String(ex.n)); else setN('');
+    if (ex.k !== undefined) setK(String(ex.k)); else setK('');
+    speak('Exemplo copiado. ' + (ex.formula || ''));
+  };
+
+  const renderExplanation = (key) => {
+    const ex = examples[key];
+    if (!ex) return null;
+    return (
+      <div className="card mt-3 math-explain">
+        <div className="card-body">
+          <h6 className="card-title">Como a conta é feita</h6>
+          <p><strong>Fórmula:</strong> {ex.formula}</p>
+          <p><strong>Exemplo:</strong> {Object.keys(ex).filter(k=>['n','k'].includes(k)).map(k=>`${k}=${ex[k]}`).join(', ')} → <em>{ex.result}</em></p>
+          <div className="d-flex gap-2">
+            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <nav aria-label="breadcrumb" className='nav justify-content-center'>
@@ -198,6 +230,7 @@ function AnaliseComb() {
                 {erro}
               </div>
             )}
+            {renderExplanation(tipo)}
           </form>
 
           <div className="mt-3 text-muted small text-center" onMouseEnter={() => speak("Preencha os campos e clique em Calcular para ver o resultado")} onFocus={() => speak("Preencha os campos e clique em Calcular para ver o resultado") }>
