@@ -2,9 +2,9 @@ name: CI - ceosFront
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build:
@@ -15,6 +15,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+      - name: Inject build-time env from secrets
+        run: |
+          if [ -z "${{ secrets.CEOS_MATH_API_URL }}" ] || [ -z "${{ secrets.CEOS_LOGIN_API_URL }}" ]; then
+            echo "::error::Required secrets CEOS_MATH_API_URL or CEOS_LOGIN_API_URL are not set. Aborting build."
+            repo="${{ github.repository }}"
+            pr_number="${{ github.event.pull_request.number }}"
+            title="[CI] Build failed: missing secrets for front-end build"
+            body="The CI build could not run because one or both secrets CEOS_MATH_API_URL and CEOS_LOGIN_API_URL are not set for workflow ${{ github.workflow }} on ref ${{ github.ref }}.\n\nActor: ${{ github.actor }}"
+            if [ -n "${pr_number}" ] && [ "${pr_number}" != "null" ]; then
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d "{\"body\": \"${body}\"}" \
+                "https://api.github.com/repos/${repo}/issues/${pr_number}/comments" || true
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d '["ci-failed"]' "https://api.github.com/repos/${repo}/issues/${pr_number}/labels" || true
+            else
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d "{\"title\": \"${title}\", \"body\": \"${body}\", \"labels\": [\"ci-failed\"] }" \
+                "https://api.github.com/repos/${repo}/issues" || true
+            fi
+            exit 1
+          fi
+          echo "REACT_APP_API_MATH_URL=${{ secrets.CEOS_MATH_API_URL }}" >> $GITHUB_ENV
+          echo "REACT_APP_API_LOGIN_URL=${{ secrets.CEOS_LOGIN_API_URL }}" >> $GITHUB_ENV
       - name: Install
         run: npm ci
       - name: Build
@@ -23,12 +46,57 @@ jobs:
         run: npm test --if-present
 
   maybe-deploy-vercel:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Trigger Vercel Deploy (optional)
-        if: ${{ secrets.VERCEL_DEPLOY_HOOK != '' }}
+      - name: Trigger Vercel Deploy
         run: |
-          echo "Triggering Vercel deploy via hook"
-          curl -X POST -sS "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
+            echo "::error::VERCEL_DEPLOY_HOOK secret is not set. Aborting deploy."
+            repo="${{ github.repository }}"
+            pr_number="${{ github.event.pull_request.number }}"
+            title="[CI] Vercel deploy failed: missing VERCEL_DEPLOY_HOOK"
+            body="The CI deploy step could not run because the secret VERCEL_DEPLOY_HOOK is not set for workflow ${{ github.workflow }} on ref ${{ github.ref }}.\n\nActor: ${{ github.actor }}"
+            if [ -n "${pr_number}" ] && [ "${pr_number}" != "null" ]; then
+              echo "Posting comment to PR ${pr_number}"
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d "{\"body\": \"${body}\"}" \
+                "https://api.github.com/repos/${repo}/issues/${pr_number}/comments" || true
+              echo "Adding label 'ci-failed' to PR ${pr_number}"
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d '["ci-failed"]' "https://api.github.com/repos/${repo}/issues/${pr_number}/labels" || true
+            else
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d "{\"title\": \"${title}\", \"body\": \"${body}\", \"labels\": [\"ci-failed\"] }" \
+                "https://api.github.com/repos/${repo}/issues" || true
+            fi
+            exit 1
+          fi
+          echo "Triggering Vercel deploy via hook..."
+          http_code=$(curl -s -o /tmp/vercel_resp -w "%{http_code}" -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}" || true)
+          echo "--- Vercel response body ---"
+          cat /tmp/vercel_resp || true
+          echo "--- end response ---"
+          echo "Vercel response HTTP status: $http_code"
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            echo "::error::Vercel deploy webhook returned non-2xx status: $http_code"
+            repo="${{ github.repository }}"
+            pr_number="${{ github.event.pull_request.number }}"
+            title="[CI] Vercel deploy failed: webhook returned $http_code"
+            body="Vercel webhook returned HTTP status $http_code for workflow ${{ github.workflow }} on ref ${{ github.ref }}. Check the workflow logs for full response.\n\nActor: ${{ github.actor }}"
+            if [ -n "${pr_number}" ] && [ "${pr_number}" != "null" ]; then
+              echo "Posting comment to PR ${pr_number}"
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d "{\"body\": \"${body}\"}" \
+                "https://api.github.com/repos/${repo}/issues/${pr_number}/comments" || true
+              echo "Adding label 'ci-failed' to PR ${pr_number}"
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d '["ci-failed"]' "https://api.github.com/repos/${repo}/issues/${pr_number}/labels" || true
+            else
+              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
+                -d "{\"title\": \"${title}\", \"body\": \"${body}\", \"labels\": [\"ci-failed\"] }" \
+                "https://api.github.com/repos/${repo}/issues" || true
+            fi
+            exit 1
+          fi

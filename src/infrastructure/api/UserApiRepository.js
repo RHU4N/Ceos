@@ -1,5 +1,4 @@
 import UserRepository from '../../domain/repositories/UserRepository';
-import axios from 'axios';
 import apiClient from './apiClient';
 
 const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
@@ -7,12 +6,12 @@ const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
 
 export default class UserApiRepository extends UserRepository {
 	async forgotPassword(email) {
-		await axios.post(`${apiUrl}/auth/forgot-password`, { email });
+		await apiClient.post(`${apiUrl}/auth/forgot-password`, { email });
 		return true;
 	}
 
 	async register(userData) {
-		const response = await axios.post(`${apiUrl}/users`, {
+		const response = await apiClient.post(`${apiUrl}/users`, {
 			nome: userData.nome,
 			email: userData.email,
 			senha: userData.senha,
