@@ -15,29 +15,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Inject build-time env from secrets
+      - name: Inject build-time env from secrets or repository variables
         run: |
-          if [ -z "${{ secrets.CEOS_MATH_API_URL }}" ] || [ -z "${{ secrets.CEOS_LOGIN_API_URL }}" ]; then
-            echo "::error::Required secrets CEOS_MATH_API_URL or CEOS_LOGIN_API_URL are not set. Aborting build."
-            repo="${{ github.repository }}"
-            pr_number="${{ github.event.pull_request.number }}"
-            title="[CI] Build failed: missing secrets for front-end build"
-            body="The CI build could not run because one or both secrets CEOS_MATH_API_URL and CEOS_LOGIN_API_URL are not set for workflow ${{ github.workflow }} on ref ${{ github.ref }}.\n\nActor: ${{ github.actor }}"
-            if [ -n "${pr_number}" ] && [ "${pr_number}" != "null" ]; then
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d "{\"body\": \"${body}\"}" \
-                "https://api.github.com/repos/${repo}/issues/${pr_number}/comments" || true
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d '["ci-failed"]' "https://api.github.com/repos/${repo}/issues/${pr_number}/labels" || true
-            else
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d "{\"title\": \"${title}\", \"body\": \"${body}\", \"labels\": [\"ci-failed\"] }" \
-                "https://api.github.com/repos/${repo}/issues" || true
-            fi
+          # Prefer explicit CEOS_* secrets, fall back to repository variables (both CEOS_* or REACT_APP_* names)
+          MATH_URL="${{ secrets.CEOS_MATH_API_URL }}"
+          LOGIN_URL="${{ secrets.CEOS_LOGIN_API_URL }}"
+          if [ -z "$MATH_URL" ]; then
+            MATH_URL="${{ vars.CEOS_MATH_API_URL }}"
+          fi
+          if [ -z "$LOGIN_URL" ]; then
+            LOGIN_URL="${{ vars.CEOS_LOGIN_API_URL }}"
+          fi
+          # also accept old REACT_APP names as variables
+          if [ -z "$MATH_URL" ]; then
+            MATH_URL="${{ vars.REACT_APP_API_MATH_URL }}"
+          fi
+          if [ -z "$LOGIN_URL" ]; then
+            LOGIN_URL="${{ vars.REACT_APP_API_LOGIN_URL }}"
+          fi
+          # or secrets with REACT_APP_ prefix (less likely but safe)
+          if [ -z "$MATH_URL" ]; then
+            MATH_URL="${{ secrets.REACT_APP_API_MATH_URL }}"
+          fi
+          if [ -z "$LOGIN_URL" ]; then
+            LOGIN_URL="${{ secrets.REACT_APP_API_LOGIN_URL }}"
+          fi
+          if [ -z "$MATH_URL" ] || [ -z "$LOGIN_URL" ]; then
+            echo "::error::Required variables for front-end build are not set. Aborting build."
+            echo "Expected one of: CEOS_MATH_API_URL / REACT_APP_API_MATH_URL (as secret or repo variable) and CEOS_LOGIN_API_URL / REACT_APP_API_LOGIN_URL."
             exit 1
           fi
-          echo "REACT_APP_API_MATH_URL=${{ secrets.CEOS_MATH_API_URL }}" >> $GITHUB_ENV
-          echo "REACT_APP_API_LOGIN_URL=${{ secrets.CEOS_LOGIN_API_URL }}" >> $GITHUB_ENV
+          echo "REACT_APP_API_MATH_URL=$MATH_URL" >> $GITHUB_ENV
+          echo "REACT_APP_API_LOGIN_URL=$LOGIN_URL" >> $GITHUB_ENV
       - name: Install
         run: npm ci
       - name: Build
