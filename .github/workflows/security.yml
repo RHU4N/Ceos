@@ -1,0 +1,34 @@
+name: Security - npm audit (ceosFront)
+
+on:
+  push:
+    branches: [ devops, main, master ]
+  pull_request:
+
+jobs:
+  npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Run npm audit (report)
+        run: |
+          npm audit --json > npm-audit.json || true
+          echo "--- npm audit summary ---"
+          cat npm-audit.json | jq '.metadata | {vulnerabilities}' || cat npm-audit.json
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: npm-audit.json
