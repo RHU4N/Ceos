@@ -55,6 +55,22 @@ jobs:
         run: npm run build --if-present
       - name: Test
         run: npm test --if-present
+      - name: Serve built site and smoke-check
+        if: success()
+        run: |
+          npm install -g serve
+          # serve the created build folder on port 5000
+          npx serve -s build -l 5000 >/tmp/serve.log 2>&1 &
+          # wait for server
+          for i in $(seq 1 20); do
+            if curl -sfS http://localhost:5000/ >/dev/null 2>&1; then
+              echo "site responding"; break
+            fi
+            echo "waiting for site... ($i)"; sleep 1
+          done
+          # simple smoke test
+          curl -fS http://localhost:5000/ || (echo "Smoke test failed"; cat /tmp/serve.log; exit 1)
+          echo "Smoke test OK"
 
   maybe-deploy-vercel:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
