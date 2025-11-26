@@ -136,8 +136,19 @@ jobs:
 
       - name: Serve built site and smoke-check
         run: |
-          # Ensure serve is available; use npx to avoid global installs
-          npx --yes serve -s build -l 5000 >/tmp/serve.log 2>&1 &
+          echo "> listing workspace after artifact download"
+          ls -la || true
+          echo "> searching for built index.html"
+          idx=$(find . -maxdepth 6 -type f -name index.html | head -n 1 || true)
+          if [ -z "$idx" ]; then
+            echo "::error::index.html not found after downloading artifact"
+            echo "--- full tree ---"
+            ls -laR || true
+            exit 1
+          fi
+          serve_dir=$(dirname "$idx")
+          echo "Serving directory: $serve_dir"
+          npx --yes serve -s "$serve_dir" -l 5000 >/tmp/serve.log 2>&1 &
           echo $! > serve.pid
           for i in $(seq 1 30); do
             if curl -sfS http://localhost:5000/ >/dev/null 2>&1; then
