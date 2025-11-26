@@ -1,0 +1,43 @@
+name: Performance - ceosFront (k6 smoke)
+
+on:
+  workflow_dispatch:
+  # optional scheduled run
+  schedule:
+    - cron: '0 */6 * * *' # every 6 hours
+
+jobs:
+  perf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve target URL
+        run: |
+          TARGET="${{ secrets.FRONTEND_URL }}"
+          if [ -z "$TARGET" ]; then TARGET="${{ vars.FRONTEND_URL }}"; fi
+          if [ -z "$TARGET" ]; then TARGET="${{ secrets.CEOS_FRONTEND_URL }}"; fi
+          if [ -z "$TARGET" ]; then TARGET="${{ vars.CEOS_FRONTEND_URL }}"; fi
+          if [ -z "$TARGET" ]; then echo "ERROR: No FRONTEND_URL configured"; exit 1; fi
+          echo "TARGET_URL=$TARGET" >> $GITHUB_ENV
+
+      - name: Install k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg2 software-properties-common
+          curl -s https://dl.k6.io/key.gpg | sudo apt-key add -
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Run k6 smoke test
+        run: |
+          k6 run --out json=results-k6.json tests/perf/k6_test.js --env TARGET_URL="$TARGET_URL"
+
+      - name: Upload k6 report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ceosFront-k6-report
+          path: results-k6.json
