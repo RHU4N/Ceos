@@ -1,0 +1,35 @@
+name: Security - Snyk (ceosFront)
+
+on:
+  push:
+    branches: [ devops, main, master ]
+  pull_request:
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Run Snyk test (skip if no token)
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          if [ -z "$SNYK_TOKEN" ]; then echo "Skipping Snyk test: SNYK_TOKEN not set"; exit 0; fi
+          snyk auth "$SNYK_TOKEN"
+          snyk test --json > snyk-report.json || true
+
+      - name: Upload Snyk report
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-report
+          path: snyk-report.json
