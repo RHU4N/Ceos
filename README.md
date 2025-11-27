@@ -45,4 +45,6 @@ Email de suporte: ceoscalculadora.suporte@gmail.com
 
 Acesse: [https://ceos-puce.vercel.app/](https://ceos-puce.vercel.app/)
 
+Nota: pequena alteração para testar o push.
+
 
