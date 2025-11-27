@@ -54,6 +54,5 @@ Nota: pequena alteração para testar o push.
 - Segurança: Snyk + `npm audit` workflows estão configurados em `.github/workflows/`.
 - Deploy: `ceosFront` é configurado para deploy via Vercel (hook opcional no workflow).
 
-**Last updated:** 2025-11-27
 
 
