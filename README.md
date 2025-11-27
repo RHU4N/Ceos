@@ -47,4 +47,13 @@ Acesse: [https://ceos-puce.vercel.app/](https://ceos-puce.vercel.app/)
 
 Nota: pequena alteração para testar o push.
 
+## Testes e CI
+
+- Testes unitários: Jest (arquivos em `src/__tests__`).
+- Performance smoke: `k6` em `tests/perf/k6_test.js` (usado em CI).
+- Segurança: Snyk + `npm audit` workflows estão configurados em `.github/workflows/`.
+- Deploy: `ceosFront` é configurado para deploy via Vercel (hook opcional no workflow).
+
+**Last updated:** 2025-11-27
+
 
