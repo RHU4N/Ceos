@@ -14,9 +14,10 @@ Principais funcionalidades
 Colaboradores
 -------------
 - Substitua pelos nomes reais dos integrantes do grupo:
-	- João Silva
-	- Maria Souza
-	- Carlos Pereira
+	- Leonardo Torres
+	- Mauricio Maia
+	- Rhuan Silva
+ 	- Vitor Bastos 
 
 URL pública
 -----------
