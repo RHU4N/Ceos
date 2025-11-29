@@ -76,4 +76,31 @@ export default class MathApiRepository extends MathRepository {
     }
     return res.data.resultado ?? res.data;
   }
+  async calcularFinanceiro(params) {
+    if (!params || !params.tipo) throw new Error('Tipo de operação financeira é obrigatório');
+    // map frontend friendly types to backend routes
+    const tipo = String(params.tipo).toLowerCase();
+    let route;
+    if (tipo === 'variacao' || tipo === 'variacao-percentual') {
+      route = tipo; // /financeiro/variacao or /financeiro/variacao-percentual
+    } else if (tipo === 'juros-simples') {
+      route = 'juros/simples';
+    } else if (tipo === 'juros-compostos') {
+      route = 'juros/compostos';
+    } else {
+      // accept a direct route string as fallback
+      route = tipo;
+    }
+
+    const url = `${apiUrl}/financeiro/${route}`;
+    const res = await apiClient.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
+    if (!res || res.status >= 400) {
+      throw new Error((res && res.data && res.data.error) || `Erro ao chamar ${url}`);
+    }
+    // backend returns simple objects or numbers; normalize similar to other methods
+    const data = res.data;
+    if (data == null) return data;
+    if (typeof data === 'number' || typeof data === 'string' || Array.isArray(data)) return data;
+    return data.resultado ?? data.result ?? data.value ?? data;
+  }
 }

@@ -67,6 +67,19 @@ function Matematica() {
       </Link>
     </div>
 
+    {/* CARD 4 - Matemática Financeira */}
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
+      <Link to="/matematica/financeira" className="text-decoration-none">
+        <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver matemática financeira">
+          <div className="card-body text-center">
+            <h5 className="card-title">Matemática Financeira</h5>
+            <img src="/financeiro.png" alt="matemática financeira" className="card-image" />
+            <p className="card-text">Variação, juros simples e compostos.</p>
+          </div>
+        </div>
+      </Link>
+    </div>
+
   </div>
 </div>
 

@@ -8,6 +8,7 @@ import Matematica from './presentation/pages/Matematica';
 import Funcao from './presentation/pages/Funcao';
 import AnaliseComb from './presentation/pages/AnaliseComb';
 import Estatistica from './presentation/pages/Estatistica';
+import MatematicaFinanceira from './presentation/pages/MatematicaFinanceira';
 import Fisica from './presentation/pages/Fisica';
 import Cinetica from './presentation/pages/Cinetica';
 import Dinamica from './presentation/pages/Dinamica';
@@ -38,6 +39,7 @@ function App() {
               <Route path="/matematica/funcao" element={<Funcao />} />
               <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
               <Route path="/matematica/estatistica" element={<Estatistica />} />
+              <Route path="/matematica/financeira" element={<MatematicaFinanceira />} />
               <Route path="/fisica" element={<Fisica />} />
               <Route path="/fisica/cinetica" element={<Cinetica />} />
               <Route path="/fisica/dinamica" element={<Dinamica />} />
