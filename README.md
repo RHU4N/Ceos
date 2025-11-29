@@ -20,7 +20,7 @@ Colaboradores
 
 URL pública
 -----------
-Adicione aqui a URL pública do deploy (ex.: `https://seu-app-onrender.app`).
+[Céos](https://ceos-puce.vercel.app/)
 
 
 Observações
