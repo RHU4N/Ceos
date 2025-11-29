@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularEstatistica from '../../domain/usecases/CalcularEstatistica';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak as speakText } from "../../hooks/useTTS";
+import ExplanationCard from '../components/ExplanationCard';
 
 function Estatistica() {
   const [tipo, setTipo] = useState('media');
   const [numeros, setNumeros] = useState('');
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
+  const { user } = useAuth();
+  const location = useLocation();
   const { loading, setLoading } = useLoading();
+
+  useEffect(() => {
+    const values = location?.state?.initialValues;
+    const subtype = location?.state?.subtype;
+    if (values) {
+      if (values.numeros !== undefined) setNumeros(String(values.numeros));
+    }
+    if (subtype) setTipo(subtype);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +45,15 @@ function Estatistica() {
       const resultado = await calcular.execute({ tipo, data });
 
       setResultado(resultado);
+      try {
+        if (user) {
+          const valores = (numeros || '').trim();
+          const resultadoStr = Array.isArray(resultado) ? resultado.join(', ') : String(resultado);
+          await saveHistorico({ tipo: `Matematica:Estatistica:${tipo}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
 
       speakText(
         Array.isArray(resultado)
@@ -71,17 +95,14 @@ function Estatistica() {
   const renderExplanation = (key) => {
     const ex = examples[key];
     if (!ex) return null;
+    const pairs = Object.keys(ex).filter(k => k !== 'result' && k !== 'formula').map(k => `${k}=${ex[k]}`);
     return (
-      <div className="card mt-3 math-explain">
-        <div className="card-body">
-          <h6 className="card-title">Como a conta é feita</h6>
-          <p><strong>Fórmula:</strong> {ex.formula}</p>
-          <p><strong>Exemplo:</strong> {ex.numeros} → <em>{ex.result}</em></p>
-          <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
-          </div>
-        </div>
-      </div>
+      <ExplanationCard
+        formula={ex.formula}
+        examplePairs={pairs}
+        exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+        onCopyExample={() => fillExample(key)}
+      />
     );
   };
 

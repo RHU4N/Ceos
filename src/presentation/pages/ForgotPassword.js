@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { speak } from '../../hooks/useTTS';
 // import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
@@ -6,12 +7,20 @@ import './Style.css'; // <-- ajuste para importar o CSS correto da página
 import ForgotPasswordUseCase from '../../domain/usecases/ForgotPassword';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { useLoading } from '../context/LoadingContext';
+import { speak, useTTS } from '../../hooks/useTTS';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [erro, setErro] = useState('');
   const { loading, setLoading } = useLoading();
+
+  const { enabled } = useTTS();
+
+  useEffect(() => {
+    if (!enabled) return;
+    try { speak('Recuperar senha'); } catch (e) {}
+  }, [enabled]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,14 +45,14 @@ const ForgotPassword = () => {
     <main>
       <div className="container-fluid py-5 d-flex justify-content-center align-items-center" style={{ minHeight: 'calc(100vh - 180px)' }}>
         <div className="card p-4 shadow" style={{ maxWidth: 400, width: '100%' }}>
-          <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }}>Recuperar Senha</h3>
+          <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }} onMouseEnter={() => speak('Recuperar senha')} onFocus={() => speak('Recuperar senha')}>Recuperar Senha</h3>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email" className="form-label fw-bold">E-mail cadastrado</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaEnvelope /></span>
               <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} className="form-control" placeholder="Digite seu e-mail" required />
             </div>
-            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading}>{loading ? 'Enviando...' : 'Enviar'}</button>
+            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading} onMouseEnter={() => speak('Enviar')} onFocus={() => speak('Enviar')}>{loading ? 'Enviando...' : 'Enviar'}</button>
             {mensagem && <div className="alert alert-success mt-2">{mensagem}</div>}
             {erro && <div className="alert alert-danger mt-2">{erro}</div>}
           </form>

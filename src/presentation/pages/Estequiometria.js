@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import CalcularQuimica from '../../domain/usecases/CalcularQuimica';
 import ChemistryApiRepository from '../../infrastructure/api/ChemistryApiRepository';
 import { speak } from '../../hooks/useTTS';
+import ExplanationCard from '../components/ExplanationCard';
 
 function Estequiometria() {
   const [action, setAction] = useState('balanceamento');
@@ -13,6 +17,19 @@ function Estequiometria() {
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
   const { loading, setLoading } = useLoading();
+  const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    const values = location?.state?.initialValues;
+    const subtype = location?.state?.subtype;
+    if (values) {
+      if (values.equation !== undefined) setEquation(String(values.equation));
+      if (values.massa !== undefined) setMassa(String(values.massa));
+      if (values.massa_molar !== undefined) setMassaMol(String(values.massa_molar));
+    }
+    if (subtype) setAction(subtype);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +47,15 @@ function Estequiometria() {
       const calcular = new CalcularQuimica(new ChemistryApiRepository());
       const res = await calcular.execute({ action: act, data });
       setResultado(res);
+      try {
+        if (user) {
+          const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
+          const resultadoStr = typeof res === 'object' ? JSON.stringify(res) : String(res);
+          await saveHistorico({ tipo: `Quimica:Estequiometria:${act}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
       speak('Resultado: ' + (typeof res === 'object' ? JSON.stringify(res) : String(res)));
     } catch (err) {
       setErro(err.message || 'Erro ao calcular');
@@ -64,17 +90,14 @@ function Estequiometria() {
   const renderExplanation = (key) => {
     const ex = examples[key];
     if (!ex) return null;
+    const pairs = Object.keys(ex).filter(k=>['equation','massa','massa_molar'].includes(k)).map(k=>`${k}=${ex[k]}`);
     return (
-      <div className="card mt-3 chemistry-explain">
-        <div className="card-body">
-          <h6 className="card-title">Como a conta é feita</h6>
-          <p><strong>Fórmula / Método:</strong> {ex.formula}</p>
-          <p><strong>Exemplo:</strong> {Object.keys(ex).filter(k=>['equation','massa','massa_molar'].includes(k)).map(k=>`${k}=${ex[k]}`).join(', ')} {ex.result ? `→ ${ex.result}` : ''}</p>
-          <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
-          </div>
-        </div>
-      </div>
+      <ExplanationCard
+        formula={ex.formula}
+        examplePairs={pairs}
+        exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+        onCopyExample={() => fillExample(key)}
+      />
     );
   };
 

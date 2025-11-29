@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 // import axios from "axios";
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
@@ -6,6 +7,8 @@ import './Style.css'; // <-- ajuste para importar o CSS correto da página
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularFuncao from '../../domain/usecases/CalcularFuncao';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 
 function Funcao() {
@@ -18,6 +21,22 @@ function Funcao() {
   const [explanation, setExplanation] = useState(null);
   const [erro, setErro] = useState("");
   const { loading, setLoading } = useLoading();
+  const { user } = useAuth();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location && location.state && location.state.initialValues) {
+      const vals = location.state.initialValues || {};
+      // tipo may be in state.subtype
+      if (location.state.subtype) setTipo(location.state.subtype);
+      if (vals.a !== undefined) setA(String(vals.a));
+      if (vals.b !== undefined) setB(String(vals.b));
+      if (vals.c !== undefined) setC(String(vals.c));
+      if (vals.x !== undefined) setX(String(vals.x));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +55,15 @@ function Funcao() {
       const resultado = await calcularFuncao.execute({ tipo, data });
       // keep raw result and also build an explanation
       setResultado(resultado);
+      try {
+        if (user) {
+          const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
+          const resultadoStr = Array.isArray(resultado) ? resultado.join(', ') : String(resultado);
+          await saveHistorico({ tipo: `Matematica:Funcao:${tipo}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
       setExplanation(buildExplanation(tipo, { a: Number(a), b: Number(b), c: Number(c), x: x !== '' ? Number(x) : undefined }, resultado));
     } catch (err) {
       setErro(err.message || "Erro ao calcular");

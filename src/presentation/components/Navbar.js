@@ -9,6 +9,7 @@ import {
   FaTrash,
   FaEnvelope,
   FaLock,
+  FaHistory,
 } from "react-icons/fa";
 import axios from "axios";
 import { createPortal } from "react-dom";
@@ -403,6 +404,19 @@ function Navbar() {
   const [showModal, setShowModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { enabled: ttsEnabled, toggle: toggleTTS } = useTTS();
+  const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
+
+  useEffect(() => {
+    function onToast(e) {
+      try {
+        const d = e && e.detail ? e.detail : {};
+        setToast({ show: true, message: d.message || 'Mensagem', type: d.type || 'info' });
+        setTimeout(() => setToast({ show: false, message: '', type: 'info' }), 3500);
+      } catch (err) {}
+    }
+    window.addEventListener('ceos:toast', onToast);
+    return () => window.removeEventListener('ceos:toast', onToast);
+  }, []);
  
 
   const handleUpdate = (newUser) => {
@@ -692,6 +706,20 @@ function Navbar() {
               />
             </span>
 
+            {/* LINK PARA HISTÓRICO */}
+            <Link
+              to="/historico"
+              className="btn btn-primary btn-sm ms-2 d-flex align-items-center"
+              tabIndex={loading ? -1 : 0}
+              onClick={(e) => { preventIfLoading(e); speak('Histórico'); }}
+              onMouseEnter={() => !loading && speak('Ver histórico')}
+              onFocus={() => !loading && speak('Ver histórico')}
+              style={{ textDecoration: 'none', borderRadius: 20, padding: '6px 10px' }}
+            >
+              <FaHistory style={{ marginRight: 6 }} />
+              Histórico
+            </Link>
+
             {/* BOTÃO SAIR */}
             <button
               className="btn btn-outline-secondary btn-sm ms-2 btn-sair-ceos"
@@ -728,6 +756,14 @@ function Navbar() {
         )}
         </>
       </div>
+      {/* Toast container */}
+      {toast.show && (
+        <div style={{ position: 'fixed', right: 18, top: 84, zIndex: 200000 }}>
+          <div className={`alert ${toast.type === 'success' ? 'alert-success' : toast.type === 'warning' ? 'alert-warning' : 'alert-info'}`} style={{ margin: 0, minWidth: 260, boxShadow: '0 6px 24px rgba(0,0,0,0.12)' }}>
+            {toast.message}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

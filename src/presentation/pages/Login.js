@@ -1,14 +1,14 @@
 import React from "react";
 import "../components/Style.css"; // <-- ajuste para importar o CSS de componentes globais
 // import axios from 'axios';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoginUser from "../../domain/usecases/LoginUser";
 import UserApiRepository from "../../infrastructure/api/UserApiRepository";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useLoading } from "../context/LoadingContext";
-import { speak } from "../../hooks/useTTS";
+import { speak, useTTS } from "../../hooks/useTTS";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +17,13 @@ const Login = () => {
   const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  const { enabled } = useTTS();
+
+  useEffect(() => {
+    if (!enabled) return;
+    try { speak('Entrar na sua conta'); } catch (e) {}
+  }, [enabled]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

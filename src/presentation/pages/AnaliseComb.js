@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import './Style.css';
 
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularAnaliseComb from '../../domain/usecases/CalcularAnaliseComb';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from "../../hooks/useTTS";
+import ExplanationCard from '../components/ExplanationCard';
 
 function AnaliseComb() {
   const [tipo, setTipo] = useState('permutacao');
@@ -14,6 +18,18 @@ function AnaliseComb() {
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
   const { loading, setLoading } = useLoading();
+  const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    const values = location?.state?.initialValues;
+    const subtype = location?.state?.subtype;
+    if (values) {
+      if (values.n !== undefined) setN(String(values.n));
+      if (values.k !== undefined) setK(String(values.k));
+    }
+    if (subtype) setTipo(subtype);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +49,16 @@ function AnaliseComb() {
 
       const resultado = await calcularAnaliseComb.execute({ tipo, data });
       setResultado(resultado);
+
+      try {
+        if (user) {
+          const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
+          const resultadoStr = Array.isArray(resultado) ? resultado.join(', ') : String(resultado);
+          await saveHistorico({ tipo: `Matematica:AnaliseCombinatoria:${tipo}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
 
       speak(`Resultado: ${resultado}`);
     } catch (err) {
@@ -73,17 +99,14 @@ function AnaliseComb() {
   const renderExplanation = (key) => {
     const ex = examples[key];
     if (!ex) return null;
+    const pairs = Object.keys(ex).filter(k=>['n','k'].includes(k)).map(k=>`${k}=${ex[k]}`);
     return (
-      <div className="card mt-3 math-explain">
-        <div className="card-body">
-          <h6 className="card-title">Como a conta é feita</h6>
-          <p><strong>Fórmula:</strong> {ex.formula}</p>
-          <p><strong>Exemplo:</strong> {Object.keys(ex).filter(k=>['n','k'].includes(k)).map(k=>`${k}=${ex[k]}`).join(', ')} → <em>{ex.result}</em></p>
-          <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
-          </div>
-        </div>
-      </div>
+      <ExplanationCard
+        formula={ex.formula}
+        examplePairs={pairs}
+        exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+        onCopyExample={() => fillExample(key)}
+      />
     );
   };
 

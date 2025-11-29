@@ -1,8 +1,9 @@
 import React from 'react';
+import { speak } from '../../hooks/useTTS';
 
 const Feedback = () => (
   <div style={{ padding: '2rem', textAlign: 'center' }}>
-    <h2>Envie seu Feedback</h2>
+    <h2 onMouseEnter={() => speak('Enviar feedback')} onFocus={() => speak('Enviar feedback')}>Envie seu Feedback</h2>
     <iframe
       src="https://docs.google.com/forms/d/e/1FAIpQLSev34QE4Y6qlNRs843XlpJ7yTbIEovmt3E1RwcO-RSqV3TK4w/viewform?embedded=true"
       width="640"

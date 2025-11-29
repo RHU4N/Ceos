@@ -1,27 +1,32 @@
-# Céos
+# Ceos Frontend (ceosFront)
 
-Céos é uma plataforma desenvolvida para facilitar o estudo de Matemática, Física e Química, oferecendo ferramentas interativas, fórmulas e recursos para estudantes e professores.
+Breve descrição
+----------------
+Frontend da aplicação CEOS — coleção de calculadoras científicas e educacionais (Matemática, Física, Química, etc.). Fornece interfaces para cálculos, histórico de operações, exportação de resultados e acessibilidade (TTS — text-to-speech).
 
-## Sobre o Projeto
+Principais funcionalidades
+-------------------------
+- Conjunto de páginas para cálculos científicos (Estatística, Dinâmica, Energia, Cinetica, Matemática Financeira, Química, etc.).
+- Sistema de histórico (salva operações por usuário, exporta em JSON/CSV, copia/abre entradas).
+- Cartões de exemplo/explicação reutilizáveis (componente `ExplanationCard`).
+- Acessibilidade: suporte a TTS (hook `useTTS`).
 
-O objetivo do Céos é tornar o aprendizado mais acessível, prático e eficiente, reunindo funcionalidades que ajudam na resolução de exercícios, revisão de conceitos e aprofundamento dos estudos.
+Colaboradores
+-------------
+- Substitua pelos nomes reais dos integrantes do grupo:
+	- João Silva
+	- Maria Souza
+	- Carlos Pereira
 
-## Funcionalidades
+URL pública
+-----------
+Adicione aqui a URL pública do deploy (ex.: `https://seu-app-onrender.app`).
 
-- Ambiente de estudo para Matemática, Física e Química
-- Ferramentas de cálculo interativas
-- Histórico de cálculos
-- Cadastro e login de usuários
-- Suporte a planos gratuitos e pagos
-- Central de ajuda (FAQ)
-- Feedback dos usuários
 
-## Tecnologias Utilizadas
-
-- React
-- React Router
-- Axios
-- Bootstrap
+Observações
+-----------
+- Atualize `Colaboradores` e `URL pública` com as informações do seu grupo.
+- Adapte as instruções de deploy caso você use uma plataforma específica.
 - React Icons
 
 ## Como executar

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
+import { speak } from '../../hooks/useTTS';
 
 function Matematica() {
   return (
@@ -18,8 +19,8 @@ function Matematica() {
 
 <div className="container mt-3">
 
-   <div className="text-center mb-4">
-    <h2 className="mb-2">Matemática</h2>
+  <div className="text-center mb-4">
+    <h2 className="mb-2" onMouseEnter={() => speak('Matemática')} onFocus={() => speak('Matemática')}>Matemática</h2>
     <p className="text-muted">Escolha uma das áreas para acessar as fórmulas e ferramentas:</p>
   </div>
 
@@ -28,7 +29,7 @@ function Matematica() {
 
     {/* CARD 1 */}
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
-      <Link to="/matematica/funcao" className="text-decoration-none">
+      <Link to="/matematica/funcao" className="text-decoration-none" onMouseEnter={() => speak('Função')} onFocus={() => speak('Função')}>
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver funções">
           <div className="card-body text-center">
             <h5 className="card-title">Função</h5>
@@ -43,7 +44,7 @@ function Matematica() {
 
     {/* CARD 2 */}
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
-      <Link to="/matematica/analise-combinatoria" className="text-decoration-none">
+      <Link to="/matematica/analise-combinatoria" className="text-decoration-none" onMouseEnter={() => speak('Análise combinatória')} onFocus={() => speak('Análise combinatória')}>
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver análise combinatória">
           <div className="card-body text-center">
             <h5 className="card-title">Análise Combinatória</h5>
@@ -56,7 +57,7 @@ function Matematica() {
 
     {/* CARD 3 */}
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
-      <Link to="/matematica/estatistica" className="text-decoration-none">
+      <Link to="/matematica/estatistica" className="text-decoration-none" onMouseEnter={() => speak('Estatística')} onFocus={() => speak('Estatística')}>
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver estatística">
           <div className="card-body text-center">
             <h5 className="card-title">Estatística</h5>
@@ -69,7 +70,7 @@ function Matematica() {
 
     {/* CARD 4 - Matemática Financeira */}
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
-      <Link to="/matematica/financeira" className="text-decoration-none">
+      <Link to="/matematica/financeira" className="text-decoration-none" onMouseEnter={() => speak('Matemática financeira')} onFocus={() => speak('Matemática financeira')}>
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver matemática financeira">
           <div className="card-body text-center">
             <h5 className="card-title">Matemática Financeira</h5>

@@ -22,6 +22,7 @@ import Estequiometria from './presentation/pages/Estequiometria';
 import Concentracao from './presentation/pages/Concentracao';
 import Termoquimica from './presentation/pages/Termoquimica';
 import Solucoes from './presentation/pages/Solucoes';
+import Historico from './presentation/pages/Historico';
 // import Feedback from './presentation/pages/Feedback';
 import { AuthProvider } from './presentation/context/AuthContext';
 import { LoadingProvider } from './presentation/context/LoadingContext';
@@ -50,6 +51,7 @@ function App() {
               <Route path="/quimica/concentracao" element={<Concentracao />} />
               <Route path="/quimica/termoquimica" element={<Termoquimica />} />
               <Route path="/solucoes" element={<Solucoes />} />
+              <Route path="/historico" element={<Historico />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               {/* <Route path="/feedback" element={<Feedback />} /> */}

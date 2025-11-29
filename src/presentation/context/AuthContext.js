@@ -90,6 +90,26 @@ export function AuthProvider({ children }) {
     }
   }, [handleLogout]);
 
+  // Listen for historico updates emitted elsewhere in the app and sync into context
+  useEffect(() => {
+    function onHistoricoUpdate(e) {
+      try {
+        const latest = e && e.detail ? e.detail : null;
+        if (!latest) return;
+        setUser(prev => {
+          if (!prev) return prev;
+          const next = { ...prev, historico: latest };
+          try { localStorage.setItem('ceos_user', JSON.stringify(next)); } catch (err) {}
+          return next;
+        });
+      } catch (err) {
+        // ignore
+      }
+    }
+    window.addEventListener('ceos:historicoUpdated', onHistoricoUpdate);
+    return () => window.removeEventListener('ceos:historicoUpdated', onHistoricoUpdate);
+  }, []);
+
   // attach axios interceptor to logout on 401 unauthorized
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(

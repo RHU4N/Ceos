@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import CalcularQuimica from '../../domain/usecases/CalcularQuimica';
 import ChemistryApiRepository from '../../infrastructure/api/ChemistryApiRepository';
 import { speak } from '../../hooks/useTTS';
+import ExplanationCard from '../components/ExplanationCard';
 
 function Solucoes() {
   const [action, setAction] = useState('molaridade');
@@ -16,6 +20,22 @@ function Solucoes() {
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
   const { loading, setLoading } = useLoading();
+  const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    const values = location?.state?.initialValues;
+    const subtype = location?.state?.subtype;
+    if (values) {
+      if (values.soluto !== undefined) setSoluto(String(values.soluto));
+      if (values.volume !== undefined) setVolume(String(values.volume));
+      if (values.solvente !== undefined) setSolvente(String(values.solvente));
+      if (values.n1 !== undefined) setN1(String(values.n1));
+      if (values.n2 !== undefined) setN2(String(values.n2));
+      if (values.massa !== undefined) setMassa(String(values.massa));
+    }
+    if (subtype) setAction(subtype);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,6 +52,15 @@ function Solucoes() {
       const calcular = new CalcularQuimica(new ChemistryApiRepository());
       const res = await calcular.execute({ action: act, data });
       setResultado(res);
+      try {
+        if (user) {
+          const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
+          const resultadoStr = typeof res === 'object' ? JSON.stringify(res) : String(res);
+          await saveHistorico({ tipo: `Quimica:Solucoes:${act}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
       speak('Resultado: ' + (typeof res === 'object' ? JSON.stringify(res) : String(res)));
     } catch (err) {
       setErro(err.message || 'Erro ao calcular');
@@ -69,18 +98,14 @@ function Solucoes() {
   const renderExplanation = (actKey) => {
     const ex = examples[actKey];
     if (!ex) return null;
+    const pairs = Object.keys(ex).filter(k => ['soluto','volume','solvente','n1','n2','massa'].includes(k)).map(k => `${k}=${ex[k]}`);
     return (
-      <div className="card mt-3 chemistry-explain">
-        <div className="card-body">
-          <h6 className="card-title">Como a conta é feita</h6>
-          <p><strong>Fórmula:</strong> {ex.formula}</p>
-          <p><strong>Unidades esperadas:</strong> {actKey === 'molaridade' ? 'soluto (mol), volume (L)' : actKey === 'concentracao-comum' ? 'soluto (g), volume (L)' : actKey === 'molalidade' ? 'soluto (mol), solvente (kg)' : actKey === 'fracao-molar' ? 'n1 (mol), n2 (mol)' : 'massa (g), volume (mL)'}</p>
-          <p><strong>Exemplo:</strong> {Object.keys(ex).filter(k => ['soluto','volume','solvente','n1','n2','massa'].includes(k)).map(k => `${k}=${ex[k]}`).join(', ')} → <em>{ex.result}</em></p>
-          <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(actKey)}>Copiar exemplo</button>
-          </div>
-        </div>
-      </div>
+      <ExplanationCard
+        formula={ex.formula}
+        examplePairs={pairs}
+        exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+        onCopyExample={() => fillExample(actKey)}
+      />
     );
   };
 

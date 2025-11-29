@@ -31,4 +31,25 @@ export default class UserApiRepository extends UserRepository {
 		const userData = userRes.data.find(u => u.email === email);
 		return { user: userData, token };
 	}
+
+	// Histórico endpoints
+	async addHistorico({ tipo, valores, resultado }) {
+		const res = await apiClient.post(`${apiUrl}/users/historico`, { tipo, valores, resultado });
+		return res.data;
+	}
+
+	async getHistorico() {
+		const res = await apiClient.get(`${apiUrl}/users/historico`);
+		return res.data;
+	}
+
+	async clearHistorico() {
+		const res = await apiClient.delete(`${apiUrl}/users/historico`);
+		return res.data;
+	}
+
+	async deleteHistoricoItem(id) {
+		const res = await apiClient.delete(`${apiUrl}/users/historico/${id}`);
+		return res.data;
+	}
 }

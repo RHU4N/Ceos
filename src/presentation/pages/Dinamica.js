@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import PhysicsApiRepository from '../../infrastructure/api/PhysicsApiRepository';
 import CalcularDinamica from '../../domain/usecases/CalcularDinamica';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
+import ExplanationCard from '../components/ExplanationCard';
 
 const repo = new PhysicsApiRepository();
 
@@ -19,6 +23,23 @@ function Dinamica() {
   const [result, setResult] = useState(null);
   const [erro, setErro] = useState('');
   const { loading, setLoading } = useLoading();
+  const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    const values = location?.state?.initialValues;
+    const subtype = location?.state?.subtype;
+    if (values) {
+      if (values.m !== undefined) setM(String(values.m));
+      if (values.g !== undefined) setG(String(values.g));
+      if (values.mu !== undefined) setMu(String(values.mu));
+      if (values.N !== undefined) setN(String(values.N));
+      if (values.a !== undefined) setA(String(values.a));
+      if (values.k !== undefined) setK(String(values.k));
+      if (values.x !== undefined) setX(String(values.x));
+    }
+    if (subtype) setTipo(subtype);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +58,15 @@ function Dinamica() {
       const calcular = new CalcularDinamica(new PhysicsApiRepository());
       const res = await calcular.execute({ action: tipo, data });
       setResult(res);
+      try {
+        if (user) {
+          const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
+          const resultadoStr = typeof res === 'object' ? JSON.stringify(res) : String(res);
+          await saveHistorico({ tipo: `Fisica:Dinamica:${tipo}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
       speak(`Resultado: ${typeof res === 'object' ? JSON.stringify(res) : String(res)}`);
     } catch (err) {
       setErro(err.message || 'Erro ao calcular');
@@ -72,17 +102,14 @@ function Dinamica() {
   const renderExplanation = (key) => {
     const ex = examples[key];
     if (!ex) return null;
+    const pairs = Object.keys(ex).filter(k=>['m','g','a','mu','N','k','x'].includes(k)).map(k=>`${k}=${ex[k]}`);
     return (
-      <div className="card mt-3 physics-explain">
-        <div className="card-body">
-          <h6 className="card-title">Como a conta é feita</h6>
-          <p><strong>Fórmula:</strong> {ex.formula}</p>
-          <p><strong>Exemplo:</strong> {Object.keys(ex).filter(k=>['m','g','a','mu','N','k','x'].includes(k)).map(k=>`${k}=${ex[k]}`).join(', ')} {ex.result ? `→ ${ex.result}` : ''}</p>
-          <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
-          </div>
-        </div>
-      </div>
+      <ExplanationCard
+        formula={ex.formula}
+        examplePairs={pairs}
+        exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+        onCopyExample={() => fillExample(key)}
+      />
     );
   };
 

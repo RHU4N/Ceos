@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaTemperatureHigh } from 'react-icons/fa6';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import CalcularQuimica from '../../domain/usecases/CalcularQuimica';
 import ChemistryApiRepository from '../../infrastructure/api/ChemistryApiRepository';
 import { speak } from '../../hooks/useTTS';
+import ExplanationCard from '../components/ExplanationCard';
 
 function Termoquimica() {
   const [action, setAction] = useState('entalpia');
@@ -16,6 +20,22 @@ function Termoquimica() {
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
   const { loading, setLoading } = useLoading();
+  const { user } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    const values = location?.state?.initialValues;
+    const subtype = location?.state?.subtype;
+    if (values) {
+      if (values.entalpia_molar !== undefined) setEntalpiaMolar(String(values.entalpia_molar));
+      if (values.moles !== undefined) setMoles(String(values.moles));
+      if (values.massa !== undefined) setMassa(String(values.massa));
+      if (values.calor_especifico !== undefined) setCalorEspecifico(String(values.calor_especifico));
+      if (values.delta_t !== undefined) setDeltaT(String(values.delta_t));
+      if (values.calor !== undefined) setCalor(String(values.calor));
+    }
+    if (subtype) setAction(subtype);
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +50,15 @@ function Termoquimica() {
       const calcular = new CalcularQuimica(new ChemistryApiRepository());
       const res = await calcular.execute({ action: act, data });
       setResultado(res);
+      try {
+        if (user) {
+          const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
+          const resultadoStr = typeof res === 'object' ? JSON.stringify(res) : String(res);
+          await saveHistorico({ tipo: `Quimica:Termoquimica:${act}`, valores, resultado: resultadoStr });
+        }
+      } catch (err) {
+        console.warn('Não foi possível salvar histórico:', err?.message || err);
+      }
       speak('Resultado: ' + (typeof res === 'object' ? JSON.stringify(res) : String(res)));
     } catch (err) {
       setErro(err.message || 'Erro ao calcular');
@@ -62,17 +91,14 @@ function Termoquimica() {
   const renderExplanation = (key) => {
     const ex = examples[key];
     if (!ex) return null;
+    const pairs = Object.keys(ex).filter(k=>['entalpia_molar','moles','massa','calor_especifico','delta_t','calor'].includes(k)).map(k=>`${k}=${ex[k]}`);
     return (
-      <div className="card mt-3 chemistry-explain">
-        <div className="card-body">
-          <h6 className="card-title">Como a conta é feita</h6>
-          <p><strong>Fórmula:</strong> {ex.formula}</p>
-          <p><strong>Exemplo:</strong> {Object.keys(ex).filter(k=>['entalpia_molar','moles','massa','calor_especifico','delta_t','calor'].includes(k)).map(k=>`${k}=${ex[k]}`).join(', ')} → <em>{ex.result}</em></p>
-          <div className="d-flex gap-2">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
-          </div>
-        </div>
-      </div>
+      <ExplanationCard
+        formula={ex.formula}
+        examplePairs={pairs}
+        exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+        onCopyExample={() => fillExample(key)}
+      />
     );
   };
 

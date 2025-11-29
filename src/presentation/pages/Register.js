@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../components/Style.css'; // use component styles for auth pages (avoid page styles meant for Matemática)
 // import axios from 'axios';
 // import { useAuth } from '../context/AuthContext';
@@ -8,7 +8,7 @@ import RegisterUser from '../../domain/usecases/RegisterUser';
 import UserApiRepository from '../../infrastructure/api/UserApiRepository';
 import { FaEnvelope, FaLock, FaUser, FaPhone } from 'react-icons/fa';
 import { useLoading } from '../context/LoadingContext';
-import { speak } from '../../hooks/useTTS';
+import { speak, useTTS } from '../../hooks/useTTS';
 
 const Register = () => {
   const [nome, setNome] = useState('');
@@ -21,6 +21,13 @@ const Register = () => {
   const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
   // const { login } = useAuth();
+
+  const { enabled } = useTTS();
+
+  useEffect(() => {
+    if (!enabled) return;
+    try { speak('Criar nova conta'); } catch (e) {}
+  }, [enabled]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import CalcularFinanceiro from '../../domain/usecases/CalcularFinanceiro';
 import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
+import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak as speakText } from '../../hooks/useTTS';
+import ExplanationCard from '../components/ExplanationCard';
 import './Style.css';
 
 function MatematicaFinanceira() {
@@ -13,6 +17,19 @@ function MatematicaFinanceira() {
 	const [resultado, setResultado] = useState(null);
 	const [erro, setErro] = useState('');
 	const { loading, setLoading } = useLoading();
+	const { user } = useAuth();
+
+	const location = useLocation();
+
+	useEffect(() => {
+		if (location && location.state && location.state.initialValues) {
+			const vals = location.state.initialValues;
+			if (location.state.subtype) setTipo(location.state.subtype);
+			// populate inputs with string values
+			setInputs(prev => ({ ...prev, ...Object.fromEntries(Object.entries(vals).map(([k,v]) => [k, v === undefined || v === null ? '' : String(v)])) }));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location]);
 
 	const handleChange = (key, value) => {
 		setInputs(prev => ({ ...prev, [key]: value }));
@@ -46,6 +63,18 @@ function MatematicaFinanceira() {
 
 			const res = await calcular.execute({ tipo, data: payload });
 			setResultado(res);
+			// save operation to user historico when logged in
+			try {
+				if (user) {
+					const valores = Object.entries(payload).map(([k,v]) => `${k}=${v}`).join(', ');
+					const resultado = Array.isArray(res) ? res.join(', ') : String(res);
+					await saveHistorico({ tipo: `MatematicaFinanceira:${tipo}`, valores, resultado });
+					// optionally update local stored user (not required here)
+				}
+			} catch (err) {
+				// fail silently - history saving should not break UX
+				console.warn('Não foi possível salvar histórico:', err?.message || err);
+			}
 			speakText(Array.isArray(res) ? `Resultado: ${res.join(', ')}` : `Resultado: ${res}`);
 		} catch (err) {
 			setErro(err.message || 'Erro ao calcular');
@@ -118,22 +147,19 @@ function MatematicaFinanceira() {
 		speakText('Exemplo copiado. ' + (ex.formula || ''));
 	};
 
-	const renderExplanation = (key) => {
-		const ex = examples[key];
-		if (!ex) return null;
-		return (
-			<div className="card mt-3 math-explain">
-				<div className="card-body">
-					<h6 className="card-title">Como a conta é feita</h6>
-					<p><strong>Fórmula:</strong> {ex.formula}</p>
-					<p><strong>Exemplo:</strong> {Object.entries(ex.inputs).map(([k,v]) => `${k}=${v}`).join(', ')} → <em>{ex.result}</em></p>
-					<div className="d-flex gap-2">
-						<button type="button" className="btn btn-outline-secondary" onClick={() => fillExample(key)}>Copiar exemplo</button>
-					</div>
-				</div>
-			</div>
-		);
-	};
+		const renderExplanation = (key) => {
+			const ex = examples[key];
+			if (!ex) return null;
+			const pairs = Object.entries(ex.inputs || {}).map(([k,v]) => `${k}=${v}`);
+			return (
+				<ExplanationCard
+					formula={ex.formula}
+					examplePairs={pairs}
+					exampleText={pairs.join(', ') + (ex.result ? ` → ${ex.result}` : '')}
+					onCopyExample={() => fillExample(key)}
+				/>
+			);
+		};
 
 	return (
 		<>
