@@ -604,17 +604,19 @@ function Navbar() {
       </nav>
 
       <div className="buttons">
-        {!user ? (
+        <>
+          <button
+            onClick={() => {
+              toggleTTS();
+            }}
+            onMouseEnter={() => !loading && speak("Alternar leitor de voz")}
+            onFocus={() => !loading && speak("Alternar leitor de voz")}
+          >
+            {ttsEnabled ? "TTS: ON" : "TTS: OFF"}
+          </button>
+
+          {!user ? (
           <>
-            <button
-              onClick={() => {
-                toggleTTS();
-              }}
-              onMouseEnter={() => !loading && speak("Alternar leitor de voz")}
-              onFocus={() => !loading && speak("Alternar leitor de voz")}
-            >
-              {ttsEnabled ? "TTS: ON" : "TTS: OFF"}
-            </button>
 
             {/* ENTRAR */}
             <Link
@@ -724,6 +726,7 @@ function Navbar() {
             />
           </div>
         )}
+        </>
       </div>
     </header>
   );
