@@ -20,6 +20,9 @@
 .env
 .env.example
 
+# Vercel
+.vercel
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
