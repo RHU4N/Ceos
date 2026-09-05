@@ -1,0 +1,10 @@
+services:
+  frontend:
+    build:
+      context: .
+      args:
+        # URLs consumed by the browser, therefore they use the host ports.
+        REACT_APP_API_MATH_URL: http://localhost:8080
+        REACT_APP_API_LOGIN_URL: http://localhost:8081
+    ports:
+      - "3000:80"
