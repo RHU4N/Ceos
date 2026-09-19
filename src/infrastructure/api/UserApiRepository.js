@@ -15,6 +15,7 @@ export default class UserApiRepository extends UserRepository {
 			nome: userData.nome,
 			email: userData.email,
 			senha: userData.senha,
+			confirmaSenha: userData.confirmarSenha,
 			telefone: userData.telefone,
 			assinante: false,
 			historico: []
@@ -23,13 +24,8 @@ export default class UserApiRepository extends UserRepository {
 	}
 
 	async login({ email, senha }) {
-			const res = await apiClient.post(`${apiUrl}/auth/login`, { email, senha });
-			const { token } = res.data;
-			// store token temporarily so apiClient will include it for subsequent user fetch
-			localStorage.setItem('ceos_token', token);
-			const userRes = await apiClient.get(`${apiUrl}/users`);
-		const userData = userRes.data.find(u => u.email === email);
-		return { user: userData, token };
+		const res = await apiClient.post(`${apiUrl}/auth/login`, { email, senha });
+		return { user: res.data.data.user };
 	}
 
 	// Histórico endpoints

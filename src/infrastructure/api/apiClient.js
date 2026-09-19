@@ -1,23 +1,7 @@
 import axios from 'axios';
 
-const apiClient = axios.create();
-
-// Attach token from localStorage on each request
-apiClient.interceptors.request.use(
-  (config) => {
-    try {
-      const token = localStorage.getItem('ceos_token');
-      if (token) {
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (e) {
-      // ignore
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// O JWT é mantido pelo navegador em um cookie HttpOnly, não no localStorage.
+const apiClient = axios.create({ withCredentials: true });
 
 // Global response handler to clear storage on 401
 apiClient.interceptors.response.use(
@@ -27,7 +11,6 @@ apiClient.interceptors.response.use(
     if (status === 401) {
       try {
         localStorage.removeItem('ceos_user');
-        localStorage.removeItem('ceos_token');
       } catch (e) {}
       // Try to redirect to login
       try {

@@ -68,14 +68,13 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
     setSucesso("");
     setLoading(true);
     try {
-      const token = localStorage.getItem("ceos_token");
       // Se for alterar senha, precisa da senha atual
       if (senha && !senhaAtual) {
         setErro("Para alterar a senha, informe a senha atual.");
         setLoading(false);
         return;
       }
-      await axios.put(
+      await axios.patch(
         `${baseUrl}/users/${user._id}`,
         {
           nome,
@@ -86,9 +85,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
           assinante: user.assinante,
           historico: user.historico,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { withCredentials: true }
       );
       setSucesso("Dados atualizados com sucesso!");
       onUpdate({ ...user, nome, email, telefone });
@@ -111,9 +108,8 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
       return;
     setLoading(true);
     try {
-      const token = localStorage.getItem("ceos_token");
       await axios.delete(`${baseUrl}/users/${user._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
       onDelete();
     } catch (err) {
@@ -420,7 +416,7 @@ function Navbar() {
  
 
   const handleUpdate = (newUser) => {
-    login(newUser, localStorage.getItem("ceos_token"));
+    login(newUser);
   };
 
   const handleDelete = () => {
