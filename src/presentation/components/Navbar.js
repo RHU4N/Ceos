@@ -30,6 +30,12 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
   // base URL fallback
   const baseUrl =
     process.env.REACT_APP_API_LOGIN_URL || "http://localhost:8081";
+  // A API devolve `id` no DTO. `_id` é aceito apenas para sessões antigas
+  // que podem ter ficado salvas no navegador.
+  const userId = user?.id || user?._id;
+
+  const getErrorMessage = (err, fallback) =>
+    err?.response?.data?.error?.message || err?.response?.data?.message || err?.message || fallback;
 
   // Impede scroll do body quando o modal está aberto
   useEffect(() => {
@@ -74,8 +80,12 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
         setLoading(false);
         return;
       }
+      if (!userId) {
+        setErro("Não foi possível identificar sua conta. Entre novamente e tente outra vez.");
+        return;
+      }
       await axios.patch(
-        `${baseUrl}/users/${user._id}`,
+        `${baseUrl}/users/${userId}`,
         {
           nome,
           email,
@@ -93,7 +103,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
       setSenhaAtual("");
       setTimeout(onClose, 1200);
     } catch (err) {
-      setErro(err.response?.data?.error || "Erro ao atualizar dados.");
+      setErro(getErrorMessage(err, "Não foi possível atualizar os dados."));
     } finally {
       setLoading(false);
     }
@@ -108,12 +118,16 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
       return;
     setLoading(true);
     try {
-      await axios.delete(`${baseUrl}/users/${user._id}`, {
+      if (!userId) {
+        setErro("Não foi possível identificar sua conta. Entre novamente e tente outra vez.");
+        return;
+      }
+      await axios.delete(`${baseUrl}/users/${userId}`, {
         withCredentials: true,
       });
       onDelete();
     } catch (err) {
-      setErro("Erro ao excluir conta.");
+      setErro(getErrorMessage(err, "Não foi possível excluir a conta."));
     } finally {
       setLoading(false);
     }
