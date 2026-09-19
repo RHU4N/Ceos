@@ -10,6 +10,8 @@ apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
     const status = error && error.response && error.response.status;
+    const apiMessage = error?.response?.data?.error?.message;
+    if (apiMessage) error.message = apiMessage;
     if (status === 401) {
       try {
         localStorage.removeItem('ceos_user');
