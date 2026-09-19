@@ -3,7 +3,9 @@ import axios from 'axios';
 // O JWT é mantido pelo navegador em um cookie HttpOnly, não no localStorage.
 const apiClient = axios.create({ withCredentials: true });
 
-// Global response handler to clear storage on 401
+// Uma resposta 401 limpa dados locais, mas não redireciona globalmente: a
+// checagem inicial de sessão (/auth/me) é esperada para visitantes anônimos e
+// as páginas públicas devem continuar acessíveis.
 apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
@@ -11,10 +13,6 @@ apiClient.interceptors.response.use(
     if (status === 401) {
       try {
         localStorage.removeItem('ceos_user');
-      } catch (e) {}
-      // Try to redirect to login
-      try {
-        window.location.href = '/login';
       } catch (e) {}
     }
     return Promise.reject(error);
