@@ -46,6 +46,23 @@ export function AuthProvider({ children }) {
     return () => { active = false; };
   }, [clearSession]);
 
+  // Mantém a cópia usada pela interface sincronizada, embora o histórico seja
+  // persistido na collection historicos e não dentro do documento users.
+  useEffect(() => {
+    function onHistoricoUpdate(event) {
+      const historico = Array.isArray(event.detail) ? event.detail : [];
+      setUser((currentUser) => {
+        if (!currentUser) return currentUser;
+        const updatedUser = { ...currentUser, historico };
+        localStorage.setItem("ceos_user", JSON.stringify(updatedUser));
+        return updatedUser;
+      });
+    }
+
+    window.addEventListener("ceos:historicoUpdated", onHistoricoUpdate);
+    return () => window.removeEventListener("ceos:historicoUpdated", onHistoricoUpdate);
+  }, []);
+
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

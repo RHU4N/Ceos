@@ -5,7 +5,7 @@ const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
 export async function saveHistorico({ tipo, valores, resultado }) {
   // valores and resultado should be strings (or serializable). Caller may stringify.
   const payload = { tipo, valores, resultado };
-  const res = await apiClient.post(`${apiUrl}/users/historico`, payload, { headers: { 'Content-Type': 'application/json' } });
+  const res = await apiClient.post(`${apiUrl}/historicos`, payload, { headers: { 'Content-Type': 'application/json' } });
   // after saving, refresh current historico and sync localStorage + emit event
   try {
     const latest = await fetchHistorico();
@@ -26,14 +26,14 @@ export async function saveHistorico({ tipo, valores, resultado }) {
   } catch (e) {
     // if fetch fails, still return server response
     try { window.dispatchEvent(new CustomEvent('ceos:toast', { detail: { type: 'warning', message: 'Operação salva, mas não foi possível atualizar o histórico local' } })); } catch (err) {}
-    return res.data;
+    return res.data.data || res.data;
   }
 }
 
 export async function fetchHistorico() {
   try {
-    const res = await apiClient.get(`${apiUrl}/users/historico`);
-    return res.data;
+    const res = await apiClient.get(`${apiUrl}/historicos`);
+    return res.data.data || [];
   } catch (err) {
     try { window.dispatchEvent(new CustomEvent('ceos:toast', { detail: { type: 'warning', message: err.response?.data?.error || 'Erro ao buscar histórico' } })); } catch (e) {}
     // return empty array on failure to avoid breaking UI
@@ -42,7 +42,7 @@ export async function fetchHistorico() {
 }
 
 export async function clearHistorico() {
-  const res = await apiClient.delete(`${apiUrl}/users/historico`);
+  const res = await apiClient.delete(`${apiUrl}/historicos?confirmed=true`);
   try {
     const latest = await fetchHistorico();
     try {
@@ -65,7 +65,7 @@ export async function clearHistorico() {
 }
 
 export async function deleteHistoricoItem(id) {
-  const res = await apiClient.delete(`${apiUrl}/users/historico/${id}`);
+  const res = await apiClient.delete(`${apiUrl}/historicos/${id}`);
   try {
     const latest = await fetchHistorico();
     try {
