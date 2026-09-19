@@ -1,8 +1,8 @@
 // Ensure api base is defined before module import (force deterministic URL for tests)
 process.env.REACT_APP_MATH_API_URL = 'http://api';
 
-import apiClient from '../infrastructure/api/apiClient';
-jest.mock('../infrastructure/api/apiClient', () => ({
+import apiClient from '../infrastructure/api/mathApiClient';
+jest.mock('../infrastructure/api/mathApiClient', () => ({
   __esModule: true,
   default: { post: jest.fn() },
 }));

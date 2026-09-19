@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import apiClient from './mathApiClient';
 
 const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
 

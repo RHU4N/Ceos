@@ -1,6 +1,6 @@
 // Implementação do MathRepository usando axios
 import MathRepository from '../../domain/repositories/MathRepository';
-import apiClient from './apiClient';
+import apiClient from './mathApiClient';
 
 
 const apiUrl = process.env.REACT_APP_API_MATH_URL

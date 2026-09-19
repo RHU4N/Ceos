@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/login/:path*",
+      "destination": "https://loginapiceos.onrender.com/:path*"
+    }
+  ]
+}

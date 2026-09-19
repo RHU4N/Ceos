@@ -2,7 +2,7 @@
 // Force deterministic URL for tests regardless of external env
 process.env.REACT_APP_MATH_API_URL = 'http://api';
 
-jest.mock('../infrastructure/api/apiClient', () => ({
+jest.mock('../infrastructure/api/mathApiClient', () => ({
   __esModule: true,
   default: { post: jest.fn() },
 }));
@@ -16,7 +16,7 @@ describe('PhysicsApiRepository (unit)', () => {
   beforeEach(() => {
     jest.resetModules();
     // Re-require the mocked apiClient and repository after reset
-    const mocked = require('../infrastructure/api/apiClient');
+    const mocked = require('../infrastructure/api/mathApiClient');
     apiClient = mocked && mocked.default ? mocked.default : mocked;
     jest.clearAllMocks();
     PhysicsApiRepository = require('../infrastructure/api/PhysicsApiRepository').default;

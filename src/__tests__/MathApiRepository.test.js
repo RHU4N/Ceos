@@ -1,8 +1,8 @@
 import MathApiRepository from '../infrastructure/api/MathApiRepository';
-import apiClient from '../infrastructure/api/apiClient';
+import apiClient from '../infrastructure/api/mathApiClient';
 
 // Provide an explicit mock for apiClient so `post` is always available
-jest.mock('../infrastructure/api/apiClient', () => ({
+jest.mock('../infrastructure/api/mathApiClient', () => ({
   __esModule: true,
   default: { post: jest.fn(), get: jest.fn() },
 }));
