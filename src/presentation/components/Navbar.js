@@ -276,6 +276,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
               }}
             />
           </div>
+          <small className="text-muted d-block mb-2">O e-mail não pode ser alterado nesta versão.</small>
           <label
             className="form-label fw-bold"
             style={{
