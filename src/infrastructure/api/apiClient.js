@@ -5,8 +5,8 @@ const apiClient = axios.create({ withCredentials: true });
 const authBaseUrl = process.env.REACT_APP_API_LOGIN_URL;
 let refreshPromise = null;
 
-function isRefreshRequest(config) {
-  return String(config?.url || '').endsWith('/auth/refresh');
+function isSessionEndpoint(config) {
+  return /\/auth\/(login|refresh|logout)(?:\?|$)/.test(String(config?.url || ''));
 }
 
 // Uma resposta 401 limpa dados locais, mas não redireciona globalmente: a
@@ -19,7 +19,7 @@ apiClient.interceptors.response.use(
     const apiMessage = error?.response?.data?.error?.message;
     if (apiMessage) error.message = apiMessage;
     const request = error?.config;
-    if (status === 401 && request && !request._ceosRetried && !isRefreshRequest(request)) {
+    if (status === 401 && request && !request._ceosRetried && !isSessionEndpoint(request)) {
       request._ceosRetried = true;
       try {
         if (!refreshPromise) refreshPromise = apiClient.post(`${authBaseUrl}/auth/refresh`);
