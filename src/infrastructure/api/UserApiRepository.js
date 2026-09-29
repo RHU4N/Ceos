@@ -5,11 +5,6 @@ const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
 // const apiUrl = 'http://localhost:8081';
 
 export default class UserApiRepository extends UserRepository {
-	async forgotPassword(email) {
-		await apiClient.post(`${apiUrl}/auth/forgot-password`, { email });
-		return true;
-	}
-
 	async register(userData) {
 		const response = await apiClient.post(`${apiUrl}/users`, {
 			nome: userData.nome,
@@ -26,6 +21,21 @@ export default class UserApiRepository extends UserRepository {
 	async login({ email, senha }) {
 		const res = await apiClient.post(`${apiUrl}/auth/login`, { email, senha });
 		return { user: res.data.data.user };
+	}
+
+	async updateProfile(id, { nome, telefone }) {
+		const res = await apiClient.patch(`${apiUrl}/users/${id}`, { nome, telefone });
+		return res.data.data;
+	}
+
+	async changePassword({ senhaAtual, novaSenha, confirmaNovaSenha }) {
+		const res = await apiClient.post(`${apiUrl}/auth/change-password`, { senhaAtual, novaSenha, confirmaNovaSenha });
+		return res.data;
+	}
+
+	async deleteAccount(id) {
+		const res = await apiClient.delete(`${apiUrl}/users/${id}`);
+		return res.data;
 	}
 
 	// Histórico endpoints

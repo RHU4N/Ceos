@@ -1,4 +1,5 @@
 import apiClient from './mathApiClient';
+import { unwrapMathResult } from './mathApiResponse';
 
 const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
 
@@ -41,21 +42,18 @@ export default class PhysicsApiRepository {
   async calcularCinetica({ action, data } = {}) {
     const url = buildUrl('cinetica', action);
     const res = await apiClient.post(url, data || {}, { headers: { 'Content-Type': 'application/json' } });
-    if (!res || res.status >= 400) throw new Error(res?.data?.error || `Erro ao chamar ${url}`);
-    return res.data.resultado ?? res.data;
+    return unwrapMathResult(res, `Erro ao chamar ${url}`);
   }
 
   async calcularDinamica({ action, data } = {}) {
     const url = buildUrl('dinamica', action);
     const res = await apiClient.post(url, data || {}, { headers: { 'Content-Type': 'application/json' } });
-    if (!res || res.status >= 400) throw new Error(res?.data?.error || `Erro ao chamar ${url}`);
-    return res.data.resultado ?? res.data;
+    return unwrapMathResult(res, `Erro ao chamar ${url}`);
   }
 
   async calcularEnergia({ action, data } = {}) {
     const url = buildUrl('energia', action);
     const res = await apiClient.post(url, data || {}, { headers: { 'Content-Type': 'application/json' } });
-    if (!res || res.status >= 400) throw new Error(res?.data?.error || `Erro ao chamar ${url}`);
-    return res.data.resultado ?? res.data;
+    return unwrapMathResult(res, `Erro ao chamar ${url}`);
   }
 }

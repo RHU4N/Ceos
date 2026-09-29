@@ -11,25 +11,23 @@ import {
   FaLock,
   FaHistory,
 } from "react-icons/fa";
-import axios from "axios";
 import { createPortal } from "react-dom";
 import { speak, useTTS } from "../../hooks/useTTS";
+import UserApiRepository from "../../infrastructure/api/UserApiRepository";
 
-function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
+function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionInvalidated }) {
   const [nome, setNome] = useState(user?.nome || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [email] = useState(user?.email || "");
   const [telefone, setTelefone] = useState(user?.telefone || "");
   const [senha, setSenha] = useState("");
   const [senhaAtual, setSenhaAtual] = useState("");
+  const [confirmaNovaSenha, setConfirmaNovaSenha] = useState("");
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [loading, setLoading] = useState(false);
   const successTimerRef = useRef(null);
   const errorTimerRef = useRef(null);
 
-  // base URL fallback
-  const baseUrl =
-    process.env.REACT_APP_API_LOGIN_URL || "http://localhost:8081";
   // A API devolve `id` no DTO. `_id` é aceito apenas para sessões antigas
   // que podem ter ficado salvas no navegador.
   const userId = user?.id || user?._id;
@@ -84,24 +82,24 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
         setErro("Não foi possível identificar sua conta. Entre novamente e tente outra vez.");
         return;
       }
-      await axios.patch(
-        `${baseUrl}/users/${userId}`,
-        {
-          nome,
-          email,
-          telefone,
-          senha: senha || undefined,
-          senhaAtual: senha ? senhaAtual : undefined,
-          assinante: user.assinante,
-          historico: user.historico,
-        },
-        { withCredentials: true }
-      );
-      setSucesso("Dados atualizados com sucesso!");
-      onUpdate({ ...user, nome, email, telefone });
+      if (senha && senha !== confirmaNovaSenha) {
+        setErro("A confirmação da nova senha não confere.");
+        return;
+      }
+      const repository = new UserApiRepository();
+      const updatedUser = await repository.updateProfile(userId, { nome, telefone });
+      onUpdate(updatedUser);
+      if (senha) {
+        await repository.changePassword({ senhaAtual, novaSenha: senha, confirmaNovaSenha });
+        setSucesso("Perfil atualizado. A senha foi alterada; entre novamente.");
+        setTimeout(onSessionInvalidated, 1200);
+      } else {
+        setSucesso("Dados atualizados com sucesso!");
+        setTimeout(onClose, 1200);
+      }
       setSenha("");
       setSenhaAtual("");
-      setTimeout(onClose, 1200);
+      setConfirmaNovaSenha("");
     } catch (err) {
       setErro(getErrorMessage(err, "Não foi possível atualizar os dados."));
     } finally {
@@ -122,9 +120,8 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
         setErro("Não foi possível identificar sua conta. Entre novamente e tente outra vez.");
         return;
       }
-      await axios.delete(`${baseUrl}/users/${userId}`, {
-        withCredentials: true,
-      });
+      const repository = new UserApiRepository();
+      await repository.deleteAccount(userId);
       onDelete();
     } catch (err) {
       setErro(getErrorMessage(err, "Não foi possível excluir a conta."));
@@ -270,8 +267,8 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
               type="email"
               className="form-control"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              disabled
+              readOnly
               style={{
                 borderRadius: 8,
                 fontFamily: "Montserrat, Arial, sans-serif",
@@ -369,6 +366,18 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
                   }}
                 />
               </div>
+              <label className="form-label fw-bold">Confirmar nova senha <span style={{ color: "#dc3545" }}>*</span></label>
+              <div className="input-group mb-2">
+                <span className="input-group-text bg-light"><FaLock /></span>
+                <input
+                  type="password"
+                  className="form-control"
+                  value={confirmaNovaSenha}
+                  onChange={(e) => setConfirmaNovaSenha(e.target.value)}
+                  placeholder="Repita a nova senha"
+                  required={!!senha}
+                />
+              </div>
             </>
           )}
           <button
@@ -409,7 +418,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete }) {
 
 function Navbar() {
   const location = useLocation();
-  const { user, logout, login } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const { loading } = useLoading();
   const [showModal, setShowModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -430,7 +439,7 @@ function Navbar() {
  
 
   const handleUpdate = (newUser) => {
-    login(newUser);
+    updateUser(newUser);
   };
 
   const handleDelete = () => {
@@ -761,6 +770,7 @@ function Navbar() {
               user={user}
               onUpdate={handleUpdate}
               onDelete={handleDelete}
+              onSessionInvalidated={logout}
             />
           </div>
         )}

@@ -6,4 +6,10 @@ export default class UserRepository {
   async login(loginData) {
     throw new Error('Not implemented');
   }
+  async updateProfile(id, data) {
+    throw new Error('Not implemented');
+  }
+  async changePassword(data) {
+    throw new Error('Not implemented');
+  }
 }

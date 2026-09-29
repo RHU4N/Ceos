@@ -15,7 +15,7 @@ describe('MathApiRepository (unit)', () => {
   test('mapFuncaoTipo maps frontend types to backend', async () => {
     const repo = new MathApiRepository();
     // apiClient.post will be called; mock a successful response
-    apiClient.post.mockResolvedValue({ status: 200, data: { resultado: { value: 42 } } });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { tipo: 'linear', resultado: 42 } } });
 
     const res = await repo.calcularFuncao({ tipo: 'funcao1', data: { x: 1 } });
     expect(apiClient.post).toHaveBeenCalled();
@@ -24,7 +24,7 @@ describe('MathApiRepository (unit)', () => {
 
   test('calcularEstatistica maps numeros -> valores and returns resultado', async () => {
     const repo = new MathApiRepository();
-    apiClient.post.mockResolvedValue({ status: 200, data: { resultado: 3.14 } });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { tipo: 'media', resultado: 3.14 } } });
 
     const res = await repo.calcularEstatistica({ tipo: 'media', data: { numeros: [1, 2, 3] } });
     expect(apiClient.post).toHaveBeenCalled();
@@ -33,7 +33,7 @@ describe('MathApiRepository (unit)', () => {
 
   test('calcularAnaliseComb maps types and returns payload on unknown result shape', async () => {
     const repo = new MathApiRepository();
-    apiClient.post.mockResolvedValue({ status: 200, data: { any: 'value' } });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { any: 'value' } } });
 
     const res = await repo.calcularAnaliseComb({ tipo: 'permutacao', data: { n: 5 } });
     expect(apiClient.post).toHaveBeenCalled();

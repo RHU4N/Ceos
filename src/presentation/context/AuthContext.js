@@ -17,6 +17,11 @@ export function AuthProvider({ children }) {
     localStorage.setItem("ceos_user", JSON.stringify(userData));
   }, []);
 
+  const updateUser = useCallback((userData) => {
+    setUser(userData);
+    localStorage.setItem("ceos_user", JSON.stringify(userData));
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await apiClient.post(`${apiUrl}/auth/logout`);
@@ -64,7 +69,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, updateUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

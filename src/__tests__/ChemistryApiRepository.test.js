@@ -14,7 +14,7 @@ describe('ChemistryApiRepository (unit)', () => {
 
   test('calcular returns resultado when present', async () => {
     const repo = new ChemistryApiRepository();
-    apiClient.post.mockResolvedValue({ status: 200, data: { resultado: { ph: 7 } } });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { resultado: { ph: 7 } } } });
     const out = await repo.calcular({ action: 'ph', data: { } });
     expect(apiClient.post).toHaveBeenCalled();
     expect(out).toEqual({ ph: 7 });
@@ -22,7 +22,7 @@ describe('ChemistryApiRepository (unit)', () => {
 
   test('calcular returns primitive when backend returns primitive', async () => {
     const repo = new ChemistryApiRepository();
-    apiClient.post.mockResolvedValue({ status: 200, data: 42 });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { resultado: 42 } } });
     const out = await repo.calcular({ action: 'molaridade', data: {} });
     expect(out).toBe(42);
   });

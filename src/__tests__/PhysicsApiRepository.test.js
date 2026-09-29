@@ -24,7 +24,7 @@ describe('PhysicsApiRepository (unit)', () => {
 
   test('calcularCinetica maps special action to nested route and returns resultado', async () => {
     const repo = new PhysicsApiRepository();
-    apiClient.post.mockResolvedValue({ status: 200, data: { resultado: 10 } });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { resultado: 10 } } });
     const out = await repo.calcularCinetica({ action: 'mruv-posicao', data: { s0: 0 } });
     expect(apiClient.post).toHaveBeenCalled();
     // first arg is URL
@@ -34,7 +34,7 @@ describe('PhysicsApiRepository (unit)', () => {
 
   test('calcularDinamica calls correct area route and returns primitive data', async () => {
     const repo = new PhysicsApiRepository();
-    apiClient.post.mockResolvedValue({ status: 200, data: 3.5 });
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { resultado: 3.5 } } });
     const out = await repo.calcularDinamica({ action: 'forca-resultante', data: { } });
     expect(apiClient.post).toHaveBeenCalled();
     expect(apiClient.post.mock.calls[0][0]).toBe('http://api/dinamica/forca-resultante');
