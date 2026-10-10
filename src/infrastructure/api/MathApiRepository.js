@@ -4,8 +4,7 @@ import apiClient from './mathApiClient';
 import { unwrapMathResult } from './mathApiResponse';
 
 
-const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
-// const apiUrl = 'http://localhost:8080'
+const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL || 'http://localhost:8080';
 
 function mapFuncaoTipo(frontTipo) {
   // frontend used 'funcao1' and 'funcao2' — map to router 'linear' and 'quadratica'
@@ -66,6 +65,17 @@ export default class MathApiRepository extends MathRepository {
 
     const url = `${apiUrl}/financeiro/${route}`;
     const res = await apiClient.post(url, params.data, { headers: { 'Content-Type': 'application/json' } });
+    return unwrapMathResult(res, `Erro ao chamar ${url}`);
+  }
+
+  async calcularMatriz(params) {
+    if (!params || !params.operacao) throw new Error('Tipo de operação de matriz é obrigatório');
+
+    const tipo = String(params.operacao).toLowerCase();
+    const route = tipo === 'adicao' ? 'soma' : tipo === 'subtracao' ? 'subtracao' : tipo === 'multiplicacao' ? 'multiplicacao' : tipo;
+    const url = `${apiUrl}/matriz/${route}`;
+    const payload = { a: params.a, b: params.b };
+    const res = await apiClient.post(url, payload, { headers: { 'Content-Type': 'application/json' } });
     return unwrapMathResult(res, `Erro ao chamar ${url}`);
   }
 }

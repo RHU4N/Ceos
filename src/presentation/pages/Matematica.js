@@ -44,6 +44,19 @@ function Matematica() {
 
     {/* CARD 2 */}
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
+      <Link to="/matematica/matrizes" className="text-decoration-none" onMouseEnter={() => speak('Matrizes')} onFocus={() => speak('Matrizes')}>
+        <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver matrizes">
+          <div className="card-body text-center">
+            <h5 className="card-title">Matrizes</h5>
+            <img src="/image.png" alt="matrizes" className="card-image" />
+            <p className="card-text">Adição, subtração e multiplicação de matrizes.</p>
+          </div>
+        </div>
+      </Link>
+    </div>
+
+    {/* CARD 3 */}
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
       <Link to="/matematica/analise-combinatoria" className="text-decoration-none" onMouseEnter={() => speak('Análise combinatória')} onFocus={() => speak('Análise combinatória')}>
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver análise combinatória">
           <div className="card-body text-center">
@@ -55,7 +68,7 @@ function Matematica() {
       </Link>
     </div>
 
-    {/* CARD 3 */}
+    {/* CARD 4 */}
     <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
       <Link to="/matematica/estatistica" className="text-decoration-none" onMouseEnter={() => speak('Estatística')} onFocus={() => speak('Estatística')}>
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver estatística">

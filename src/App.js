@@ -6,6 +6,7 @@ import Navbar from './presentation/components/Navbar';
 import Home from './presentation/pages/Home';
 import Matematica from './presentation/pages/Matematica';
 import Funcao from './presentation/pages/Funcao';
+import Matrizes from './presentation/pages/Matrizes';
 import AnaliseComb from './presentation/pages/AnaliseComb';
 import Estatistica from './presentation/pages/Estatistica';
 import MatematicaFinanceira from './presentation/pages/MatematicaFinanceira';
@@ -13,6 +14,7 @@ import Fisica from './presentation/pages/Fisica';
 import Cinetica from './presentation/pages/Cinetica';
 import Dinamica from './presentation/pages/Dinamica';
 import Energia from './presentation/pages/Energia';
+import FisicaNuclear from './presentation/pages/FisicaNuclear';
 import Footer from './presentation/components/Footer';
 import FAQ from './presentation/pages/FAQ';
 import Login from './presentation/pages/Login';
@@ -38,6 +40,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/matematica" element={<Matematica />} />
               <Route path="/matematica/funcao" element={<Funcao />} />
+              <Route path="/matematica/matrizes" element={<Matrizes />} />
               <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
               <Route path="/matematica/estatistica" element={<Estatistica />} />
               <Route path="/matematica/financeira" element={<MatematicaFinanceira />} />
@@ -45,6 +48,7 @@ function App() {
               <Route path="/fisica/cinetica" element={<Cinetica />} />
               <Route path="/fisica/dinamica" element={<Dinamica />} />
               <Route path="/fisica/energia" element={<Energia />} />
+              <Route path="/fisica/nuclear" element={<FisicaNuclear />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/quimica" element={<Quimica />} />
               <Route path="/quimica/estequiometria" element={<Estequiometria />} />
