@@ -28,15 +28,19 @@ import Historico from './presentation/pages/Historico';
 // import Feedback from './presentation/pages/Feedback';
 import { AuthProvider } from './presentation/context/AuthContext';
 import { LoadingProvider } from './presentation/context/LoadingContext';
+import IoTDashboard from './presentation/iot/IoTDashboard';
+import { IoTNotificationProvider } from './presentation/iot/IoTNotificationProvider';
 
 function App() {
   return (
     <AuthProvider>
       <LoadingProvider>
         <Router>
+          <IoTNotificationProvider>
           <Navbar />
           <main>
             <Routes>
+              <Route path="/iot" element={<IoTDashboard />} />
               <Route path="/" element={<Home />} />
               <Route path="/matematica" element={<Matematica />} />
               <Route path="/matematica/funcao" element={<Funcao />} />
@@ -62,6 +66,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          </IoTNotificationProvider>
         </Router>
       </LoadingProvider>
     </AuthProvider>
