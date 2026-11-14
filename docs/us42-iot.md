@@ -8,4 +8,4 @@ Gestão, pareamento exibido uma vez, sensores dinâmicos, dashboard por disposit
 
 Validação: `CI=true npm test -- --watchAll=false --runInBand` e `CI=true npm run build`. Os testes IoT cobrem gráfico/ausência, cadastro e Provider global com navegação entre rotas. A resolução CommonJS de React Router 7 no Jest foi explicitada, mantendo o Router existente. Corrigidos os avisos de variáveis sem uso em três calculadoras e a atribuição inválida de const na Estequiometria que impediam build CI.
 
-[Arquitetura, contrato, limites, firmware, deploy/rollback e matriz Jira](https://github.com/RHU4N/ceos-mensageria/blob/feat/SCRUM-81-iot-multiusuario/docs/us42-platform.md).
+[Arquitetura, contrato, limites, firmware, deploy/rollback e matriz Jira](https://github.com/RHU4N/ceos-mensageria/blob/main/docs/us42-platform.md). Dispositivos desvinculados com medições próprias permanecem disponíveis somente para histórico, com controles de leitura e credenciais desabilitados.

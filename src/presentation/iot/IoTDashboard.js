@@ -335,10 +335,13 @@ export default function IoTDashboard() {
             >
               {busy ? "Solicitando…" : "Solicitar leitura"}
             </button>
-            {!device.capacidades.supportsOnDemand && (
+            {device.historyOnly && (
+              <p>Somente histórico. Este vínculo não permite novas leituras.</p>
+            )}
+            {!device.historyOnly && !device.capacidades.supportsOnDemand && (
               <p>Este dispositivo aceita apenas envio espontâneo.</p>
             )}
-            {device.status !== 'LEGACY' && (
+            {device.status !== "LEGACY" && !device.historyOnly && (
               <div className="iot-actions">
                 <button
                   onClick={() => {
