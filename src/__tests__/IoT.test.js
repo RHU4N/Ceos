@@ -8,15 +8,17 @@ import {
 } from "@testing-library/react";
 import { MemoryRouter, Link, Route, Routes } from "react-router-dom";
 import IoTChart from "../presentation/iot/IoTChart";
+import IoTDashboard from "../presentation/iot/IoTDashboard";
 import IoTDeviceSetup from "../presentation/iot/IoTDeviceSetup";
 import {
   IoTNotificationBell,
   IoTNotificationProvider,
 } from "../presentation/iot/IoTNotificationProvider";
 import { iotApi } from "../infrastructure/api/iotApi";
-jest.mock("../presentation/context/AuthContext", () => ({
-  useAuth: () => ({ user: { id: "test-owner" } }),
-}));
+jest.mock("../presentation/context/AuthContext", () => {
+  const user = { id: "test-owner" };
+  return { useAuth: () => ({ user }) };
+});
 jest.mock("../infrastructure/api/iotApi", () => ({
   iotApi: { get: jest.fn(), post: jest.fn(), patch: jest.fn() },
 }));
@@ -122,4 +124,50 @@ test("one global poll survives navigation, announces completion and opens persis
   await act(async () => {});
   expect(screen.getByText("Resultado persistido")).toBeTruthy();
   expect(iotApi.patch).toHaveBeenCalledWith("/notifications/note/read", {});
+});
+
+test("unlinked device history stays visible while reading controls remain disabled", async () => {
+  const sensor = {
+    sensorId: "temp",
+    nome: "Temperature",
+    tipo: "temperatura",
+    unidade: "C",
+  };
+  const device = {
+    deviceId: "archived",
+    nome: "Archived station",
+    status: "ARCHIVED",
+    historyOnly: true,
+    sensores: [sensor],
+    capacidades: { supportsPush: false },
+  };
+  const row = {
+    id: "row",
+    deviceId: "archived",
+    sensorId: "temp",
+    sensorTipo: "temperatura",
+    valor: 22,
+    unidade: "C",
+    timestamp: "2026-11-14T10:00:00Z",
+    metadata: { eventId: "event" },
+  };
+  iotApi.get.mockImplementation(async (path) =>
+    path === "/iot/devices"
+      ? { data: [device] }
+      : path === "/iot/requests"
+        ? { data: { items: [], pagination: { totalPages: 0 } } }
+        : { data: [row], pagination: { page: 1, total: 1, totalPages: 1 } },
+  );
+  render(
+    <MemoryRouter>
+      <IoTDashboard />
+    </MemoryRouter>,
+  );
+  await waitFor(() => expect(screen.getByText(/^Somente hist/)).toBeTruthy());
+  expect(
+    screen.getByRole("button", { name: "Solicitar leitura" }).disabled,
+  ).toBe(true);
+  fireEvent.click(screen.getByRole("button", { name: /^Hist/ }));
+  await waitFor(() => expect(screen.getByText(/^22 /)).toBeTruthy());
+  expect(screen.getByText("Abrir leitura")).toBeTruthy();
 });
