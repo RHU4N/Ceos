@@ -338,7 +338,7 @@ export default function IoTDashboard() {
             {!device.capacidades.supportsOnDemand && (
               <p>Este dispositivo aceita apenas envio espontâneo.</p>
             )}
-            {!device.legacy && (
+            {device.status !== 'LEGACY' && (
               <div className="iot-actions">
                 <button
                   onClick={() => {
