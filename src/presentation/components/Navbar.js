@@ -15,6 +15,7 @@ import { createPortal } from "react-dom";
 import { speak, useTTS } from "../../hooks/useTTS";
 import UserApiRepository from "../../infrastructure/api/UserApiRepository";
 
+import { IoTNotificationBell } from '../iot/IoTNotificationProvider';
 function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionInvalidated }) {
   const [nome, setNome] = useState(user?.nome || "");
   const [email] = useState(user?.email || "");
@@ -726,6 +727,7 @@ function Navbar() {
               />
             </span>
 
+            <IoTNotificationBell />
             {/* LINK PARA HISTÓRICO */}
             <Link
               to="/historico"

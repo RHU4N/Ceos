@@ -9,7 +9,6 @@ import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 
-const repo = new PhysicsApiRepository();
 
 function Energia() {
   const [tipo, setTipo] = useState('trabalho');

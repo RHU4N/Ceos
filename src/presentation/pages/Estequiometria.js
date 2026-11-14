@@ -38,7 +38,7 @@ function Estequiometria() {
     setLoading(true);
     document.body.classList.add('loading-global');
     try {
-      const data = {};
+      let data = {};
       const act = String(action).toLowerCase();
       if (act === 'balanceamento') data.equation = equation;
       if (act === 'calculo-reagente') data = { massa: Number(massa), massa_molar: Number(massaMol) };

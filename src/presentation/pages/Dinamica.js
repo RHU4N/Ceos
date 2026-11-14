@@ -9,7 +9,6 @@ import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 
-const repo = new PhysicsApiRepository();
 
 function Dinamica() {
   const [tipo, setTipo] = useState('forca-resultante');
