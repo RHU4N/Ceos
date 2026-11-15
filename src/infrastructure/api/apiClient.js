@@ -31,7 +31,7 @@ apiClient.interceptors.response.use(
         refreshPromise = null;
       }
     }
-    if (status === 401 || error?.response?.status === 401) {
+    if (error?.response?.status === 401) {
       try {
         localStorage.removeItem('ceos_user');
       } catch (e) {}

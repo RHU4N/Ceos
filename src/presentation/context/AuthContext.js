@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import apiClient from "../../infrastructure/api/apiClient";
 
 const AuthContext = createContext();
@@ -6,13 +6,16 @@ const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const sessionVersion = useRef(0);
 
   const clearSession = useCallback(() => {
+    sessionVersion.current++;
     setUser(null);
     localStorage.removeItem("ceos_user");
   }, []);
 
   const login = useCallback((userData) => {
+    sessionVersion.current++;
     setUser(userData);
     localStorage.setItem("ceos_user", JSON.stringify(userData));
   }, []);
@@ -23,6 +26,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
+    sessionVersion.current++;
     try {
       await apiClient.post(`${apiUrl}/auth/logout`);
     } catch (_error) {
@@ -34,16 +38,17 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let active = true;
+    const version = sessionVersion.current;
 
     async function restoreSession() {
       try {
         const response = await apiClient.get(`${apiUrl}/auth/me`);
-        if (!active) return;
+        if (!active || version !== sessionVersion.current) return;
         const currentUser = response.data.data;
         setUser(currentUser);
         localStorage.setItem("ceos_user", JSON.stringify(currentUser));
       } catch (_error) {
-        if (active) clearSession();
+        if (active && version === sessionVersion.current) clearSession();
       }
     }
 

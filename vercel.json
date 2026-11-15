@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/login/:path*",
-      "destination": "https://loginapiceos.onrender.com/:path*"
+      "destination": "https://loginapi-ceos.azurewebsites.net/:path*"
     }
   ]
 }

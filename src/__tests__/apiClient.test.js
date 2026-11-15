@@ -63,4 +63,12 @@ describe('apiClient session refresh', () => {
     expect(mockClient.post).not.toHaveBeenCalled();
     expect(localStorage.getItem('ceos_user')).toBeNull();
   });
+
+  test('preserves the local session during a temporary refresh outage', async () => {
+    localStorage.setItem('ceos_user', 'current-user');
+    mockClient.post.mockRejectedValue({ response: { status: 503 } });
+    await expect(rejected(unauthorized('/iot/devices'))).rejects.toMatchObject({ response: { status: 503 } });
+    expect(localStorage.getItem('ceos_user')).toBe('current-user');
+    expect(mockClient).not.toHaveBeenCalled();
+  });
 });

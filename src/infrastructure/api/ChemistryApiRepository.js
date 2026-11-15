@@ -13,7 +13,11 @@ function buildUrl(action) {
 export default class ChemistryApiRepository {
   async calcular({ action, data } = {}) {
     const url = buildUrl(action);
-    const res = await apiClient.post(url, data || {}, { headers: { 'Content-Type': 'application/json' } });
+    // The concentration page names the amount `moles`; the API expects `soluto`.
+    const payload = action === 'molaridade' && data?.moles !== undefined && data?.soluto === undefined
+      ? { soluto: data.moles, volume: data.volume }
+      : data || {};
+    const res = await apiClient.post(url, payload, { headers: { 'Content-Type': 'application/json' } });
     return unwrapMathResult(res, `Erro ao chamar ${url}`);
   }
 }
