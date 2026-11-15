@@ -15,17 +15,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Install dependencies
         run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          npm ci
 
       - name: Run npm audit (report)
         run: |
           npm audit --json > npm-audit.json || true
-          echo "--- npm audit summary ---"
-          cat npm-audit.json | jq '.metadata | {vulnerabilities}' || cat npm-audit.json
+          jq -e '.metadata.vulnerabilities' npm-audit.json
+          echo 'Audit findings are reported; this workflow is not a vulnerability gate.'
 
       - name: Upload audit report
         uses: actions/upload-artifact@v4

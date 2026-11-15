@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-const base = process.env.REACT_APP_API_LOGIN_URL;
+import { loginApiUrl as base } from '../../config/apiConfig';
 export const iotApi = {
   get: async (path, params) => (await apiClient.get(`${base}${path}`, { params })).data,
   post: async (path, body, key) => (await apiClient.post(`${base}${path}`, body, { headers: key ? { 'Idempotency-Key': key } : {} })).data,

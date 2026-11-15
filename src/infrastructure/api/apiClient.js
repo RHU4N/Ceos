@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { loginApiUrl as authBaseUrl } from '../../config/apiConfig';
 
 // O JWT é mantido pelo navegador em um cookie HttpOnly, não no localStorage.
 const apiClient = axios.create({ withCredentials: true });
-const authBaseUrl = process.env.REACT_APP_API_LOGIN_URL;
 let refreshPromise = null;
 
 function isSessionEndpoint(config) {

@@ -1,7 +1,7 @@
 import apiClient from './mathApiClient';
 import { unwrapMathResult } from './mathApiResponse';
 
-const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL;
+import { mathApiUrl as apiUrl } from '../../config/apiConfig';
 
 function buildUrl(action) {
   // Backend currently exposes chemical solution calculations under /solucoes

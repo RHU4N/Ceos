@@ -2,9 +2,9 @@
 import MathRepository from '../../domain/repositories/MathRepository';
 import apiClient from './mathApiClient';
 import { unwrapMathResult } from './mathApiResponse';
+import { mathApiUrl as apiUrl } from '../../config/apiConfig';
 
 
-const apiUrl = process.env.REACT_APP_MATH_API_URL || process.env.REACT_APP_API_MATH_URL || 'http://localhost:8080';
 
 function mapFuncaoTipo(frontTipo) {
   // frontend used 'funcao1' and 'funcao2' — map to router 'linear' and 'quadratica'
