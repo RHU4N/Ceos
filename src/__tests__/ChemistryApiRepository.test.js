@@ -32,4 +32,17 @@ describe('ChemistryApiRepository (unit)', () => {
     apiClient.post.mockResolvedValue({ status: 500, data: { error: 'boom' } });
     await expect(repo.calcular({ action: 'molaridade', data: {} })).rejects.toThrow();
   });
+
+  test('concentration page amount uses the API soluto contract', async () => {
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { resultado: '4 mol/L' } } });
+    const out = await new ChemistryApiRepository().calcular({ action: 'molaridade', data: { moles: 2, volume: 0.5 } });
+    expect(apiClient.post).toHaveBeenCalledWith(expect.stringMatching(/\/solucoes\/molaridade$/), { soluto: 2, volume: 0.5 }, expect.any(Object));
+    expect(out).toBe('4 mol/L');
+  });
+
+  test('solution page keeps its canonical soluto payload', async () => {
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: { resultado: '4 mol/L' } } });
+    await new ChemistryApiRepository().calcular({ action: 'molaridade', data: { soluto: 2, volume: 0.5 } });
+    expect(apiClient.post).toHaveBeenCalledWith(expect.stringMatching(/\/solucoes\/molaridade$/), { soluto: 2, volume: 0.5 }, expect.any(Object));
+  });
 });
