@@ -1,3 +1,4 @@
+import SiteImage from './SiteImage';
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Style.css";
@@ -502,7 +503,7 @@ function Navbar() {
             speak("Página inicial");
           }}
         >
-          <img
+          <SiteImage
             src="/logo.png"
             alt="Logo Céos"
             style={{

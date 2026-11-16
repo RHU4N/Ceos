@@ -1,3 +1,4 @@
+import SiteImage from './SiteImage';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import './Style.css';
@@ -25,7 +26,7 @@ const Footer = () => {
     >
       <div className="footer-content">
         <Link to="/" className="footer-logo">
-          <img src="/logo.png" alt="Logo Céos" />
+          <SiteImage src="/logo.png" alt="Logo Céos" />
           <span>Céos</span>
         </Link>
         <p className="footer-text">

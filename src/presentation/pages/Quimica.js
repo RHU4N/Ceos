@@ -1,3 +1,4 @@
+import SiteImage from '../components/SiteImage';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Style.css';
@@ -25,7 +26,7 @@ function Quimica() {
             <div className="card shadow-sm chemistry-card card-disabled d-flex align-items-center justify-content-center" aria-disabled="true" tabIndex={-1} title="Em breve">
               <div className="card-body text-center">
                 <h5 className="card-title">Estequiometria</h5>
-                <img src="/estequiometria.png" alt="estequiometria" className="card-image" />
+                <SiteImage src="/estequiometria.png" alt="estequiometria" className="card-image" />
                 <p className="card-text mt-2">Balanceamento e cálculos estequiométricos.</p>
                 <div className="small text-muted mt-2">Em breve</div>
               </div>
@@ -37,7 +38,7 @@ function Quimica() {
               <div className="card shadow-sm card-affordance chemistry-card" tabIndex={0} title="Soluções">
                 <div className="card-body text-center">
                   <h5 className="card-title">Soluções</h5>
-                  <img src="/concentracao.png" alt="soluções" className="card-image" />
+                  <SiteImage src="/concentracao.png" alt="soluções" className="card-image" />
                   <p className="card-text mt-2">Molaridade, molalidade, densidade, fração molar e concentração comum.</p>
                 </div>
               </div>
@@ -48,7 +49,7 @@ function Quimica() {
             <div className="card shadow-sm chemistry-card card-disabled d-flex align-items-center justify-content-center" aria-disabled="true" tabIndex={-1} title="Em breve">
               <div className="card-body text-center">
                 <h5 className="card-title">Termoquímica</h5>
-                <img src="/termoquimica.png" alt="termoquimica" className="card-image" />
+                <SiteImage src="/termoquimica.png" alt="termoquimica" className="card-image" />
                 <p className="card-text mt-2">Entalpia e calor trocado.</p>
                 <div className="small text-muted mt-2">Em breve</div>
               </div>
