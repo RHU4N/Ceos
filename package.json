@@ -25,10 +25,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node scripts/start.cjs",
     "build": "node scripts/build.cjs",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test:build-loaders": "node scripts/check-build-loaders.cjs",
+    "test:dev-server": "node scripts/check-dev-server.cjs",
+    "test:toolchain-network": "node scripts/check-toolchain-network.cjs"
   },
   "eslintConfig": {
     "extends": [
@@ -51,5 +54,19 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0"
+  },
+  "overrides": {
+    "serialize-javascript": "7.1.4",
+    "underscore": "1.13.8",
+    "react-scripts": {
+      "@svgr/webpack": "8.1.0",
+      "resolve-url-loader": "5.0.0",
+      "webpack-dev-server": "5.2.7"
+    },
+    "webpack-dev-middleware": "7.4.6",
+    "sockjs": {
+      "uuid": "11.1.1"
+    },
+    "@tootallnate/once": "2.0.1"
   }
 }

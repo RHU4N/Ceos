@@ -11,5 +11,5 @@ try {
   process.exit(1);
 }
 process.env.GENERATE_SOURCEMAP ??= 'false';
-const result = spawnSync(process.execPath, [require.resolve('react-scripts/scripts/build')], { stdio: 'inherit', env: process.env });
+const result = spawnSync(process.execPath, [require.resolve('react-scripts/scripts/build'), ...process.argv.slice(2)], { stdio: 'inherit', env: process.env });
 process.exit(result.status ?? 1);
