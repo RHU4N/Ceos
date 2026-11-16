@@ -1,5 +1,5 @@
 // Ensure api base is defined before module import (force deterministic URL for tests)
-process.env.REACT_APP_MATH_API_URL = 'http://api';
+process.env.REACT_APP_API_MATH_URL = 'http://api';
 
 import apiClient from '../infrastructure/api/mathApiClient';
 jest.mock('../infrastructure/api/mathApiClient', () => ({

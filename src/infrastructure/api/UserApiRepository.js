@@ -1,8 +1,7 @@
 import UserRepository from '../../domain/repositories/UserRepository';
 import apiClient from './apiClient';
 
-const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
-// const apiUrl = 'http://localhost:8081';
+import { loginApiUrl as apiUrl } from '../../config/apiConfig';
 
 export default class UserApiRepository extends UserRepository {
 	async register(userData) {

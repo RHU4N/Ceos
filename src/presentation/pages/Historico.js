@@ -33,7 +33,7 @@ function Historico() {
           const stored = localStorage.getItem('ceos_user');
           if (stored) {
             const parsed = JSON.parse(stored);
-            const localHist = parsed && parsed.historico ? parsed.historico : [];
+            const localHist = parsed?.id === user.id && Array.isArray(parsed.historico) ? parsed.historico : [];
             setHistorico(Array.isArray(localHist) ? localHist : []);
           } else {
             setHistorico([]);
@@ -43,13 +43,13 @@ function Historico() {
         }
       }
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       // Try to recover from fetch error by using localStorage
       try {
         const stored = localStorage.getItem('ceos_user');
         if (stored) {
           const parsed = JSON.parse(stored);
-          const localHist = parsed && parsed.historico ? parsed.historico : [];
+          const localHist = parsed?.id === user.id && Array.isArray(parsed.historico) ? parsed.historico : [];
           setHistorico(Array.isArray(localHist) ? localHist : []);
         } else {
           setHistorico([]);
@@ -87,7 +87,7 @@ function Historico() {
       speak('Histórico baixado como JSON');
       setExportOpen(false);
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       setError('Erro ao exportar JSON');
     }
   };
@@ -108,7 +108,7 @@ function Historico() {
       speak('Histórico copiado para a área de transferência');
       setExportOpen(false);
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       setError('Erro ao copiar para área de transferência');
     }
   };
@@ -150,7 +150,7 @@ function Historico() {
       speak('Histórico baixado como CSV');
       setExportOpen(false);
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       setError('Erro ao exportar CSV');
     }
   };
@@ -232,7 +232,7 @@ function Historico() {
       setHistorico(prev => prev.filter(i => (i._id || i.id) !== id));
       speak('Item removido do histórico');
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       setError(err?.message || 'Erro ao remover item');
     } finally {
       setBusy(false);
@@ -258,7 +258,7 @@ function Historico() {
       speak('Conteúdo copiado');
       setTimeout(() => setCopiedId(null), 1800);
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       setError('Erro ao copiar');
     }
   };
@@ -271,7 +271,7 @@ function Historico() {
       setHistorico([]);
       speak('Histórico limpo');
     } catch (err) {
-      console.error(err);
+      console.error('Historico: operação falhou', err?.code || 'UNKNOWN');
       setError(err?.message || 'Erro ao limpar histórico');
     } finally {
       setBusy(false);
@@ -333,7 +333,7 @@ function Historico() {
                 const dateText = when ? new Date(when).toLocaleString() : '';
                 return (
                   <div key={id} className="list-group-item d-flex justify-content-between align-items-start">
-                    <div style={{ maxWidth: '78%' }}>
+                    <div className="historico-item-content">
                       <div className="fw-bold">{item.tipo}</div>
                       <div className="text-muted small">{item.valores}</div>
                       <div className="mt-1">Resultado: <strong>{typeof item.resultado === 'object' ? JSON.stringify(item.resultado) : String(item.resultado)}</strong></div>

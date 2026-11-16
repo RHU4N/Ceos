@@ -701,6 +701,7 @@ main .grid {
   align-items: center;
   justify-content: flex-end;
 }
+.historico-item-content { flex: 1; min-width: 0; max-width: 78%; overflow-wrap: anywhere; }
 .historico-btn {
   display: inline-flex;
   align-items: center;
@@ -724,6 +725,7 @@ main .grid {
 
 @media (max-width: 768px) {
   .historico-item-actions { justify-content: center; }
+  .historico-header { grid-template-columns: minmax(0, 1fr); }
 }
 
 @keyframes gradientMove {

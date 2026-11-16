@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Install Snyk
         run: npm install -g snyk
@@ -25,8 +25,10 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           if [ -z "$SNYK_TOKEN" ]; then echo "Skipping Snyk test: SNYK_TOKEN not set"; exit 0; fi
-          snyk auth "$SNYK_TOKEN"
-          snyk test --json > snyk-report.json || true
+          status=0
+          snyk test --json > snyk-report.json || status=$?
+          if [ "$status" -gt 1 ]; then echo '::error::Snyk could not complete'; exit "$status"; fi
+          if [ "$status" -eq 1 ]; then echo '::warning::Snyk reported vulnerability findings'; fi
 
       - name: Upload Snyk report
         uses: actions/upload-artifact@v4

@@ -1,5 +1,10 @@
 node_modules
 build
 .git
-.env
+.env*
+!.env.example
+**/.secrets/
+.codex/
+*.pem
+*.key
 npm-debug.log*

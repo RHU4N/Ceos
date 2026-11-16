@@ -1,181 +1,52 @@
 name: CI - ceosFront
-
 on:
   push:
     branches: [ main, master, devops ]
   pull_request:
     branches: [ main, master, devops ]
-
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: 'true'
+      REACT_APP_API_LOGIN_URL: /api/login
+      REACT_APP_API_MATH_URL: https://mathapi-ceos.azurewebsites.net
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      - name: Inject build-time env from secrets or repository variables
-        run: |
-          # Prefer explicit CEOS_* secrets, fall back to repository variables (both CEOS_* or REACT_APP_* names)
-          MATH_URL="${{ secrets.CEOS_MATH_API_URL }}"
-          LOGIN_URL="${{ secrets.CEOS_LOGIN_API_URL }}"
-          if [ -z "$MATH_URL" ]; then
-            MATH_URL="${{ vars.CEOS_MATH_API_URL }}"
-          fi
-          if [ -z "$LOGIN_URL" ]; then
-            LOGIN_URL="${{ vars.CEOS_LOGIN_API_URL }}"
-          fi
-          # also accept old REACT_APP names as variables
-          if [ -z "$MATH_URL" ]; then
-            MATH_URL="${{ vars.REACT_APP_API_MATH_URL }}"
-          fi
-          if [ -z "$LOGIN_URL" ]; then
-            LOGIN_URL="${{ vars.REACT_APP_API_LOGIN_URL }}"
-          fi
-          # or secrets with REACT_APP_ prefix (less likely but safe)
-          if [ -z "$MATH_URL" ]; then
-            MATH_URL="${{ secrets.REACT_APP_API_MATH_URL }}"
-          fi
-          if [ -z "$LOGIN_URL" ]; then
-            LOGIN_URL="${{ secrets.REACT_APP_API_LOGIN_URL }}"
-          fi
-          if [ -z "$MATH_URL" ] || [ -z "$LOGIN_URL" ]; then
-            echo "::error::Required variables for front-end build are not set. Aborting build."
-            echo "Expected one of: CEOS_MATH_API_URL / REACT_APP_API_MATH_URL (as secret or repo variable) and CEOS_LOGIN_API_URL / REACT_APP_API_LOGIN_URL."
-            exit 1
-          fi
-          echo "REACT_APP_API_MATH_URL=$MATH_URL" >> $GITHUB_ENV
-          echo "REACT_APP_API_LOGIN_URL=$LOGIN_URL" >> $GITHUB_ENV
-      - name: Install
-        run: npm ci
-      - name: Build
-        env:
-          CI: false
-        run: npm run build --if-present
-      - name: Test
-        run: npm test --if-present
-      - name: Upload `build` artifact for infra tests
-        if: success()
-        uses: actions/upload-artifact@v4
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --watchAll=false --runInBand
+      - run: npm run test:build-loaders
+      - run: npm run test:toolchain-network
+      - run: npm run test:dev-server
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
         with:
           name: ceosFront-build
           path: build
-
-  maybe-deploy-vercel:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Trigger Vercel Deploy
-        run: |
-          if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
-            echo "::error::VERCEL_DEPLOY_HOOK secret is not set. Aborting deploy."
-            repo="${{ github.repository }}"
-            pr_number="${{ github.event.pull_request.number }}"
-            title="[CI] Vercel deploy failed: missing VERCEL_DEPLOY_HOOK"
-            body="The CI deploy step could not run because the secret VERCEL_DEPLOY_HOOK is not set for workflow ${{ github.workflow }} on ref ${{ github.ref }}.\n\nActor: ${{ github.actor }}"
-            if [ -n "${pr_number}" ] && [ "${pr_number}" != "null" ]; then
-              echo "Posting comment to PR ${pr_number}"
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d "{\"body\": \"${body}\"}" \
-                "https://api.github.com/repos/${repo}/issues/${pr_number}/comments" || true
-              echo "Adding label 'ci-failed' to PR ${pr_number}"
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d '["ci-failed"]' "https://api.github.com/repos/${repo}/issues/${pr_number}/labels" || true
-            else
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d "{\"title\": \"${title}\", \"body\": \"${body}\", \"labels\": [\"ci-failed\"] }" \
-                "https://api.github.com/repos/${repo}/issues" || true
-            fi
-            exit 1
-          fi
-          echo "Triggering Vercel deploy via hook..."
-          http_code=$(curl -s -o /tmp/vercel_resp -w "%{http_code}" -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}" || true)
-          echo "--- Vercel response body ---"
-          cat /tmp/vercel_resp || true
-          echo "--- end response ---"
-          echo "Vercel response HTTP status: $http_code"
-          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
-            echo "::error::Vercel deploy webhook returned non-2xx status: $http_code"
-            repo="${{ github.repository }}"
-            pr_number="${{ github.event.pull_request.number }}"
-            title="[CI] Vercel deploy failed: webhook returned $http_code"
-            body="Vercel webhook returned HTTP status $http_code for workflow ${{ github.workflow }} on ref ${{ github.ref }}. Check the workflow logs for full response.\n\nActor: ${{ github.actor }}"
-            if [ -n "${pr_number}" ] && [ "${pr_number}" != "null" ]; then
-              echo "Posting comment to PR ${pr_number}"
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d "{\"body\": \"${body}\"}" \
-                "https://api.github.com/repos/${repo}/issues/${pr_number}/comments" || true
-              echo "Adding label 'ci-failed' to PR ${pr_number}"
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d '["ci-failed"]' "https://api.github.com/repos/${repo}/issues/${pr_number}/labels" || true
-            else
-              curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/json" \
-                -d "{\"title\": \"${title}\", \"body\": \"${body}\", \"labels\": [\"ci-failed\"] }" \
-                "https://api.github.com/repos/${repo}/issues" || true
-            fi
-            exit 1
-          fi
-
+          if-no-files-found: error
+          retention-days: 3
+  # Vercel's Git integration owns deployments; do not also trigger a deploy hook.
   infra-tests:
     name: Infra Tests - ceosFront (serve build + smoke)
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: ceosFront-build
-          path: ./
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
+          path: build
       - name: Serve built site and smoke-check
+        shell: bash
         run: |
-          echo "> listing workspace after artifact download"
-          ls -la || true
-          echo "> searching for built index.html"
-          idx=$(find . -maxdepth 6 -type f -name index.html | head -n 1 || true)
-          if [ -z "$idx" ]; then
-            echo "::error::index.html not found after downloading artifact"
-            echo "--- full tree ---"
-            ls -laR || true
-            exit 1
-          fi
-          serve_dir=$(dirname "$idx")
-          echo "Serving directory: $serve_dir"
-          npx --yes serve -s "$serve_dir" -l 5000 >/tmp/serve.log 2>&1 &
-          echo $! > serve.pid
-          for i in $(seq 1 30); do
-            if curl -sfS http://localhost:5000/ >/dev/null 2>&1; then
-              echo "site responding"; break
-            fi
-            echo "waiting for site... ($i)"; sleep 1
-          done
-          # smoke test: expect HTTP 200 and the root HTML to include the app root
-          if ! curl -fS http://localhost:5000/ | grep -q "<div id=\"root\">"; then
-            echo "Smoke test failed: root container not present";
-            echo "--- serve log ---"; cat /tmp/serve.log || true;
-            kill $(cat serve.pid) || true;
-            exit 1;
-          fi
-          echo "Smoke test OK"
-
-      - name: Upload serve log on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ceosFront-serve-log
-          path: /tmp/serve.log
-
-      - name: Stop serve
-        if: always()
-        run: |
-          if [ -f serve.pid ]; then
-            kill $(cat serve.pid) || true
-            rm -f serve.pid
-          fi
+          test -f build/index.html
+          python3 -m http.server 5000 --bind 127.0.0.1 --directory build >/tmp/serve.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          curl --retry 10 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:5000/ -o /tmp/index.html
+          grep -q '<div id="root">' /tmp/index.html

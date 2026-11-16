@@ -1,8 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import apiClient from "../../infrastructure/api/apiClient";
+import { loginApiUrl as apiUrl } from "../../config/apiConfig";
+import { cacheUser } from "../../infrastructure/api/userCache";
 
 const AuthContext = createContext();
-const apiUrl = process.env.REACT_APP_API_LOGIN_URL;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -17,12 +18,12 @@ export function AuthProvider({ children }) {
   const login = useCallback((userData) => {
     sessionVersion.current++;
     setUser(userData);
-    localStorage.setItem("ceos_user", JSON.stringify(userData));
+    cacheUser(userData);
   }, []);
 
   const updateUser = useCallback((userData) => {
     setUser(userData);
-    localStorage.setItem("ceos_user", JSON.stringify(userData));
+    cacheUser(userData);
   }, []);
 
   const logout = useCallback(async () => {
@@ -46,7 +47,7 @@ export function AuthProvider({ children }) {
         if (!active || version !== sessionVersion.current) return;
         const currentUser = response.data.data;
         setUser(currentUser);
-        localStorage.setItem("ceos_user", JSON.stringify(currentUser));
+        cacheUser(currentUser);
       } catch (_error) {
         if (active && version === sessionVersion.current) clearSession();
       }
@@ -64,7 +65,7 @@ export function AuthProvider({ children }) {
       setUser((currentUser) => {
         if (!currentUser) return currentUser;
         const updatedUser = { ...currentUser, historico };
-        localStorage.setItem("ceos_user", JSON.stringify(updatedUser));
+        cacheUser(updatedUser);
         return updatedUser;
       });
     }
