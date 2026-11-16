@@ -20,6 +20,11 @@
 @media (max-width: 900px) {
   :root { --navbar-height: 60px; --navbar-padding-vertical: 6px; }
 }
+
+/* Custom narrow container padding is smaller than Bootstrap's negative row gutters. */
+@media (max-width: 600px) {
+  .container > .row { --bs-gutter-x: 0; margin-left: 0; margin-right: 0; width: 100%; }
+}
 @media (max-width: 600px) {
   :root { --navbar-height: 52px; --navbar-padding-vertical: 6px; }
 }
@@ -304,4 +309,11 @@ main {
 }
 @media (max-width: 500px) {
   .login-card, .register-card { max-width: 98vw; padding: 8px !important; }
+}
+
+/* Keep authenticated controls inside narrow viewports, including longer names. */
+@media (max-width: 900px) {
+  .navbar .buttons { min-width: 0; max-width: 100%; }
+  .navbar .navbar-user-actions { width: 100%; max-width: 100%; min-width: 0; flex-wrap: wrap; justify-content: center; }
+  .navbar .navbar-user-name { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 }

@@ -692,7 +692,7 @@ function Navbar() {
             </Link>
           </>
         ) : (
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center gap-2 navbar-user-actions">
             <FaUserCircle size={32} />
 
             {/* NOME DO USUÁRIO */}
@@ -710,6 +710,7 @@ function Navbar() {
               onMouseEnter={() => !loading && speak("Editar perfil")} // ADICIONADO
               onFocus={() => !loading && speak("Editar perfil")}
               title="Editar perfil"
+              className="navbar-user-name"
               tabIndex={loading ? -1 : 0}
               aria-disabled={loading}
             >

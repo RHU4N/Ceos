@@ -333,7 +333,7 @@ function Historico() {
                 const dateText = when ? new Date(when).toLocaleString() : '';
                 return (
                   <div key={id} className="list-group-item d-flex justify-content-between align-items-start">
-                    <div style={{ maxWidth: '78%' }}>
+                    <div className="historico-item-content">
                       <div className="fw-bold">{item.tipo}</div>
                       <div className="text-muted small">{item.valores}</div>
                       <div className="mt-1">Resultado: <strong>{typeof item.resultado === 'object' ? JSON.stringify(item.resultado) : String(item.resultado)}</strong></div>
