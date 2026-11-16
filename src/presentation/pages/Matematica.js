@@ -1,3 +1,4 @@
+import SiteImage from '../components/SiteImage';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Style.css'; // <-- ajuste para importar o CSS correto da página
@@ -34,7 +35,7 @@ function Matematica() {
           <div className="card-body text-center">
             <h5 className="card-title">Função</h5>
 
-            <img src="/image.png" alt="funções" className="card-image" />
+            <SiteImage src="/image.png" alt="funções" className="card-image" />
 
             <p className="card-text mt-2">Cálculos e fórmulas de funções matemáticas.</p>
           </div>
@@ -48,7 +49,7 @@ function Matematica() {
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver matrizes">
           <div className="card-body text-center">
             <h5 className="card-title">Matrizes</h5>
-            <img src="/image.png" alt="matrizes" className="card-image" />
+            <SiteImage src="/image.png" alt="matrizes" className="card-image" />
             <p className="card-text">Adição, subtração e multiplicação de matrizes.</p>
           </div>
         </div>
@@ -61,7 +62,7 @@ function Matematica() {
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver análise combinatória">
           <div className="card-body text-center">
             <h5 className="card-title">Análise Combinatória</h5>
-            <img src="/analisecombinatoria.png" alt="analise combinatória" className="card-image" />
+            <SiteImage src="/analisecombinatoria.png" alt="analise combinatória" className="card-image" />
             <p className="card-text">Permutação, combinação e arranjo.</p>
           </div>
         </div>
@@ -74,7 +75,7 @@ function Matematica() {
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver estatística">
           <div className="card-body text-center">
             <h5 className="card-title">Estatística</h5>
-            <img src="/estatistica.png" alt="estatística" className="card-image" />
+            <SiteImage src="/estatistica.png" alt="estatística" className="card-image" />
             <p className="card-text">Média, mediana e moda.</p>
           </div>
         </div>
@@ -87,7 +88,7 @@ function Matematica() {
         <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para ver matemática financeira">
           <div className="card-body text-center">
             <h5 className="card-title">Matemática Financeira</h5>
-            <img src="/financeiro.png" alt="matemática financeira" className="card-image" />
+            <SiteImage src="/financeiro.png" alt="matemática financeira" className="card-image" />
             <p className="card-text">Variação, juros simples e compostos.</p>
           </div>
         </div>
