@@ -5,3 +5,5 @@ REACT_APP_SITE_ASSETS_MODE=azure ativa o carregamento das ilustrações pelo gat
 As imagens já existentes foram mantidas. Nenhuma chave, connection string ou SAS entra no React. O container Azure permanece privado e o backend permite somente nomes predefinidos. Antes de ativar a configuração em Preview/Production, publicar e validar o PR do backend, sua identidade gerenciada e o RBAC mínimo no container ceos-files.
 
 POC realizada com build React e gateway locais acessando o Blob Azure real: 12 imagens com hashes iguais aos arquivos do site e 28 verificações de navegador aprovadas em desktop/tablet/mobile. Essa evidência não significa que o frontend de produção já usa Blob. A ativação exige aprovação de publicação e validação do gateway publicado. Nenhuma mudança nos destinos das APIs ou nas cores/fontes foi feita.
+
+O build da POC com CI=true e a suíte completa atual de 52 testes em 13 suítes passaram. A rede foi inspecionada para exigir imagens do gateway, evitando contar o fallback local como comprovação do Blob. As capturas de contingência do monitoramento exibem métricas reais coletadas da API Azure Monitor, com origem, intervalo e horário visíveis.
