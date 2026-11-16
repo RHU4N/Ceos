@@ -1,3 +1,4 @@
+import SiteImage from '../components/SiteImage';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Style.css';
@@ -31,7 +32,7 @@ function Fisica() {
               <div className="card shadow-sm card-affordance physics-card" tabIndex={0} title="Cinemática">
                 <div className="card-body text-center">
                   <h5 className="card-title">Cinemática</h5>
-                  <img src="/cinetica.jpg" alt="cinemática" className="card-image" />
+                  <SiteImage src="/cinetica.jpg" alt="cinemática" className="card-image" />
                   <p className="card-text mt-2">Velocidade, aceleração e movimento.</p>
                 </div>
               </div>
@@ -43,7 +44,7 @@ function Fisica() {
               <div className="card shadow-sm card-affordance physics-card" tabIndex={0} title="Dinâmica">
                 <div className="card-body text-center">
                   <h5 className="card-title">Dinâmica</h5>
-                  <img src="/dinamica.png" alt="dinâmica" className="card-image" />
+                  <SiteImage src="/dinamica.png" alt="dinâmica" className="card-image" />
                   <p className="card-text">Forças, leis de Newton e aplicações.</p>
                 </div>
               </div>
@@ -55,7 +56,7 @@ function Fisica() {
               <div className="card shadow-sm card-affordance physics-card" tabIndex={0} title="Energia">
                 <div className="card-body text-center">
                   <h5 className="card-title">Energia</h5>
-                  <img src="/energia.png" alt="energia" className="card-image" />
+                  <SiteImage src="/energia.png" alt="energia" className="card-image" />
                   <p className="card-text">Trabalho, energia cinética e potencial.</p>
                 </div>
               </div>
