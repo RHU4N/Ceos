@@ -13,4 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build and test isolated container
+        env:
+          CEOS_DOCKER_IMAGE_ARCHIVE: ${{ runner.temp }}/ceos-a02-web.tar
         run: bash scripts/docker-smoke.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ceos-a02-runtime-scan
+          path: ${{ runner.temp }}/ceos-a02-web.tar
+          retention-days: 1
+          if-no-files-found: error

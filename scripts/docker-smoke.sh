@@ -34,3 +34,9 @@ curl -fsS http://127.0.0.1:$port/login | grep -q '<div id="root">'
 curl -fsS http://127.0.0.1:$port/iot | grep -q '<div id="root">'
 docker exec "$container" sh -ec 'test -z "$(find /usr/share/nginx/html -name "*.map" -print -quit)"'
 echo 'Frontend: root, SPA deep links, Node 22 build and sensitive-file exclusions passed.'
+
+# Optional short-lived artifact for scanning the exact tested image with the
+# existing local Docker Scout installation, without pushing to a registry.
+if [ -n "${CEOS_DOCKER_IMAGE_ARCHIVE:-}" ]; then
+  docker save -o "$CEOS_DOCKER_IMAGE_ARCHIVE" "$image"
+fi
