@@ -41,9 +41,9 @@ function CatalogoCalculadoras() {
 
       <div className="container mt-3">
         <div className="w-100 text-center mb-3">
-          <h2 onMouseEnter={() => speak('Catálogo de Calculadoras')} onFocus={() => speak('Catálogo de Calculadoras')}>
+          <h1 className="h2" onMouseEnter={() => speak('Catálogo de Calculadoras')} onFocus={() => speak('Catálogo de Calculadoras')}>
             Catálogo de Calculadoras
-          </h2>
+          </h1>
           <p className="text-muted">
             Explore todas as calculadoras de Matemática, Física e Química em um só lugar.
           </p>
@@ -99,7 +99,7 @@ function CatalogoCalculadoras() {
                       <span className="badge text-bg-light border mb-2">
                         {calc.areaTitle}{calc.subarea ? ` · ${calc.subarea}` : ''}
                       </span>
-                      <h5 className="card-title">{calc.title}</h5>
+                      <h2 className="h5 card-title">{calc.title}</h2>
                       <SiteImage src={calc.image} alt={calc.title} className="card-image" />
                       <p className="card-text mt-2">{calc.detail}</p>
                     </div>

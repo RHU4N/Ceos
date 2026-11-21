@@ -58,11 +58,10 @@ const Register = () => {
   };
 
   return (
-    <main>
-      <div className="centered-auth-container">
-        <div className="card p-4 shadow register-card" style={{ maxWidth: 400, width: '100%' }}>
-          <h3 className="mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }} onMouseEnter={() => speak('Criar nova conta')} onFocus={() => speak('Criar nova conta')}>Criar nova conta</h3>
-          <form onSubmit={handleSubmit}>
+    <div className="centered-auth-container">
+      <div className="card p-4 shadow register-card" style={{ maxWidth: 400, width: '100%' }}>
+        <h1 className="h3 mb-3 text-center" style={{ fontWeight: 700, letterSpacing: 1 }} onMouseEnter={() => speak('Criar nova conta')} onFocus={() => speak('Criar nova conta')}>Criar nova conta</h1>
+        <form onSubmit={handleSubmit}>
             <label htmlFor="nome" className="form-label fw-bold">Nome completo</label>
             <div className="input-group mb-2">
               <span className="input-group-text bg-light"><FaUser /></span>
@@ -88,26 +87,25 @@ const Register = () => {
               <span className="input-group-text bg-light"><FaLock /></span>
               <input type="password" id="confirmarSenha" value={confirmarSenha} onChange={e => setConfirmarSenha(e.target.value)} className="form-control" placeholder="Repita a senha" required disabled={loading} onMouseEnter={() => speak('Campo confirmar senha')} onFocus={() => speak('Campo confirmar senha')} />
             </div>
-            <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading} onMouseEnter={() => speak('Cadastrar')} onFocus={() => speak('Cadastrar')}>{loading ? 'Cadastrando...' : 'Cadastrar'}</button>
-            {sucesso && <div className="alert alert-success mt-2" onMouseEnter={() => speak('Cadastro realizado com sucesso')} onFocus={() => speak('Cadastro realizado com sucesso')}>{sucesso}</div>}
-            {erro && <div className="alert alert-danger mt-2" onMouseEnter={() => speak('Erro ao cadastrar')} onFocus={() => speak('Erro ao cadastrar')}>{erro}</div>}
-          </form>
-          <div className="mt-3 text-center small">
-            <Link
-              to="/login"
-              className="text-decoration-none"
-              tabIndex={loading ? -1 : 0}
-              style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
-              onClick={e => loading && e.preventDefault()}
-              onMouseEnter={() => !loading && speak('Já tem conta? Entrar')}
-              onFocus={() => !loading && speak('Já tem conta? Entrar')}
-            >
-              Já tem conta? Entrar
-            </Link>
-          </div>
+          <button type="submit" className="btn btn-primary w-100 mt-2 fw-bold" disabled={loading} onMouseEnter={() => speak('Cadastrar')} onFocus={() => speak('Cadastrar')}>{loading ? 'Cadastrando...' : 'Cadastrar'}</button>
+          {sucesso && <div className="alert alert-success mt-2" role="status" onMouseEnter={() => speak('Cadastro realizado com sucesso')} onFocus={() => speak('Cadastro realizado com sucesso')}>{sucesso}</div>}
+          {erro && <div className="alert alert-danger mt-2" role="alert" onMouseEnter={() => speak('Erro ao cadastrar')} onFocus={() => speak('Erro ao cadastrar')}>{erro}</div>}
+        </form>
+        <div className="mt-3 text-center small">
+          <Link
+            to="/login"
+            className="text-decoration-none"
+            tabIndex={loading ? -1 : 0}
+            style={{ pointerEvents: loading ? 'none' : undefined, opacity: loading ? 0.6 : undefined }}
+            onClick={e => loading && e.preventDefault()}
+            onMouseEnter={() => !loading && speak('Já tem conta? Entrar')}
+            onFocus={() => !loading && speak('Já tem conta? Entrar')}
+          >
+            Já tem conta? Entrar
+          </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

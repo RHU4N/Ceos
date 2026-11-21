@@ -166,7 +166,7 @@ function Matrizes() {
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center">Matrizes</h2>
+            <h1 className="h2 mb-0 text-center">Matrizes</h1>
             <FavoriteButton
               resourceId="calc:matematica:matrizes"
               resourceType="calculation"
@@ -177,8 +177,8 @@ function Matrizes() {
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-9" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Operação</label>
-              <select className="form-select" value={operacao} onChange={(event) => setOperacao(event.target.value)} disabled={loading}>
+              <label htmlFor="matrizes-operacao" className="form-label">Operação</label>
+              <select id="matrizes-operacao" className="form-select" value={operacao} onChange={(event) => setOperacao(event.target.value)} disabled={loading}>
                 {OPERATION_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
@@ -187,8 +187,9 @@ function Matrizes() {
 
             <div className="row g-3 align-items-end mb-4">
               <div className="col-12 col-md-5">
-                <label className="form-label">Largura da matriz A</label>
+                <label htmlFor="matrizes-largura-a" className="form-label">Largura da matriz A</label>
                 <input
+                  id="matrizes-largura-a"
                   type="number"
                   className="form-control"
                   min={1}
@@ -200,8 +201,9 @@ function Matrizes() {
               </div>
               <div className="col-12 col-md-2 text-center fw-bold fs-3">X</div>
               <div className="col-12 col-md-5">
-                <label className="form-label">Altura da matriz A</label>
+                <label htmlFor="matrizes-altura-a" className="form-label">Altura da matriz A</label>
                 <input
+                  id="matrizes-altura-a"
                   type="number"
                   className="form-control"
                   min={1}
@@ -213,8 +215,9 @@ function Matrizes() {
               </div>
 
               <div className="col-12 col-md-5">
-                <label className="form-label">Largura da matriz B</label>
+                <label htmlFor="matrizes-largura-b" className="form-label">Largura da matriz B</label>
                 <input
+                  id="matrizes-largura-b"
                   type="number"
                   className="form-control"
                   min={1}
@@ -226,8 +229,9 @@ function Matrizes() {
               </div>
               <div className="col-12 col-md-2 text-center fw-bold fs-3">X</div>
               <div className="col-12 col-md-5">
-                <label className="form-label">Altura da matriz B</label>
+                <label htmlFor="matrizes-altura-b" className="form-label">Altura da matriz B</label>
                 <input
+                  id="matrizes-altura-b"
                   type="number"
                   className="form-control"
                   min={1}

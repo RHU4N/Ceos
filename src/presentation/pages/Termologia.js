@@ -17,9 +17,9 @@ function Termologia() {
 
       <div className="container mt-3">
         <div className="text-center mb-4">
-          <h2 className="mb-2" onMouseEnter={() => speak('Termologia')} onFocus={() => speak('Termologia')}>
+          <h1 className="h2 mb-2" onMouseEnter={() => speak('Termologia')} onFocus={() => speak('Termologia')}>
             Termologia
-          </h2>
+          </h1>
           <p className="text-muted">Ferramentas de psicrometria e fenômenos térmicos:</p>
         </div>
 
@@ -31,9 +31,9 @@ function Termologia() {
               onMouseEnter={() => speak('Ponto de Orvalho')}
               onFocus={() => speak('Ponto de Orvalho')}
             >
-              <div className="card shadow-sm card-affordance physics-card" tabIndex={0} title="Ponto de Orvalho">
+              <div className="card shadow-sm card-affordance physics-card" title="Ponto de Orvalho">
                 <div className="card-body text-center">
-                  <h5 className="card-title">Ponto de Orvalho</h5>
+                  <h2 className="h5 card-title">Ponto de Orvalho</h2>
                   <SiteImage src="/energia.png" alt="ponto de orvalho" className="card-image" />
                   <p className="card-text mt-2">
                     Fórmula de Magnus com temperatura e umidade (Manual e IoT).

@@ -137,7 +137,7 @@ function Cinetica() {
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center">Cinemática</h2>
+            <h1 className="h2 mb-0 text-center">Cinemática</h1>
             <FavoriteButton
               resourceId="calc:fisica:cinetica"
               resourceType="calculation"
@@ -148,8 +148,8 @@ function Cinetica() {
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-8" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Tipo</label>
-              <select className="form-select" value={tipo} onChange={e => { setTipo(e.target.value); speak(e.target.value); }} disabled={loading}>
+              <label htmlFor="cinetica-tipo" className="form-label">Tipo</label>
+              <select id="cinetica-tipo" className="form-select" value={tipo} onChange={e => { setTipo(e.target.value); speak(e.target.value); }} disabled={loading}>
                 <option value="velocidade">Velocidade média</option>
                 <option value="aceleracao">Aceleração média</option>
                 <option value="mru">MRU (posição final)</option>

@@ -20,11 +20,16 @@ const Home = () => {
     <>
       <div className="banner">
         <h1 onMouseEnter={() => speak('Torne-se Premium. Veja nossos planos.')} onFocus={() => speak('Torne-se Premium. Veja nossos planos.')}>
-          Torne-se Premium! Veja nosso planos
+          Torne-se Premium! Veja nossos planos
         </h1>
-        <button className="banner-btn" onMouseEnter={() => speak('Saiba mais sobre nossos planos')} onFocus={() => speak('Saiba mais sobre nossos planos')}>
+        <Link
+          to="/faq#planos"
+          className="banner-btn"
+          onMouseEnter={() => speak('Saiba mais sobre nossos planos')}
+          onFocus={() => speak('Saiba mais sobre nossos planos')}
+        >
           Saiba Mais
-        </button>
+        </Link>
       </div>
       <div className="page-container">
         <div className="left-section">
@@ -41,25 +46,34 @@ const Home = () => {
           </p>
         </div>
         <div className="right-section">
-          <h4>Conheça nossas ferramentas</h4>
+          <h3 className="h4">Conheça nossas ferramentas</h3>
           <div className="tool-buttons">
-            <Link to="/matematica" onMouseEnter={() => speak('Navegar para Matemática')} onFocus={() => speak('Navegar para Matemática')}>
-              <button className="tool math-tool" onMouseEnter={() => speak('Matemática')} onFocus={() => speak('Matemática')}>
-                <span style={{marginRight: 8, fontSize: 22}}>&#x2211;</span> {/* Soma Σ para matemática */}
-                Matemática
-              </button>
+            <Link
+              to="/matematica"
+              className="tool math-tool"
+              onMouseEnter={() => speak('Navegar para Matemática')}
+              onFocus={() => speak('Navegar para Matemática')}
+            >
+              <span aria-hidden="true" style={{ marginRight: 8, fontSize: 22 }}>&#x2211;</span>
+              Matemática
             </Link>
-            <Link to="/fisica" onMouseEnter={() => speak('Navegar para Física')} onFocus={() => speak('Navegar para Física')}>
-              <button className="tool physics-tool" onMouseEnter={() => speak('Física')} onFocus={() => speak('Física')}>
-                <span style={{marginRight: 8, fontSize: 22}}>&#x269B;</span> {/* Átomo para física */}
-                Física
-              </button>
+            <Link
+              to="/fisica"
+              className="tool physics-tool"
+              onMouseEnter={() => speak('Navegar para Física')}
+              onFocus={() => speak('Navegar para Física')}
+            >
+              <span aria-hidden="true" style={{ marginRight: 8, fontSize: 22 }}>&#x269B;</span>
+              Física
             </Link>
-            <Link to="/quimica" onMouseEnter={() => speak('Navegar para Química')} onFocus={() => speak('Navegar para Química')}>
-              <button className="tool chemistry-tool" onMouseEnter={() => speak('Química')} onFocus={() => speak('Química')}>
-                <span style={{marginRight: 8, fontSize: 22}}>&#x2697;</span> {/* Tubo de ensaio para química */}
-                Química
-              </button>
+            <Link
+              to="/quimica"
+              className="tool chemistry-tool"
+              onMouseEnter={() => speak('Navegar para Química')}
+              onFocus={() => speak('Navegar para Química')}
+            >
+              <span aria-hidden="true" style={{ marginRight: 8, fontSize: 22 }}>&#x2697;</span>
+              Química
             </Link>
           </div>
         </div>

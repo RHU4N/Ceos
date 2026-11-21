@@ -1,27 +1,31 @@
-/* Variáveis globais de cor */
+/* Variáveis globais de cor (ajustadas para contraste WCAG 2.1 AA >= 4,5:1) */
 :root {
-  --color-banner-bg: rgb(255, 255, 1);
-  --color-primary: #007BFF;
-  --color-primary-dark: #0056b3;
-  --color-secondary: #1e88e5;
+  --color-banner-bg: #ffe066;
+  --color-primary: #0b5ed7;
+  --color-primary-dark: #084298;
+  --color-secondary: #1565c0;
   --color-secondary-light: #e0edfc;
-  --color-terciary-light: #42a9fd;
+  --color-terciary-light: #12538a;
   --color-light: #ffffff;
-  --color-accent: #ff6600;
-  --color-success: #00c672;
+  --color-accent: #b84400;
+  --color-success: #007a47;
   --color-purple: #662d91;
-  --color-purple-light: #a883ee;
+  --color-purple-light: #7936c9;
   --color-purple-dark: rgb(47, 14, 90);
-  --color-purple-bg: rgb(159, 92, 235);
+  --color-purple-bg: #7936c9;
   --color-bg: #ffffff;
-  --color-text: #333;
-  --color-footer: #007bff;
-  --color-footer-dark: #145d9c;
+  --color-text: #222222;
+  --color-footer: #0b5ed7;
+  --color-footer-dark: #0d47a1;
   --color-footer-light: #e7c2ff;
   --color-border: #ddd;
   --color-list-bg: #f4f4f4;
   --color-list-hover: #fdfdfd6c;
   --color-shadow: rgba(0, 0, 0, 0.1);
+  --bs-primary: #0b5ed7;
+  --bs-link-color: #0b5ed7;
+  --bs-link-hover-color: #084298;
+  --bs-code-color: #9e1c5b;
 }
 
 /* Reset e utilidades globais */
@@ -101,26 +105,74 @@ form input[type="text"] {
 
 form input:focus {
     border-color: var(--color-primary);
-    outline: none;
+}
+
+code {
+    color: var(--bs-code-color, #9e1c5b);
+}
+
+:focus-visible,
+.btn:focus-visible,
+.btn-link:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #0b5ed7 !important;
+    outline-offset: 2px !important;
+}
+
+header.navbar :focus-visible,
+header.navbar .btn:focus-visible,
+header.navbar button:focus-visible,
+header.navbar a:focus-visible {
+    outline: 3px solid #ffe066 !important;
+    outline-offset: 2px !important;
+}
+
+.btn-primary {
+    --bs-btn-bg: #0b5ed7;
+    --bs-btn-border-color: #0b5ed7;
+    --bs-btn-hover-bg: #084298;
+    --bs-btn-hover-border-color: #084298;
+    --bs-btn-active-bg: #084298;
+    --bs-btn-active-border-color: #084298;
+}
+
+.btn-danger {
+    --bs-btn-bg: #c82333;
+    --bs-btn-border-color: #c82333;
+    --bs-btn-hover-bg: #a71d2a;
+    --bs-btn-hover-border-color: #a71d2a;
+    --bs-btn-active-bg: #a71d2a;
+    --bs-btn-active-border-color: #a71d2a;
+}
+
+.text-bg-primary {
+    background-color: #0b5ed7 !important;
+    color: #ffffff !important;
+}
+
+.alert-info a,
+.alert-secondary a {
+    color: #055160;
 }
 
 /* ==========================
    Header (Topo)
    ========================== */
 .navbar {
-    background: linear-gradient(to right, #1e88e5, #00acc1);
+    background: var(--color-secondary);
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 40px;
+    padding: 12px 24px;
     z-index: 1050;
     position: relative;
 }
 
 .navbar .dropdown {
     text-decoration: none;
-    color: #51a1f7;
+    color: #ffffff;
     font-weight: bold;
 }
 
@@ -135,21 +187,20 @@ form input:focus {
 .menu {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 14px;
     padding: 0;
     margin: 0 auto;
-    /* Centraliza o menu */
 }
 
 .menu li {
     position: relative;
-    padding: 10px 15px;
+    padding: 6px 10px;
 }
 
 /* Estilo dos links do menu */
 .menu a {
     text-decoration: none;
-    color: #51a1f7;
+    color: #ffffff;
     font-weight: bold;
     display: block;
 }
@@ -161,18 +212,18 @@ form input:focus {
     top: 100%;
     left: 0;
     background: white;
-    color: #007bff;
+    color: var(--color-primary);
     list-style: none;
-    padding: 0;
+    padding: 8px;
     margin: 0;
-    border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    min-width: 150px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.16);
+    min-width: 170px;
     z-index: 1100;
 }
 
 .submenu a {
-    color: #333;
+    color: #222222;
     padding: 10px;
     display: block;
     text-align: left;
@@ -201,49 +252,35 @@ form input:focus {
 }
 
 .btn-light {
-    background: white;
-    color: #1e88e5;
+    background: #ffffff;
+    color: #0d47a1;
 }
 
 .btn-light:hover {
-    background: #145d9c;
+    background: #0d47a1;
     color: #ffffff;
 }
 
 .btn-dark {
-    background: rgb(159, 92, 235);
-    color: white;
+    background: var(--color-purple-bg);
+    color: #ffffff;
 }
 
 .btn-dark:hover {
-    background: rgb(47, 14, 90);
-    color: #e7c2ff;
+    background: var(--color-purple-dark);
+    color: var(--color-footer-light);
 }
 
 /* ==========================
-   Rodapé (Footer) Fixo no Final
+   Rodapé (Footer)
    ========================== */
 .footer {
-    background: #007bff;
-    color: white;
+    background: #f8f9fa;
+    color: #333333;
     text-align: center;
-    padding: 10px;
+    padding: 16px 12px;
     width: 100%;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    z-index: 2000; /* Aumenta para garantir que fique acima de tudo */
-    pointer-events: auto;
-}
-
-/* Adicione espaço extra ao main para não sobrepor o footer */
-main {
-    min-height: calc(100vh - 60px);
-    width: 100%;
-    box-sizing: border-box;
-    padding-bottom: 60px; /* Garante espaço para o footer fixo */
-    padding-top: 70px; /* Garante espaço para o navbar fixo */
-    display: block;
+    position: relative;
 }
 
 /* Ajuste para o main ocupar o espaço entre navbar e footer */
@@ -251,14 +288,14 @@ main {
   min-height: calc(100vh - 70px);
   width: 100%;
   box-sizing: border-box;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  padding: 0;
+  padding: 0 0 70px 0;
   background: transparent;
   position: relative;
-  padding-bottom: 70px; /* Garante espaço para o footer fixo */
 }
 
 /* Centralização vertical para login/cadastro */
@@ -270,8 +307,7 @@ main {
   justify-content: center;
   box-sizing: border-box;
   min-height: calc(100vh - 70px);
-  padding-top: 32px;
-  padding-bottom: 70px; /* Espaço extra para o footer */
+  padding: 32px 12px 70px;
 }
 
 /* Estilo dos cards de login e cadastro */
@@ -284,23 +320,6 @@ main {
   box-sizing: border-box;
   z-index: 1000;
   position: relative;
-}
-
-/* Responsividade para telas pequenas */
-@media (max-width: 600px) {
-  .centered-auth-container {
-    padding-top: 16px;
-    min-height: calc(100vh - 56px);
-    padding-bottom: 90px; /* Espaço extra para o footer em telas pequenas */
-  }
-  .login-card, .register-card {
-    max-width: 98%;
-    padding: 8px !important;
-  }
-  main {
-    min-height: calc(100vh - 56px);
-    padding-bottom: 90px; /* Espaço extra para o footer em telas pequenas */
-  }
 }
 
 @media (max-width: 1200px) {
@@ -329,52 +348,23 @@ main {
   .container2 {
     padding: 20px 8px;
   }
-  .menu li {
-    min-width: 140px;
-    max-width: 140px;
-    width: 140px;
-    justify-content: center;
-    text-align: center;
-    display: flex;
-    align-items: center;
-  }
 }
 
 @media (max-width: 600px) {
-  .navbar {
-    flex-direction: column;
-    padding: 10px 8px;
-    height: auto;
+  .centered-auth-container {
+    padding-top: 16px;
+    min-height: calc(100vh - 56px);
+    padding-bottom: 90px;
   }
-  .navbar .logo {
-    font-size: 32px;
-  }
-  .menu {
-    flex-direction: column;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    align-items: flex-start;
-  }
-  .menu li {
-    padding: 8px 0;
-    min-width: 140px;
-    max-width: 140px;
-    width: 140px;
-    justify-content: center;
-    text-align: center;
-    display: flex;
-    align-items: center;
-  }
-  .buttons {
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
+  .login-card,
+  .register-card {
+    max-width: 98%;
+    padding: 12px !important;
   }
   .tool {
-    width: min(92%, 220px);
+    width: min(92%, 260px);
     min-width: 140px;
-    max-width: 220px;
+    max-width: 260px;
     font-size: 16px;
     padding: 12px;
     box-sizing: border-box;
@@ -397,11 +387,13 @@ main {
   .left-section h2 {
     font-size: 22px;
   }
+  .right-section h3,
   .right-section h4 {
     font-size: 18px;
   }
   main {
-    padding-bottom: 80px !important; /* Aumenta o espaço para o footer em telas pequenas */
+    min-height: calc(100vh - 56px);
+    padding-bottom: 80px;
   }
 }
 
@@ -417,212 +409,6 @@ main {
   .container2 {
     padding: 4px;
   }
-}
-
-/* Garante que os cards de login/cadastro fiquem centralizados e responsivos */
-.login-card, .register-card {
-  width: 100%;
-  max-width: 400px;
-  min-width: 0;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-@media (max-width: 500px) {
-  .login-card, .register-card {
-    max-width: 98%;
-    padding: 8px !important;
-  }
-}
-
-/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
-main {
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-@media (max-width: 500px) {
-  .login-card, .register-card {
-    max-width: 98%;
-    padding: 8px !important;
-  }
-}
-
-/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
-main {
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  box-sizing: border-box;
-}
-  
-
-/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
-main {
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-
-@media (max-width: 900px) {
-  .container,
-  .container2 {
-    flex-direction: column;
-    max-width: 100%;
-    width: 100%;
-    padding: 10px;
-    height: auto;
-    min-width: 0;
-  }
-  .left-section,
-  .right-section {
-    width: 100%;
-    padding: 0;
-    text-align: center;
-  }
-  .container2 {
-    padding: 20px 8px;
-  }
-  .menu li {
-    min-width: 140px;
-    max-width: 140px;
-    width: 140px;
-    justify-content: center;
-    text-align: center;
-    display: flex;
-    align-items: center;
-  }
-}
-
-@media (max-width: 600px) {
-  .navbar {
-    flex-direction: column;
-    padding: 10px 8px;
-    height: auto;
-  }
-  .navbar .logo {
-    font-size: 32px;
-  }
-  .menu {
-    flex-direction: column;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    align-items: flex-start;
-  }
-  .menu li {
-    padding: 8px 0;
-    min-width: 140px;
-    max-width: 140px;
-    width: 140px;
-    justify-content: center;
-    text-align: center;
-    display: flex;
-    align-items: center;
-  }
-  .buttons {
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .tool {
-    width: 220px;
-    min-width: 220px;
-    max-width: 220px;
-    font-size: 16px;
-    padding: 12px;
-    box-sizing: border-box;
-  }
-  .tool-buttons {
-    width: 100%;
-    align-items: center;
-  }
-  .container,
-  .container2 {
-    margin: 8px auto;
-    border-radius: 4px;
-    box-shadow: none;
-    padding: 8px;
-  }
-  .footer {
-    font-size: 0.95em;
-    padding: 8px;
-  }
-  .left-section h2 {
-    font-size: 22px;
-  }
-  .right-section h4 {
-    font-size: 18px;
-  }
-  main {
-    padding-bottom: 80px !important; /* Aumenta o espaço para o footer em telas pequenas */
-  }
-}
-
-@media (max-width: 400px) {
-  .navbar .logo {
-    font-size: 22px;
-  }
-  .footer {
-    font-size: 0.85em;
-    padding: 6px;
-  }
-  .container,
-  .container2 {
-    padding: 4px;
-  }
-}
-
-/* Garante que os cards de login/cadastro fiquem centralizados e responsivos */
-.login-card, .register-card {
-  width: 100%;
-  max-width: 400px;
-  min-width: 0;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-@media (max-width: 500px) {
-  .login-card, .register-card {
-    max-width: 98%;
-    padding: 8px !important;
-  }
-}
-
-/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
-main {
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-@media (max-width: 500px) {
-  .login-card, .register-card {
-    max-width: 98%;
-    padding: 8px !important;
-  }
-}
-
-/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
-main {
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  box-sizing: border-box;
-}
-  
-
-/* Ajuste para o footer não sobrepor conteúdo em telas pequenas */
-main {
-  min-height: calc(100vh - 60px);
-  width: 100%;
-  box-sizing: border-box;
 }
 
 body.loading-global button,

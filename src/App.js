@@ -21,6 +21,7 @@ import Footer from './presentation/components/Footer';
 import FAQ from './presentation/pages/FAQ';
 import Login from './presentation/pages/Login';
 import Register from './presentation/pages/Register';
+import ForgotPassword from './presentation/pages/ForgotPassword';
 import Quimica from './presentation/pages/Quimica';
 import Estequiometria from './presentation/pages/Estequiometria';
 import Concentracao from './presentation/pages/Concentracao';
@@ -74,6 +75,7 @@ function App() {
                 <Route path="/historico" element={<Historico />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
                 {/* <Route path="/feedback" element={<Feedback />} /> */}
               </Routes>
             </main>

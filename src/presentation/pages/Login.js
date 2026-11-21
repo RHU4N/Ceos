@@ -45,21 +45,20 @@ const Login = () => {
   };
 
   return (
-    <main>
-      <div className="centered-auth-container">
-        <div
-          className="card p-4 shadow login-card col-12 col-sm-10 col-md-8 col-lg-5"
-          style={{ maxWidth: 400, width: "100%" }}
+    <div className="centered-auth-container">
+      <div
+        className="card p-4 shadow login-card col-12 col-sm-10 col-md-8 col-lg-5"
+        style={{ maxWidth: 400, width: "100%" }}
+      >
+        <h1
+          className="h3 mb-3 text-center"
+          style={{ fontWeight: 700, letterSpacing: 1 }}
+          onMouseEnter={() => speak("Entrar na sua conta")}
+          onFocus={() => speak("Entrar na sua conta")}
         >
-          <h3
-            className="mb-3 text-center"
-            style={{ fontWeight: 700, letterSpacing: 1 }}
-            onMouseEnter={() => speak("Entrar na sua conta")}
-            onFocus={() => speak("Entrar na sua conta")}
-          >
-            Entrar na sua conta
-          </h3>
-          <form onSubmit={handleSubmit}>
+          Entrar na sua conta
+        </h1>
+        <form onSubmit={handleSubmit}>
             <label htmlFor="email" className="form-label fw-bold">
               E-mail
             </label>
@@ -111,53 +110,52 @@ const Login = () => {
             >
               {loading ? "Entrando..." : "Entrar"}
             </button>
-            {erro && (
-              <div
-                className="alert alert-danger mt-2"
-                onMouseEnter={() => speak("Erro ao fazer login")}
-                onFocus={() => speak("Erro ao fazer login")}
-              >
-                {erro}
-              </div>
-            )}
-          </form>
-          <div className="mt-3 text-center small">
-            <button
-              type="button"
-              className="btn btn-link text-decoration-none p-0"
-              style={{ boxShadow: "none" }}
-              tabIndex={loading ? -1 : 0}
-              onClick={(e) => {
-                e.preventDefault();
-                if (!loading) {
-                  speak("Esqueci minha senha");
-                  navigate('/forgot-password');
-                }
-              }}
-              onMouseEnter={() => !loading && speak("Esqueci minha senha")}
-              onFocus={() => !loading && speak("Esqueci minha senha")}
+          {erro && (
+            <div
+              className="alert alert-danger mt-2"
+              role="alert"
+              onMouseEnter={() => speak("Erro ao fazer login")}
+              onFocus={() => speak("Erro ao fazer login")}
             >
-              Esqueci minha senha
-            </button>
-            <span className="mx-2">|</span>
-            <Link
-              to="/register"
-              className="text-decoration-none"
-              tabIndex={loading ? -1 : 0}
-              style={{
-                pointerEvents: loading ? "none" : undefined,
-                opacity: loading ? 0.6 : undefined,
-              }}
-              onClick={(e) => loading && e.preventDefault()}
-              onMouseEnter={() => !loading && speak("Não tem conta? Cadastre-se")}
-              onFocus={() => !loading && speak("Não tem conta? Cadastre-se")}
-            >
-              Não tem conta? Cadastre-se
-            </Link>
-          </div>
+              {erro}
+            </div>
+          )}
+        </form>
+        <div className="mt-3 text-center small">
+          <button
+            type="button"
+            className="btn btn-link text-decoration-none p-0"
+            tabIndex={loading ? -1 : 0}
+            onClick={(e) => {
+              e.preventDefault();
+              if (!loading) {
+                speak("Esqueci minha senha");
+                navigate('/forgot-password');
+              }
+            }}
+            onMouseEnter={() => !loading && speak("Esqueci minha senha")}
+            onFocus={() => !loading && speak("Esqueci minha senha")}
+          >
+            Esqueci minha senha
+          </button>
+          <span className="mx-2">|</span>
+          <Link
+            to="/register"
+            className="text-decoration-none"
+            tabIndex={loading ? -1 : 0}
+            style={{
+              pointerEvents: loading ? "none" : undefined,
+              opacity: loading ? 0.6 : undefined,
+            }}
+            onClick={(e) => loading && e.preventDefault()}
+            onMouseEnter={() => !loading && speak("Não tem conta? Cadastre-se")}
+            onFocus={() => !loading && speak("Não tem conta? Cadastre-se")}
+          >
+            Não tem conta? Cadastre-se
+          </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

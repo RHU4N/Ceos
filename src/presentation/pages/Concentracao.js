@@ -111,12 +111,12 @@ function Concentracao() {
 
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <h2 className="mb-4 text-center">Concentração</h2>
+          <h1 className="h2 mb-4 text-center">Concentração</h1>
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-8" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Tipo</label>
-              <select className="form-select" value={action} onChange={e => { setAction(e.target.value); speak(e.target.value); }} disabled={loading}>
+              <label htmlFor="concentracao-tipo" className="form-label">Tipo</label>
+              <select id="concentracao-tipo" className="form-select" value={action} onChange={e => { setAction(e.target.value); speak(e.target.value); }} disabled={loading}>
                 <option value="molaridade">Molaridade</option>
                 <option value="normalidade">Normalidade</option>
                 <option value="percentual">Percentual</option>

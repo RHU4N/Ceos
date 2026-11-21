@@ -45,7 +45,7 @@ function Favoritos() {
         <div className="container mt-5">
           <div className="row justify-content-center">
             <div className="col-12 col-md-8 text-center">
-              <h2 className="mb-3">Favoritos</h2>
+              <h1 className="h2 mb-3">Favoritos</h1>
               <div className="alert alert-info">
                 Entre na sua conta para visualizar e gerenciar seus itens favoritos.{' '}
                 <Link to="/login" className="fw-bold">Ir para Login</Link>
@@ -70,10 +70,10 @@ function Favoritos() {
         <div className="row justify-content-center">
           <div className="col-12 col-md-10">
             <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-              <h2 className="mb-0 d-flex align-items-center gap-2">
-                <FaStar style={{ color: '#f59e0b' }} />
+              <h1 className="h2 mb-0 d-flex align-items-center gap-2">
+                <FaStar aria-hidden="true" style={{ color: '#b45309' }} />
                 Favoritos
-              </h2>
+              </h1>
               <button
                 type="button"
                 className="btn btn-outline-secondary btn-sm"

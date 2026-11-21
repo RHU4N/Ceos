@@ -15,7 +15,7 @@ const Sobre = () => (
     onMouseEnter={() => speak('Sobre nós. Conheça a equipe e a missão do Céos')}
     onFocus={() => speak('Sobre nós. Conheça a equipe e a missão do Céos')}
   >
-    <h1 onMouseEnter={() => speak('Sobre Nós')} onFocus={() => speak('Sobre Nós')}>Sobre Nós</h1>
+    <h2 onMouseEnter={() => speak('Sobre Nós')} onFocus={() => speak('Sobre Nós')}>Sobre Nós</h2>
     <p onMouseEnter={() => speak('Somos um grupo de estudantes apaixonados por ciência e educação')} onFocus={() => speak('Somos um grupo de estudantes apaixonados por ciência e educação')}>
       Somos um grupo de estudantes apaixonados por ciência, tecnologia e educação, unidos pelo objetivo de facilitar o acesso ao conhecimento. No Céos, acreditamos que aprender deve ser uma experiência acessível, clara e prática para todos. Nossa missão é ajudar estudantes, professores e entusiastas das áreas de Física, Química e Matemática a encontrar e aplicar fórmulas e cálculos de maneira rápida, eficiente e descomplicada.
     </p>

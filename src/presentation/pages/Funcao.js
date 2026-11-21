@@ -205,7 +205,7 @@ function Funcao() {
 <div className="container mt-4">
   <div className="row justify-content-center">
     <div className="col-12 text-center d-flex flex-column align-items-center gap-2 mb-4">
-      <h2 className="mb-0">Função</h2>
+      <h1 className="h2 mb-0">Função</h1>
       <FavoriteButton
         resourceId="calc:matematica:funcao"
         resourceType="calculation"
@@ -221,8 +221,9 @@ function Funcao() {
         aria-label="Formulário de função"
       >
         <div className="mb-3">
-          <label className="form-label">Tipo de Função</label>
+          <label htmlFor="funcao-tipo" className="form-label">Tipo de Função</label>
           <select
+            id="funcao-tipo"
             className="form-select"
             value={tipo}
             onChange={(e) => { setTipo(e.target.value); try { speak(`Tipo selecionado: ${e.target.options[e.target.selectedIndex].text}`); } catch (err) {} }}
@@ -355,7 +356,7 @@ function Funcao() {
 
         {explanation && (
           <div className="card mt-3 p-3 math-explain">
-            <h5>{explanation.title}</h5>
+            <h2 className="h5">{explanation.title}</h2>
             {explanation.formula && (
               <div>
                 <strong>Fórmula:</strong> <code>{explanation.formula}</code>

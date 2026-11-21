@@ -33,8 +33,8 @@ const Calculos = () => (
       </ul>
     </aside>
 
-    {/* MAIN */}
-    <main>
+    {/* GRID PRINCIPAL (sem <main> duplicado, já fornecido por App.js) */}
+    <section aria-label="Área de cálculos">
       <div className="grid">
 
         <div
@@ -58,7 +58,7 @@ const Calculos = () => (
         ></div>
 
       </div>
-    </main>
+    </section>
 
   </div>
 );

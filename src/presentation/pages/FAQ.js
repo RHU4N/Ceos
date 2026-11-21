@@ -1,18 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { speak } from "../../hooks/useTTS";
 
 const FAQ = () => {
+  const location = useLocation();
+  const isPlansOpen = location.hash === "#planos";
+
+  useEffect(() => {
+    if (!isPlansOpen) return;
+    try {
+      const target = document.getElementById("planos");
+      if (target && typeof target.scrollIntoView === "function") {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } catch (e) {}
+  }, [isPlansOpen]);
+
   return (
     <div className="faq-page">
       <nav aria-label="breadcrumb" className="nav justify-content-center">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <a
-              href="/"
+            <Link
+              to="/"
               onMouseEnter={() => speak("Página inicial")}
             >
               Home
-            </a>
+            </Link>
           </li>
 
           <li
@@ -94,11 +108,11 @@ const FAQ = () => {
                 className="accordion-body"
                 onMouseEnter={() =>
                   speak(
-                    "Para recuperar sua senha, clique em esqueci minha senha na tela de login. Você receberá um e-mail com instruções. Se não receber, verifique o spam ou contate o suporte."
+                    "A recuperação automática por e-mail ainda não está disponível nesta versão. Caso ainda tenha acesso à conta, altere a senha em Editar perfil; se perdeu o acesso, contate o suporte técnico."
                   )
                 }
               >
-                Para recuperar sua senha, clique em "Esqueci minha senha" na tela de login. Você receberá um e-mail com instruções para redefinir sua senha. Caso não receba o e-mail, verifique sua caixa de spam ou entre em contato com o suporte técnico.
+                A recuperação automática de senha por e-mail ainda não está disponível nesta versão. Se você ainda tiver acesso à conta, use a opção <strong>Editar perfil</strong> na barra superior para atualizar sua senha; caso tenha perdido o acesso, entre em contato com o suporte técnico pelo e-mail <a href="mailto:ceoscalculadora.suporte@gmail.com">ceoscalculadora.suporte@gmail.com</a>.
               </div>
             </div>
           </div>
@@ -172,14 +186,14 @@ const FAQ = () => {
           </div>
 
           {/* 5 */}
-          <div className="accordion-item">
+          <div className="accordion-item" id="planos">
             <h2 className="accordion-header">
               <button
-                className="accordion-button collapsed"
+                className={`accordion-button ${isPlansOpen ? "" : "collapsed"}`}
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseFive"
-                aria-expanded="false"
+                aria-expanded={isPlansOpen}
                 aria-controls="collapseFive"
                 onMouseEnter={() => speak("O que muda do plano gratuito para o plano pago?")}
               >
@@ -189,18 +203,18 @@ const FAQ = () => {
 
             <div
               id="collapseFive"
-              className="accordion-collapse collapse"
+              className={`accordion-collapse collapse ${isPlansOpen ? "show" : ""}`}
               data-bs-parent="#accordionExample"
             >
               <div
                 className="accordion-body"
                 onMouseEnter={() =>
                   speak(
-                    "O plano gratuito tem funcionalidades limitadas. O plano pago libera tudo, oferece suporte prioritário e atualizações exclusivas."
+                    "Todas as calculadoras de Matemática, Física e Química, funções personalizadas e painéis IoT já estão liberados para uso acadêmico no CEOS. A contratação de planos comerciais ainda não está habilitada nesta versão."
                   )
                 }
               >
-                O plano gratuito oferece acesso limitado a algumas funcionalidades da calculadora. Já o plano pago oferece acesso completo a todas as funcionalidades, além de suporte técnico prioritário e atualizações exclusivas.
+                Atualmente todas as calculadoras de Matemática, Física e Química, funções personalizadas, favoritos e painel IoT disponíveis no CEOS estão liberados para uso. Funcionalidades futuras de planos pagos adicionais ainda não estão habilitadas nesta versão; dúvidas podem ser enviadas para <a href="mailto:ceoscalculadora.suporte@gmail.com">ceoscalculadora.suporte@gmail.com</a>.
               </div>
             </div>
           </div>

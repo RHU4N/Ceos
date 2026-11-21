@@ -4,7 +4,7 @@ function ExplanationCard({ title = 'Como a conta é feita', formula, exampleText
   return (
     <div className="card mt-3 explanation-card">
       <div className="card-body">
-        <h6 className="card-title">{title}</h6>
+        <h2 className="h6 card-title">{title}</h2>
         {formula && (<p><strong>Fórmula:</strong> {formula}</p>)}
         {exampleText && (<p><strong>Exemplo:</strong> {exampleText}</p>)}
         {examplePairs && examplePairs.length > 0 && (
