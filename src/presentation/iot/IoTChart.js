@@ -1,11 +1,10 @@
 import React from "react";
-export const unit = (value) => (value === "C" ? "°C" : value);
-export const date = (value) =>
-  value ? new Date(value).toLocaleString("pt-BR") : "Sem comunicação";
+import { number, unit, date } from './presentation';
+export { unit, date } from './presentation';
 export default function IoTChart({ sensor, measurements }) {
   const values = measurements
     .filter(
-      (m) => m.sensorId === sensor.sensorId && m.unidade === sensor.unidade,
+      (m) => m.sensorId === sensor.sensorId && m.unidade === sensor.unidade && Number.isFinite(m.valor) && Number.isFinite(Date.parse(m.timestamp)),
     )
     .slice()
     .sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
@@ -29,17 +28,11 @@ export default function IoTChart({ sensor, measurements }) {
       >
         <path d="M60 25V175H550" fill="none" stroke="#758195" />
         <text x="4" y="42">
-          {max.toFixed(1)}
+          {number(max)}
         </text>
         <text x="4" y="165">
-          {min.toFixed(1)}
+          {number(min)}
         </text>
-        <polyline
-          points={values.map((m) => `${x(m)},${y(m)}`).join(" ")}
-          fill="none"
-          stroke="#176baf"
-          strokeWidth="3"
-        />
         {values.map((m) => (
           <circle
             key={m.id || m._id}
@@ -50,7 +43,7 @@ export default function IoTChart({ sensor, measurements }) {
             fill="#176baf"
           >
             <title>
-              {date(m.timestamp)}: {m.valor} {unit(m.unidade)}
+              {date(m.timestamp)}: {number(m.valor)} {unit(m.unidade)}
             </title>
           </circle>
         ))}
@@ -61,9 +54,14 @@ export default function IoTChart({ sensor, measurements }) {
           {date(values[values.length - 1].timestamp)}
         </text>
       </svg>
+      <p>
+        Faixa observada: {number(min)} a {number(max)} {unit(sensor.unidade)}.
+        {" "}Intervalo: {date(values[0].timestamp)} a {date(values[values.length - 1].timestamp)}.
+      </p>
       <small>
         Últimas {values.length} amostras do período consultado. Use o histórico
-        para outros períodos.
+        para outros períodos. Os pontos representam somente medições recebidas,
+        sem interpolação de dados ausentes.
       </small>
     </figure>
   );
