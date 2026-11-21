@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './Style.css';
 import MathApiRepository from '../../infrastructure/api/MathApiRepository';
 import { useLoading } from '../context/LoadingContext';
+import FavoriteButton from '../components/FavoriteButton';
 
 const OPERATION_OPTIONS = [
   { value: 'soma', label: 'Adição de matriz' },
@@ -164,7 +165,15 @@ function Matrizes() {
 
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <h2 className="mb-4 text-center">Matrizes</h2>
+          <div className="d-flex flex-column align-items-center gap-2 mb-4">
+            <h2 className="mb-0 text-center">Matrizes</h2>
+            <FavoriteButton
+              resourceId="calc:matematica:matrizes"
+              resourceType="calculation"
+              nome="Matrizes"
+              descricao="Adição, subtração e multiplicação de matrizes."
+            />
+          </div>
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-9" onSubmit={handleSubmit}>
             <div className="mb-3">

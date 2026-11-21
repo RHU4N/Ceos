@@ -9,7 +9,7 @@ function Quimica() {
     <>
       <nav aria-label="breadcrumb" className="nav justify-content-center mt-3">
         <ol className="breadcrumb">
-          <li className="breadcrumb-item"><a href="/">Home</a></li>
+          <li className="breadcrumb-item"><Link to="/">Home</Link></li>
           <li className="breadcrumb-item active" aria-current="page">Química</li>
         </ol>
       </nav>
@@ -23,14 +23,15 @@ function Quimica() {
         <div className="row g-4 justify-content-center">
 
           <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
-            <div className="card shadow-sm chemistry-card card-disabled d-flex align-items-center justify-content-center" aria-disabled="true" tabIndex={-1} title="Em breve">
-              <div className="card-body text-center">
-                <h5 className="card-title">Estequiometria</h5>
-                <SiteImage src="/estequiometria.png" alt="estequiometria" className="card-image" />
-                <p className="card-text mt-2">Balanceamento e cálculos estequiométricos.</p>
-                <div className="small text-muted mt-2">Em breve</div>
+            <Link to="/quimica/estequiometria" className="text-decoration-none" onMouseEnter={() => speak('Estequiometria')} onFocus={() => speak('Estequiometria')}>
+              <div className="card shadow-sm card-affordance chemistry-card" tabIndex={0} title="Estequiometria">
+                <div className="card-body text-center">
+                  <h5 className="card-title">Estequiometria</h5>
+                  <SiteImage src="/estequiometria.png" alt="estequiometria" className="card-image" />
+                  <p className="card-text mt-2">Balanceamento racional, massa molar, conversões e reagente limitante.</p>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
@@ -46,14 +47,15 @@ function Quimica() {
           </div>
 
           <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
-            <div className="card shadow-sm chemistry-card card-disabled d-flex align-items-center justify-content-center" aria-disabled="true" tabIndex={-1} title="Em breve">
-              <div className="card-body text-center">
-                <h5 className="card-title">Termoquímica</h5>
-                <SiteImage src="/termoquimica.png" alt="termoquimica" className="card-image" />
-                <p className="card-text mt-2">Entalpia e calor trocado.</p>
-                <div className="small text-muted mt-2">Em breve</div>
+            <Link to="/quimica/termoquimica" className="text-decoration-none" onMouseEnter={() => speak('Termoquímica')} onFocus={() => speak('Termoquímica')}>
+              <div className="card shadow-sm card-affordance chemistry-card" tabIndex={0} title="Termoquímica">
+                <div className="card-body text-center">
+                  <h5 className="card-title">Termoquímica</h5>
+                  <SiteImage src="/termoquimica.png" alt="termoquimica" className="card-image" />
+                  <p className="card-text mt-2">Calor sensível, variação de temperatura, entalpia e processos.</p>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
 
         </div>

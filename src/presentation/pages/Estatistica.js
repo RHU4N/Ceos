@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak as speakText } from "../../hooks/useTTS";
 import ExplanationCard from '../components/ExplanationCard';
+import FavoriteButton from '../components/FavoriteButton';
 
 function Estatistica() {
   const [tipo, setTipo] = useState('media');
@@ -142,7 +143,15 @@ function Estatistica() {
       <div className="container mt-5">
         <div className="row justify-content-center">
 
-          <h2 className="mb-4 text-center" onMouseEnter={() => speakText("Estatística")} onFocus={() => speakText("Estatística")}>Estatística</h2>
+          <div className="d-flex flex-column align-items-center gap-2 mb-4">
+            <h2 className="mb-0 text-center" onMouseEnter={() => speakText("Estatística")} onFocus={() => speakText("Estatística")}>Estatística</h2>
+            <FavoriteButton
+              resourceId="calc:matematica:estatistica"
+              resourceType="calculation"
+              nome="Estatística"
+              descricao="Média, mediana e moda."
+            />
+          </div>
 
           <form
             className="op-card p-4 col-12 col-md-10 col-lg-8"

@@ -204,14 +204,30 @@ function Historico() {
       route = '/fisica/dinamica';
     } else if (key.includes('energia')) {
       route = '/fisica/energia';
+    } else if (
+      key.includes('termologia') ||
+      has('termologia') ||
+      key.includes('ponto-de-orvalho') ||
+      has('ponto-de-orvalho') ||
+      has('pontodeorvalho')
+    ) {
+      route = '/fisica/termologia/ponto-de-orvalho';
     } else if (key.includes('concentracao')) {
       route = '/quimica/concentracao';
-    } else if (key.includes('estequiometria')) {
+    } else if (key.includes('estequiometria') || has('estequiometria')) {
       route = '/quimica/estequiometria';
-    } else if (key.includes('termoquimica')) {
+      if (parts[2]) state.subtype = parts[2];
+    } else if (key.includes('termoquimica') || has('termoquimica')) {
       route = '/quimica/termoquimica';
+      if (parts[2]) state.subtype = parts[2];
     } else if (key.includes('solucoes') || has('solucoes')) {
       route = '/solucoes';
+      if (parts[2]) state.subtype = parts[2];
+    } else if (key.includes('funcaopersonalizada') || has('funcaopersonalizada')) {
+      const fnId = state.initialValues?.id;
+      route = fnId
+        ? `/funcoes-personalizadas?id=${encodeURIComponent(String(fnId))}`
+        : '/funcoes-personalizadas';
     }
 
     if (route) {

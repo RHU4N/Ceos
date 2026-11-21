@@ -601,6 +601,65 @@ function Navbar() {
 
           <li>
             <Link
+              to="/calculadoras"
+              tabIndex={loading ? -1 : 0}
+              style={{
+                pointerEvents: loading ? 'none' : undefined,
+                opacity: loading ? 0.6 : undefined,
+              }}
+              onClick={(e) => {
+                preventIfLoading(e);
+                speak('Calculadoras');
+              }}
+              onMouseEnter={() => !loading && speak('Calculadoras')}
+              onFocus={() => !loading && speak('Calculadoras')}
+            >
+              Calculadoras
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/funcoes-personalizadas"
+              tabIndex={loading ? -1 : 0}
+              style={{
+                pointerEvents: loading ? 'none' : undefined,
+                opacity: loading ? 0.6 : undefined,
+              }}
+              onClick={(e) => {
+                preventIfLoading(e);
+                speak('Funções personalizadas');
+              }}
+              onMouseEnter={() => !loading && speak('Funções personalizadas')}
+              onFocus={() => !loading && speak('Funções personalizadas')}
+            >
+              Funções
+            </Link>
+          </li>
+
+          {user && (
+            <li>
+              <Link
+                to="/favoritos"
+                tabIndex={loading ? -1 : 0}
+                style={{
+                  pointerEvents: loading ? 'none' : undefined,
+                  opacity: loading ? 0.6 : undefined,
+                }}
+                onClick={(e) => {
+                  preventIfLoading(e);
+                  speak('Favoritos');
+                }}
+                onMouseEnter={() => !loading && speak('Favoritos')}
+                onFocus={() => !loading && speak('Favoritos')}
+              >
+                Favoritos
+              </Link>
+            </li>
+          )}
+
+          <li>
+            <Link
               to="/faq"
               tabIndex={loading ? -1 : 0}
               style={{

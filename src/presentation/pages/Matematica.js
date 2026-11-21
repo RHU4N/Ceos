@@ -95,6 +95,19 @@ function Matematica() {
       </Link>
     </div>
 
+    {/* CARD 6 - Funções Personalizadas */}
+    <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
+      <Link to="/funcoes-personalizadas" className="text-decoration-none" onMouseEnter={() => speak('Funções Personalizadas')} onFocus={() => speak('Funções Personalizadas')}>
+        <div className="card shadow-sm card-affordance math-card" tabIndex={0} title="Clique para acessar Funções Personalizadas">
+          <div className="card-body text-center">
+            <h5 className="card-title">Funções Personalizadas</h5>
+            <SiteImage src="/image.png" alt="funções personalizadas" className="card-image" />
+            <p className="card-text">Crie, valide e execute suas próprias fórmulas matemáticas.</p>
+          </div>
+        </div>
+      </Link>
+    </div>
+
   </div>
 </div>
 

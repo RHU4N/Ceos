@@ -46,4 +46,16 @@ describe('PhysicsApiRepository (unit)', () => {
     apiClient.post.mockResolvedValue({ status: 500, data: { error: 'boom' } });
     await expect(repo.calcularEnergia({ action: 'trabalho', data: {} })).rejects.toThrow();
   });
+
+  test('calcularTermologia calls /termologia/ponto-de-orvalho and returns full data object', async () => {
+    const repo = new PhysicsApiRepository();
+    const payload = { resultado: '9.56 °C', pontoOrvalho: 9.56, unidade: '°C' };
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: payload } });
+    const out = await repo.calcularTermologia({
+      action: 'ponto-de-orvalho',
+      data: { temperatura: 24, umidadeRelativa: 40, origem: 'manual' },
+    });
+    expect(apiClient.post.mock.calls[0][0]).toBe('http://api/termologia/ponto-de-orvalho');
+    expect(out).toEqual(payload);
+  });
 });

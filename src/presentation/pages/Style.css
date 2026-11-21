@@ -733,3 +733,122 @@ main .grid {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* Botões e blocos utilitários adicionados (PI6) */
+.ceos-btn-fav,
+.op-card .ceos-btn-fav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: 1.5px solid #f0b429;
+  background-color: #fffdf5;
+  color: #8d5b00;
+  transition: all 0.15s ease;
+}
+
+.ceos-btn-fav:hover,
+.op-card .ceos-btn-fav:hover {
+  background-color: #fff4cc;
+  color: #6b4300;
+}
+
+.ceos-btn-fav--active,
+.op-card .ceos-btn-fav--active {
+  background-color: #f59e0b;
+  border-color: #d97706;
+  color: #ffffff;
+}
+
+.ceos-btn-fav--active:hover,
+.op-card .ceos-btn-fav--active:hover {
+  background-color: #d97706;
+  color: #ffffff;
+}
+
+.ceos-tab-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ceos-tab-btn,
+.op-card .ceos-tab-btn {
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1.5px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+.ceos-tab-btn:hover,
+.op-card .ceos-tab-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.ceos-tab-btn--active,
+.op-card .ceos-tab-btn--active {
+  background-color: #1e88e5;
+  border-color: #1e88e5;
+  color: #ffffff;
+}
+
+.ceos-tab-btn--active:hover,
+.op-card .ceos-tab-btn--active:hover {
+  background-color: #1565c0;
+  color: #ffffff;
+}
+
+.ceos-chip-btn,
+.op-card .ceos-chip-btn {
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #334155;
+}
+
+.ceos-chip-btn:hover,
+.op-card .ceos-chip-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.ceos-chip-btn--danger,
+.op-card .ceos-chip-btn--danger {
+  border-color: #f5c2c7;
+  color: #b02a37;
+  background-color: #fff5f5;
+}
+
+.ceos-chip-btn--danger:hover,
+.op-card .ceos-chip-btn--danger:hover {
+  background-color: #ffe3e6;
+  color: #842029;
+}
+
+.ceos-result-card {
+  background: #f8fafc;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.ceos-catalog-card {
+  max-width: 280px;
+  width: 100%;
+  min-height: 440px;
+}
+
+.ceos-catalog-card .card-body {
+  justify-content: space-between;
+}
+

@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak as speakText } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
+import FavoriteButton from '../components/FavoriteButton';
 import './Style.css';
 
 function MatematicaFinanceira() {
@@ -173,8 +174,14 @@ function MatematicaFinanceira() {
 
 			<div className="container mt-4">
 				<div className="row justify-content-center">
-					<div className="col-12 text-center">
-						<h2 className="mb-4">Matemática Financeira</h2>
+					<div className="col-12 text-center d-flex flex-column align-items-center gap-2 mb-4">
+						<h2 className="mb-0">Matemática Financeira</h2>
+						<FavoriteButton
+							resourceId="calc:matematica:financeiro"
+							resourceType="calculation"
+							nome="Matemática Financeira"
+							descricao="Variação, juros simples e compostos."
+						/>
 					</div>
 
 					<div className="col-12 col-md-10 col-lg-8">
