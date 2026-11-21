@@ -68,6 +68,9 @@ function PontoDeOrvalho() {
   const mountedRef = useRef(true);
 
   const { user } = useAuth();
+  // O AuthContext troca o objeto `user` ao salvar histórico; dependências usam apenas o
+  // estado de sessão para não recarregar medições nem resetar o evento escolhido.
+  const hasUser = Boolean(user);
   const { loading, setLoading } = useLoading();
   const location = useLocation();
 
@@ -97,7 +100,7 @@ function PontoDeOrvalho() {
   }, [location]);
 
   const loadDevices = useCallback(async () => {
-    if (!user) {
+    if (!hasUser) {
       setDevices([]);
       setDeviceId('');
       return;
@@ -122,11 +125,11 @@ function PontoDeOrvalho() {
         setIotLoading(false);
       }
     }
-  }, [user]);
+  }, [hasUser]);
 
   const loadMeasurements = useCallback(
     async (targetDeviceId) => {
-      if (!user || !targetDeviceId) {
+      if (!hasUser || !targetDeviceId) {
         setMeasurements([]);
         setSelectedEventId('');
         return;
@@ -155,23 +158,23 @@ function PontoDeOrvalho() {
         }
       }
     },
-    [user]
+    [hasUser]
   );
 
   useEffect(() => {
-    if (activeTab === 'iot' && user) {
+    if (activeTab === 'iot' && hasUser) {
       loadDevices();
     }
-  }, [activeTab, user, loadDevices]);
+  }, [activeTab, hasUser, loadDevices]);
 
   useEffect(() => {
-    if (activeTab === 'iot' && user && deviceId) {
+    if (activeTab === 'iot' && hasUser && deviceId) {
       loadMeasurements(deviceId);
     } else if (!deviceId) {
       setMeasurements([]);
       setSelectedEventId('');
     }
-  }, [activeTab, user, deviceId, loadMeasurements]);
+  }, [activeTab, hasUser, deviceId, loadMeasurements]);
 
   const selectedDevice = useMemo(
     () => devices.find((d) => d.deviceId === deviceId) || null,
