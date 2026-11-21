@@ -10,7 +10,7 @@ function Fisica() {
       <nav aria-label="breadcrumb" className="nav justify-content-center mt-3">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
             Física
@@ -58,6 +58,18 @@ function Fisica() {
                   <h5 className="card-title">Energia</h5>
                   <SiteImage src="/energia.png" alt="energia" className="card-image" />
                   <p className="card-text">Trabalho, energia cinética e potencial.</p>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
+            <Link to="/fisica/termologia" className="text-decoration-none" onMouseEnter={() => speak('Termologia')} onFocus={() => speak('Termologia')}>
+              <div className="card shadow-sm card-affordance physics-card" tabIndex={0} title="Termologia">
+                <div className="card-body text-center">
+                  <h5 className="card-title">Termologia</h5>
+                  <SiteImage src="/energia.png" alt="termologia" className="card-image" />
+                  <p className="card-text">Ponto de orvalho, temperatura e umidade (Manual e IoT).</p>
                 </div>
               </div>
             </Link>

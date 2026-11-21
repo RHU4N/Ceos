@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
+import FavoriteButton from '../components/FavoriteButton';
 
 
 function Cinetica() {
@@ -135,7 +136,15 @@ function Cinetica() {
 
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <h2 className="mb-4 text-center">Cinemática</h2>
+          <div className="d-flex flex-column align-items-center gap-2 mb-4">
+            <h2 className="mb-0 text-center">Cinemática</h2>
+            <FavoriteButton
+              resourceId="calc:fisica:cinetica"
+              resourceType="calculation"
+              nome="Cinemática"
+              descricao="Velocidade, aceleração e movimento."
+            />
+          </div>
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-8" onSubmit={handleSubmit}>
             <div className="mb-3">

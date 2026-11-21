@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
+import FavoriteButton from '../components/FavoriteButton';
 
 
 function Energia() {
@@ -127,7 +128,15 @@ function Energia() {
 
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <h2 className="mb-4 text-center">Energia</h2>
+          <div className="d-flex flex-column align-items-center gap-2 mb-4">
+            <h2 className="mb-0 text-center">Energia</h2>
+            <FavoriteButton
+              resourceId="calc:fisica:energia"
+              resourceType="calculation"
+              nome="Energia"
+              descricao="Trabalho, energia cinética e potencial."
+            />
+          </div>
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-8" onSubmit={handleSubmit}>
             <div className="mb-3">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { useLoading } from '../context/LoadingContext';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +8,7 @@ import CalcularQuimica from '../../domain/usecases/CalcularQuimica';
 import ChemistryApiRepository from '../../infrastructure/api/ChemistryApiRepository';
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
+import FavoriteButton from '../components/FavoriteButton';
 
 function Solucoes() {
   const [action, setAction] = useState('molaridade');
@@ -98,7 +99,7 @@ function Solucoes() {
   const renderExplanation = (actKey) => {
     const ex = examples[actKey];
     if (!ex) return null;
-    const pairs = Object.keys(ex).filter(k => ['soluto','volume','solvente','n1','n2','massa'].includes(k)).map(k => `${k}=${ex[k]}`);
+    const pairs = Object.keys(ex).filter(k => ['soluto', 'volume', 'solvente', 'n1', 'n2', 'massa'].includes(k)).map(k => `${k}=${ex[k]}`);
     return (
       <ExplanationCard
         formula={ex.formula}
@@ -113,20 +114,34 @@ function Solucoes() {
     <>
       <nav aria-label="breadcrumb" className="nav justify-content-center mt-3">
         <ol className="breadcrumb">
-          <li className="breadcrumb-item"><a href="/">Home</a></li>
-          <li className="breadcrumb-item"><a href="/quimica">Química</a></li>
+          <li className="breadcrumb-item"><Link to="/">Home</Link></li>
+          <li className="breadcrumb-item"><Link to="/quimica">Química</Link></li>
           <li className="breadcrumb-item active" aria-current="page">Soluções</li>
         </ol>
       </nav>
 
       <div className="container mt-5">
         <div className="row justify-content-center">
-          <h2 className="mb-4 text-center">Soluções</h2>
+          <div className="d-flex flex-column align-items-center gap-2 mb-4">
+            <h2 className="mb-0 text-center">Soluções</h2>
+            <FavoriteButton
+              resourceId="calc:quimica:solucoes"
+              resourceType="calculation"
+              nome="Soluções (Química)"
+              descricao="Concentração comum, molaridade, molalidade, fração molar e densidade."
+            />
+          </div>
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-8" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Operação</label>
-              <select className="form-select" value={action} onChange={e => { setAction(e.target.value); speak(e.target.value); }} disabled={loading}>
+              <label className="form-label" htmlFor="solucoes-operacao">Operação</label>
+              <select
+                id="solucoes-operacao"
+                className="form-select"
+                value={action}
+                onChange={e => { setAction(e.target.value); speak(e.target.value); }}
+                disabled={loading}
+              >
                 <option value="concentracao-comum">Concentração comum (g/L)</option>
                 <option value="molaridade">Molaridade (mol/L)</option>
                 <option value="molalidade">Molalidade (mol/kg)</option>
@@ -135,13 +150,60 @@ function Solucoes() {
               </select>
             </div>
 
-            {(action === 'concentracao-comum' || action === 'molaridade' || action === 'densidade') && (
+            {(action === 'concentracao-comum' || action === 'molaridade') && (
               <div className="row g-2">
                 <div className="col">
-                  <input type="number" className="form-control" placeholder="soluto (g ou mol conforme operação)" value={soluto} onChange={e => setSoluto(e.target.value)} disabled={loading} />
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder={action === 'molaridade' ? 'soluto (mol)' : 'soluto (g)'}
+                    aria-label="Soluto"
+                    value={soluto}
+                    onChange={e => setSoluto(e.target.value)}
+                    disabled={loading}
+                  />
                 </div>
                 <div className="col">
-                  <input type="number" className="form-control" placeholder="volume (L ou mL conforme operação)" value={volume} onChange={e => setVolume(e.target.value)} disabled={loading} />
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="volume (L)"
+                    aria-label="Volume (L)"
+                    value={volume}
+                    onChange={e => setVolume(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+            )}
+
+            {action === 'densidade' && (
+              <div className="row g-2">
+                <div className="col">
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="massa (g)"
+                    aria-label="Massa (g)"
+                    value={massa}
+                    onChange={e => setMassa(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+                <div className="col">
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="volume (mL)"
+                    aria-label="Volume (mL)"
+                    value={volume}
+                    onChange={e => setVolume(e.target.value)}
+                    disabled={loading}
+                  />
                 </div>
               </div>
             )}
@@ -149,10 +211,28 @@ function Solucoes() {
             {action === 'molalidade' && (
               <div className="row g-2">
                 <div className="col">
-                  <input type="number" className="form-control" placeholder="soluto (mol)" value={soluto} onChange={e => setSoluto(e.target.value)} disabled={loading} />
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="soluto (mol)"
+                    aria-label="Soluto (mol)"
+                    value={soluto}
+                    onChange={e => setSoluto(e.target.value)}
+                    disabled={loading}
+                  />
                 </div>
                 <div className="col">
-                  <input type="number" className="form-control" placeholder="solvente (kg)" value={solvente} onChange={e => setSolvente(e.target.value)} disabled={loading} />
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="solvente (kg)"
+                    aria-label="Solvente (kg)"
+                    value={solvente}
+                    onChange={e => setSolvente(e.target.value)}
+                    disabled={loading}
+                  />
                 </div>
               </div>
             )}
@@ -160,10 +240,28 @@ function Solucoes() {
             {action === 'fracao-molar' && (
               <div className="row g-2">
                 <div className="col">
-                  <input type="number" className="form-control" placeholder="n1 (mol)" value={n1} onChange={e => setN1(e.target.value)} disabled={loading} />
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="n1 (mol)"
+                    aria-label="n1 (mol)"
+                    value={n1}
+                    onChange={e => setN1(e.target.value)}
+                    disabled={loading}
+                  />
                 </div>
                 <div className="col">
-                  <input type="number" className="form-control" placeholder="n2 (mol)" value={n2} onChange={e => setN2(e.target.value)} disabled={loading} />
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="n2 (mol)"
+                    aria-label="n2 (mol)"
+                    value={n2}
+                    onChange={e => setN2(e.target.value)}
+                    disabled={loading}
+                  />
                 </div>
               </div>
             )}

@@ -45,4 +45,49 @@ describe('ChemistryApiRepository (unit)', () => {
     await new ChemistryApiRepository().calcular({ action: 'molaridade', data: { soluto: 2, volume: 0.5 } });
     expect(apiClient.post).toHaveBeenCalledWith(expect.stringMatching(/\/solucoes\/molaridade$/), { soluto: 2, volume: 0.5 }, expect.any(Object));
   });
+
+  test('calcularEstequiometria returns full unwrapped data payload', async () => {
+    const fullData = {
+      resultado: '2 H2 + O2 -> 2 H2O',
+      equacaoBalanceada: '2 H2 + O2 -> 2 H2O',
+      passos: ['step 1'],
+    };
+    apiClient.post.mockResolvedValue({ status: 200, data: { success: true, data: fullData } });
+    const out = await new ChemistryApiRepository().calcularEstequiometria({
+      action: 'balanceamento',
+      data: { equacao: 'H2 + O2 -> H2O' },
+    });
+    expect(apiClient.post).toHaveBeenCalledWith(
+      expect.stringMatching(/\/estequiometria\/balanceamento$/),
+      { equacao: 'H2 + O2 -> H2O' },
+      expect.any(Object)
+    );
+    expect(out).toEqual(fullData);
+  });
+
+  test('calcularTermoquimica returns full unwrapped data payload and translates error', async () => {
+    const fullData = {
+      resultado: '8360 J (8.36 kJ)',
+      valorJ: 8360,
+      valorKJ: 8.36,
+    };
+    apiClient.post.mockResolvedValueOnce({ status: 200, data: { success: true, data: fullData } });
+    const out = await new ChemistryApiRepository().calcularTermoquimica({
+      action: 'calor-sensivel',
+      data: { massa: 200, calorEspecifico: 4.18, temperaturaInicial: 20, temperaturaFinal: 30 },
+    });
+    expect(apiClient.post).toHaveBeenCalledWith(
+      expect.stringMatching(/\/termoquimica\/calor-sensivel$/),
+      expect.any(Object),
+      expect.any(Object)
+    );
+    expect(out).toEqual(fullData);
+
+    apiClient.post.mockRejectedValueOnce({
+      response: { status: 400, data: { error: { message: 'massa inválida' } } },
+    });
+    await expect(
+      new ChemistryApiRepository().calcularTermoquimica({ action: 'calor-sensivel', data: {} })
+    ).rejects.toThrow('massa inválida');
+  });
 });

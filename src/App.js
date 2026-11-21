@@ -15,6 +15,8 @@ import Cinetica from './presentation/pages/Cinetica';
 import Dinamica from './presentation/pages/Dinamica';
 import Energia from './presentation/pages/Energia';
 import FisicaNuclear from './presentation/pages/FisicaNuclear';
+import Termologia from './presentation/pages/Termologia';
+import PontoDeOrvalho from './presentation/pages/PontoDeOrvalho';
 import Footer from './presentation/components/Footer';
 import FAQ from './presentation/pages/FAQ';
 import Login from './presentation/pages/Login';
@@ -25,8 +27,12 @@ import Concentracao from './presentation/pages/Concentracao';
 import Termoquimica from './presentation/pages/Termoquimica';
 import Solucoes from './presentation/pages/Solucoes';
 import Historico from './presentation/pages/Historico';
+import Favoritos from './presentation/pages/Favoritos';
+import FuncoesPersonalizadas from './presentation/pages/FuncoesPersonalizadas';
+import CatalogoCalculadoras from './presentation/pages/CatalogoCalculadoras';
 // import Feedback from './presentation/pages/Feedback';
 import { AuthProvider } from './presentation/context/AuthContext';
+import { FavoritesProvider } from './presentation/context/FavoritesContext';
 import { LoadingProvider } from './presentation/context/LoadingContext';
 import IoTDashboard from './presentation/iot/IoTDashboard';
 import { IoTNotificationProvider } from './presentation/iot/IoTNotificationProvider';
@@ -34,41 +40,48 @@ import { IoTNotificationProvider } from './presentation/iot/IoTNotificationProvi
 function App() {
   return (
     <AuthProvider>
-      <LoadingProvider>
-        <Router>
-          <IoTNotificationProvider>
-          <Navbar />
-          <main>
-            <Routes>
-              <Route path="/iot" element={<IoTDashboard />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/matematica" element={<Matematica />} />
-              <Route path="/matematica/funcao" element={<Funcao />} />
-              <Route path="/matematica/matrizes" element={<Matrizes />} />
-              <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
-              <Route path="/matematica/estatistica" element={<Estatistica />} />
-              <Route path="/matematica/financeira" element={<MatematicaFinanceira />} />
-              <Route path="/fisica" element={<Fisica />} />
-              <Route path="/fisica/cinetica" element={<Cinetica />} />
-              <Route path="/fisica/dinamica" element={<Dinamica />} />
-              <Route path="/fisica/energia" element={<Energia />} />
-              <Route path="/fisica/nuclear" element={<FisicaNuclear />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/quimica" element={<Quimica />} />
-              <Route path="/quimica/estequiometria" element={<Estequiometria />} />
-              <Route path="/quimica/concentracao" element={<Concentracao />} />
-              <Route path="/quimica/termoquimica" element={<Termoquimica />} />
-              <Route path="/solucoes" element={<Solucoes />} />
-              <Route path="/historico" element={<Historico />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              {/* <Route path="/feedback" element={<Feedback />} /> */}
-            </Routes>
-          </main>
-          <Footer />
-          </IoTNotificationProvider>
-        </Router>
-      </LoadingProvider>
+      <FavoritesProvider>
+        <LoadingProvider>
+          <Router>
+            <IoTNotificationProvider>
+            <Navbar />
+            <main>
+              <Routes>
+                <Route path="/iot" element={<IoTDashboard />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/calculadoras" element={<CatalogoCalculadoras />} />
+                <Route path="/favoritos" element={<Favoritos />} />
+                <Route path="/funcoes-personalizadas" element={<FuncoesPersonalizadas />} />
+                <Route path="/matematica" element={<Matematica />} />
+                <Route path="/matematica/funcao" element={<Funcao />} />
+                <Route path="/matematica/matrizes" element={<Matrizes />} />
+                <Route path="/matematica/analise-combinatoria" element={<AnaliseComb />} />
+                <Route path="/matematica/estatistica" element={<Estatistica />} />
+                <Route path="/matematica/financeira" element={<MatematicaFinanceira />} />
+                <Route path="/fisica" element={<Fisica />} />
+                <Route path="/fisica/cinetica" element={<Cinetica />} />
+                <Route path="/fisica/dinamica" element={<Dinamica />} />
+                <Route path="/fisica/energia" element={<Energia />} />
+                <Route path="/fisica/nuclear" element={<FisicaNuclear />} />
+                <Route path="/fisica/termologia" element={<Termologia />} />
+                <Route path="/fisica/termologia/ponto-de-orvalho" element={<PontoDeOrvalho />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/quimica" element={<Quimica />} />
+                <Route path="/quimica/estequiometria" element={<Estequiometria />} />
+                <Route path="/quimica/concentracao" element={<Concentracao />} />
+                <Route path="/quimica/termoquimica" element={<Termoquimica />} />
+                <Route path="/solucoes" element={<Solucoes />} />
+                <Route path="/historico" element={<Historico />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                {/* <Route path="/feedback" element={<Feedback />} /> */}
+              </Routes>
+            </main>
+            <Footer />
+            </IoTNotificationProvider>
+          </Router>
+        </LoadingProvider>
+      </FavoritesProvider>
     </AuthProvider>
   );
 }

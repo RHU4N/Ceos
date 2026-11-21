@@ -10,6 +10,7 @@ import { useLoading } from '../context/LoadingContext';
 import { useAuth } from '../context/AuthContext';
 import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
+import FavoriteButton from '../components/FavoriteButton';
 
 function Funcao() {
   const [tipo, setTipo] = useState("funcao1");
@@ -203,8 +204,14 @@ function Funcao() {
 
 <div className="container mt-4">
   <div className="row justify-content-center">
-    <div className="col-12 text-center">
-      <h2 className="mb-4">Função</h2>
+    <div className="col-12 text-center d-flex flex-column align-items-center gap-2 mb-4">
+      <h2 className="mb-0">Função</h2>
+      <FavoriteButton
+        resourceId="calc:matematica:funcao"
+        resourceType="calculation"
+        nome="Função"
+        descricao="Cálculos e fórmulas de funções matemáticas (1º e 2º grau)."
+      />
     </div>
 
     <div className="col-12 col-md-10 col-lg-8">

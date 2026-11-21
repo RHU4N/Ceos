@@ -1,5 +1,5 @@
 import apiClient from './mathApiClient';
-import { unwrapMathResult } from './mathApiResponse';
+import { getApiError, unwrapMathData, unwrapMathResult } from './mathApiResponse';
 
 import { mathApiUrl as apiUrl } from '../../config/apiConfig';
 
@@ -29,6 +29,9 @@ function buildUrl(area, action) {
     },
     energia: {
       // backend uses hyphenated names for energia strategies (handled as-is)
+    },
+    termologia: {
+      // backend exposes /termologia/ponto-de-orvalho
     }
   };
 
@@ -55,5 +58,22 @@ export default class PhysicsApiRepository {
     const url = buildUrl('energia', action);
     const res = await apiClient.post(url, data || {}, { headers: { 'Content-Type': 'application/json' } });
     return unwrapMathResult(res, `Erro ao chamar ${url}`);
+  }
+
+  /**
+   * Executes a thermology calculation (e.g. ponto-de-orvalho) and returns the full MathAPI data payload.
+   */
+  async calcularTermologia({ action = 'ponto-de-orvalho', data } = {}) {
+    const url = buildUrl('termologia', action);
+    const fallback = `Erro ao chamar ${url}`;
+    try {
+      const res = await apiClient.post(url, data || {}, { headers: { 'Content-Type': 'application/json' } });
+      return unwrapMathData(res, fallback);
+    } catch (err) {
+      if (err?.response) {
+        throw new Error(getApiError(err.response, err.message || fallback));
+      }
+      throw err;
+    }
   }
 }
