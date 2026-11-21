@@ -27,7 +27,7 @@ compiler.run((error,stats)=>{
   assert.match(result.markup,/<title[^>]*>SVG contract<\/title>/);
   assert.match(result.markup,/viewBox="0 0 10 10"/);
   assert.match(result.url,/\.svg$/);
-  const css=stats.toJson({all:false,assets:true}).assets.filter(asset=>asset.name.endsWith('.css'));
+  const css=stats.toJson({all:false,assets:true,cachedAssets:true,groupAssetsByEmitStatus:false,groupAssetsByPath:false,groupAssetsByExtension:false,groupAssetsByChunk:false,groupAssetsByInfo:false}).assets.filter(asset=>asset.name.endsWith('.css'));
   assert.ok(css.length>0,'SCSS pipeline must emit CSS');
   assert.ok(css.some(asset=>/url\([^)]*\.svg\)/.test(fs.readFileSync(path.join(output,asset.name),'utf8'))),'Sass source-map URLs must resolve to emitted SVG assets');
   console.log('CRA loader contracts passed: SVG URL/named component/title/ref and CSS URL source maps.');
