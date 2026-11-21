@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTrash, FaExternalLinkAlt, FaClipboard } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { useLoading } from '../context/LoadingContext';
@@ -299,8 +299,11 @@ function Historico() {
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 text-center">
-            <h3>Histórico</h3>
-            <div className="alert alert-info">Você precisa estar logado para ver seu histórico.</div>
+            <h1 className="h3 mb-3">Histórico</h1>
+            <div className="alert alert-info">
+              Você precisa estar logado para ver seu histórico.{' '}
+              <Link to="/login" className="fw-bold">Ir para Login</Link>
+            </div>
           </div>
         </div>
       </div>
@@ -312,7 +315,7 @@ function Historico() {
       <div className="row justify-content-center">
         <div className="col-12 col-md-10">
           <div className="historico-header mb-3">
-            <h3>Histórico de operações</h3>
+            <h1>Histórico de operações</h1>
             <div className="historico-actions">
               <div style={{ position: 'relative' }}>
                 <button ref={exportBtnRef} className="btn btn-outline-secondary me-2" onClick={e => {
@@ -356,14 +359,14 @@ function Historico() {
                       {dateText && <div className="text-muted small mt-1">{dateText}</div>}
                     </div>
                     <div className="historico-item-actions">
-                      <button className="btn btn-sm historico-btn historico-copy" title="Copiar valores e resultado" onClick={() => copyCard(item)}>
-                        <FaClipboard />
+                      <button type="button" className="btn btn-sm historico-btn historico-copy" title="Copiar valores e resultado" aria-label="Copiar valores e resultado" onClick={() => copyCard(item)}>
+                        <FaClipboard aria-hidden="true" />
                       </button>
-                      <button className="btn btn-sm historico-btn historico-open" title="Abrir (duplo clique também funciona)" onClick={() => handleOpen(item)} onDoubleClick={() => handleOpen(item)}>
-                        <FaExternalLinkAlt />
+                      <button type="button" className="btn btn-sm historico-btn historico-open" title="Abrir (duplo clique também funciona)" aria-label="Abrir calculadora com estes valores" onClick={() => handleOpen(item)} onDoubleClick={() => handleOpen(item)}>
+                        <FaExternalLinkAlt aria-hidden="true" />
                       </button>
-                      <button className="btn btn-sm historico-btn historico-delete" title="Remover" onClick={() => handleDelete(id)} disabled={busy}>
-                        <FaTrash />
+                      <button type="button" className="btn btn-sm historico-btn historico-delete" title="Remover" aria-label="Remover item do histórico" onClick={() => handleDelete(id)} disabled={busy}>
+                        <FaTrash aria-hidden="true" />
                       </button>
                       {copiedId && copiedId === (item._id || item.id || item._key) && (
                         <span className="text-success small ms-2">Copiado!</span>

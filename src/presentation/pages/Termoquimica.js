@@ -346,7 +346,7 @@ function Termoquimica() {
       <div className="container mt-4">
         <div className="row justify-content-center">
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center">Termoquímica</h2>
+            <h1 className="h2 mb-0 text-center">Termoquímica</h1>
             <FavoriteButton
               resourceId="calc:quimica:termoquimica"
               resourceType="calculation"

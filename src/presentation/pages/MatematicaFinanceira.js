@@ -175,7 +175,7 @@ function MatematicaFinanceira() {
 			<div className="container mt-4">
 				<div className="row justify-content-center">
 					<div className="col-12 text-center d-flex flex-column align-items-center gap-2 mb-4">
-						<h2 className="mb-0">Matemática Financeira</h2>
+						<h1 className="h2 mb-0">Matemática Financeira</h1>
 						<FavoriteButton
 							resourceId="calc:matematica:financeiro"
 							resourceType="calculation"
@@ -187,8 +187,8 @@ function MatematicaFinanceira() {
 					<div className="col-12 col-md-10 col-lg-8">
 						<form className="op-card p-4 shadow-sm mx-auto" onSubmit={handleSubmit} aria-label="Formulário de matemática financeira">
 							<div className="mb-3">
-								<label className="form-label">Operação</label>
-								<select className="form-select" value={tipo} onChange={e => { setTipo(e.target.value); speakText(e.target.options[e.target.selectedIndex].text); }} disabled={loading}>
+								<label htmlFor="financeira-tipo" className="form-label">Operação</label>
+								<select id="financeira-tipo" className="form-select" value={tipo} onChange={e => { setTipo(e.target.value); speakText(e.target.options[e.target.selectedIndex].text); }} disabled={loading}>
 									<option value="variacao">Variação</option>
 									<option value="variacao-percentual">Variação Percentual</option>
 									<option value="juros-simples">Juros Simples</option>

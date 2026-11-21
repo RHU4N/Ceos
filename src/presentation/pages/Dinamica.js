@@ -126,7 +126,7 @@ function Dinamica() {
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center">Dinâmica</h2>
+            <h1 className="h2 mb-0 text-center">Dinâmica</h1>
             <FavoriteButton
               resourceId="calc:fisica:dinamica"
               resourceType="calculation"
@@ -137,8 +137,8 @@ function Dinamica() {
 
           <form className="op-card p-4 col-12 col-md-10 col-lg-8" onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Tipo</label>
-              <select className="form-select" value={tipo} onChange={e => { setTipo(e.target.value); speak(e.target.value); }} disabled={loading}>
+              <label htmlFor="dinamica-tipo" className="form-label">Tipo</label>
+              <select id="dinamica-tipo" className="form-select" value={tipo} onChange={e => { setTipo(e.target.value); speak(e.target.value); }} disabled={loading}>
                 <option value="forca-resultante">Força resultante</option>
                 <option value="peso">Peso</option>
                 <option value="forca-atrito">Força de atrito</option>

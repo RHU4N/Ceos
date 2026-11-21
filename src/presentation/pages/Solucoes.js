@@ -123,7 +123,7 @@ function Solucoes() {
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center">Soluções</h2>
+            <h1 className="h2 mb-0 text-center">Soluções</h1>
             <FavoriteButton
               resourceId="calc:quimica:solucoes"
               resourceType="calculation"

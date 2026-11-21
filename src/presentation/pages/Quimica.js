@@ -16,7 +16,7 @@ function Quimica() {
 
       <div className="container mt-3">
         <div className="text-center mb-4">
-          <h2 className="mb-2" onMouseEnter={() => speak('Química')} onFocus={() => speak('Química')}>Química</h2>
+          <h1 className="h2 mb-2" onMouseEnter={() => speak('Química')} onFocus={() => speak('Química')}>Química</h1>
           <p className="text-muted">Escolha uma das áreas para acessar as ferramentas químicas:</p>
         </div>
 
@@ -24,9 +24,9 @@ function Quimica() {
 
           <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
             <Link to="/quimica/estequiometria" className="text-decoration-none" onMouseEnter={() => speak('Estequiometria')} onFocus={() => speak('Estequiometria')}>
-              <div className="card shadow-sm card-affordance chemistry-card" tabIndex={0} title="Estequiometria">
+              <div className="card shadow-sm card-affordance chemistry-card" title="Estequiometria">
                 <div className="card-body text-center">
-                  <h5 className="card-title">Estequiometria</h5>
+                  <h2 className="h5 card-title">Estequiometria</h2>
                   <SiteImage src="/estequiometria.png" alt="estequiometria" className="card-image" />
                   <p className="card-text mt-2">Balanceamento racional, massa molar, conversões e reagente limitante.</p>
                 </div>
@@ -36,9 +36,9 @@ function Quimica() {
 
           <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
             <Link to="/solucoes" className="text-decoration-none" onMouseEnter={() => speak('Soluções')} onFocus={() => speak('Soluções')}>
-              <div className="card shadow-sm card-affordance chemistry-card" tabIndex={0} title="Soluções">
+              <div className="card shadow-sm card-affordance chemistry-card" title="Soluções">
                 <div className="card-body text-center">
-                  <h5 className="card-title">Soluções</h5>
+                  <h2 className="h5 card-title">Soluções</h2>
                   <SiteImage src="/concentracao.png" alt="soluções" className="card-image" />
                   <p className="card-text mt-2">Molaridade, molalidade, densidade, fração molar e concentração comum.</p>
                 </div>
@@ -48,9 +48,9 @@ function Quimica() {
 
           <div className="col-12 col-sm-6 col-md-4 d-flex align-items-stretch justify-content-center">
             <Link to="/quimica/termoquimica" className="text-decoration-none" onMouseEnter={() => speak('Termoquímica')} onFocus={() => speak('Termoquímica')}>
-              <div className="card shadow-sm card-affordance chemistry-card" tabIndex={0} title="Termoquímica">
+              <div className="card shadow-sm card-affordance chemistry-card" title="Termoquímica">
                 <div className="card-body text-center">
-                  <h5 className="card-title">Termoquímica</h5>
+                  <h2 className="h5 card-title">Termoquímica</h2>
                   <SiteImage src="/termoquimica.png" alt="termoquimica" className="card-image" />
                   <p className="card-text mt-2">Calor sensível, variação de temperatura, entalpia e processos.</p>
                 </div>

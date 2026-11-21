@@ -419,7 +419,7 @@ function FuncoesPersonalizadas() {
         <div className="container mt-5">
           <div className="row justify-content-center">
             <div className="col-12 col-md-8 text-center">
-              <h2 className="mb-3">Funções Personalizadas</h2>
+              <h1 className="h2 mb-3">Funções Personalizadas</h1>
               <div className="alert alert-info">
                 Entre na sua conta para criar, validar, favoritar e executar suas próprias fórmulas.{' '}
                 <Link to="/login" className="fw-bold">Ir para Login</Link>
@@ -436,24 +436,23 @@ function FuncoesPersonalizadas() {
       <nav aria-label="breadcrumb" className="nav justify-content-center mt-3">
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-          <li className="breadcrumb-item"><Link to="/matematica">Matemática</Link></li>
           <li className="breadcrumb-item active" aria-current="page">Funções Personalizadas</li>
         </ol>
       </nav>
 
       <div className="container mt-4">
-        <div className="row justify-content-center g-4">
-          <div className="col-12 text-center">
-            <h2>Funções Personalizadas</h2>
-            <p className="text-muted mb-0">
-              Crie suas próprias fórmulas matemáticas, valide os parâmetros e execute quando quiser.
-            </p>
-          </div>
+        <div className="w-100 text-center mb-3">
+          <h1 className="h2 mb-1">Funções Personalizadas</h1>
+          <p className="text-muted mb-0">
+            Crie suas próprias fórmulas matemáticas, valide os parâmetros e execute quando quiser.
+          </p>
+        </div>
 
+        <div className="row justify-content-center g-4 w-100">
           {/* Formulário Criar / Editar */}
           <div className="col-12 col-lg-6">
             <form className="op-card p-4 mx-auto" onSubmit={handleSaveFunction} aria-label="Formulário de função personalizada">
-              <h4 className="mb-3">{editingId ? 'Editar função' : 'Nova função personalizada'}</h4>
+              <h2 className="h4 mb-3">{editingId ? 'Editar função' : 'Nova função personalizada'}</h2>
 
               <div className="mb-3">
                 <label className="form-label" htmlFor="cf-nome">Nome</label>
@@ -649,7 +648,7 @@ function FuncoesPersonalizadas() {
               <form className="op-card p-4 mb-4 mx-auto" onSubmit={handleExecute} aria-label="Executar função personalizada">
                 <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
                   <div>
-                    <h4 className="mb-1">Executar: {selectedFn.nome}</h4>
+                    <h2 className="h4 mb-1">Executar: {selectedFn.nome}</h2>
                     <code className="d-block">{selectedFn.formula}</code>
                   </div>
                   <button
@@ -706,7 +705,7 @@ function FuncoesPersonalizadas() {
 
             <div className="op-card p-4 mx-auto">
               <div className="d-flex justify-content-between align-items-center mb-3 gap-2 flex-wrap">
-                <h4 className="mb-0">Minhas funções</h4>
+                <h2 className="h4 mb-0">Minhas funções</h2>
                 <button
                   type="button"
                   className="ceos-chip-btn"

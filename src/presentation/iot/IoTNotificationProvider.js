@@ -90,16 +90,24 @@ function NotificationSession({ children, userId }) {
     </Context.Provider>
   );
 }
-export function IoTNotificationBell() {
+export function IoTNotificationBell({ onNavigate }) {
   const { user } = useAuth();
   const { count } = useIoTNotifications();
+  const unreadText =
+    count === 1 ? "1 notificação não lida" : `${count} notificações não lidas`;
+  const ariaLabel =
+    count > 0
+      ? `Meu IoT (${count}): ${unreadText}`
+      : "Meu IoT: sem notificações não lidas";
+
   return user ? (
     <Link
-      className="btn btn-primary btn-sm ms-2"
+      className="btn btn-primary btn-sm navbar-iot-bell"
       to="/iot?tab=notifications"
-      aria-label={`Notificações IoT: ${count} não lidas`}
+      aria-label={ariaLabel}
+      onClick={onNavigate}
     >
-      🔔 Meu IoT {count > 0 && <strong>({count})</strong>}
+      <span aria-hidden="true">🔔 </span>Meu IoT{count > 0 && <> <strong>({count})</strong></>}
     </Link>
   ) : null;
 }

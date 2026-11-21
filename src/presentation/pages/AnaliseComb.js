@@ -147,7 +147,7 @@ function AnaliseComb() {
         <div className="row justify-content-center">
 
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center" onMouseEnter={() => speak("Análise combinatória")} onFocus={() => speak("Análise combinatória")}>Análise Combinatória</h2>
+            <h1 className="h2 mb-0 text-center" onMouseEnter={() => speak("Análise combinatória")} onFocus={() => speak("Análise combinatória")}>Análise Combinatória</h1>
             <FavoriteButton
               resourceId="calc:matematica:analise"
               resourceType="calculation"
@@ -162,8 +162,9 @@ function AnaliseComb() {
             aria-label="Formulário de análise combinatória"
           >
             <div className="mb-3">
-              <label className="form-label">Tipo</label>
+              <label htmlFor="analise-tipo" className="form-label">Tipo</label>
               <select
+                id="analise-tipo"
                 className="form-select"
                 value={tipo}
                 onChange={e => { setTipo(e.target.value); speak(`Tipo de cálculo alterado para ${e.target.value}`); }}

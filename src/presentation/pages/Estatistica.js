@@ -144,7 +144,7 @@ function Estatistica() {
         <div className="row justify-content-center">
 
           <div className="d-flex flex-column align-items-center gap-2 mb-4">
-            <h2 className="mb-0 text-center" onMouseEnter={() => speakText("Estatística")} onFocus={() => speakText("Estatística")}>Estatística</h2>
+            <h1 className="h2 mb-0 text-center" onMouseEnter={() => speakText("Estatística")} onFocus={() => speakText("Estatística")}>Estatística</h1>
             <FavoriteButton
               resourceId="calc:matematica:estatistica"
               resourceType="calculation"
@@ -159,8 +159,9 @@ function Estatistica() {
             aria-label="Formulário de estatística"
           >
             <div className="mb-3">
-              <label className="form-label">Tipo</label>
+              <label htmlFor="estatistica-tipo" className="form-label">Tipo</label>
               <select
+                id="estatistica-tipo"
                 className="form-select"
                 value={tipo}
                 onChange={e => { const novo = e.target.value; setTipo(novo); const frases = { media: "Você selecionou média.", mediana: "Você selecionou mediana.", moda: "Você selecionou moda." }; speakText(frases[novo]); }}
