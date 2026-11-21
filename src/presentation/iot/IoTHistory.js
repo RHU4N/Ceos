@@ -1,5 +1,6 @@
 import React from "react";
 import { date, unit } from "./IoTChart";
+import { number, sensorType, measurementOrigin } from './presentation';
 export default function IoTHistory({ rows, pagination, onPage, onOpen }) {
   return (
     <section>
@@ -23,10 +24,10 @@ export default function IoTHistory({ rows, pagination, onPage, onOpen }) {
                   <td>
                     {m.deviceId}
                     <br />
-                    {m.sensorId} · {m.sensorTipo}
+                    {m.sensorId} · {sensorType(m.sensorTipo)}
                   </td>
                   <td>
-                    {m.valor} {unit(m.unidade)}
+                    {number(m.valor)} {unit(m.unidade)}
                   </td>
                   <td>
                     {date(m.timestamp)}
@@ -35,7 +36,7 @@ export default function IoTHistory({ rows, pagination, onPage, onOpen }) {
                       ? "Coleta no dispositivo"
                       : "Recebimento no servidor"}
                     <br />
-                    {m.metadata?.origin || "PUSH"}
+                    {measurementOrigin(m.metadata?.origin)}
                   </td>
                   <td>
                     {m.metadata?.eventId ? (

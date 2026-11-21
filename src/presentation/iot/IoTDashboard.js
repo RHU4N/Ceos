@@ -7,17 +7,9 @@ import IoTDeviceSetup, { Provisioning } from "./IoTDeviceSetup";
 import IoTHistory from "./IoTHistory";
 import IoTNotifications from "./IoTNotifications";
 import "./iot.css";
+import { statuses, deviceStatus, sensorType, requestError, number } from './presentation';
+export { statuses } from './presentation';
 const pending = ["QUEUED", "WAITING_FOR_DEVICE", "MEASURING", "PROCESSING"];
-export const statuses = {
-  QUEUED: "Na fila",
-  WAITING_FOR_DEVICE: "Aguardando dispositivo",
-  MEASURING: "Medindo",
-  PROCESSING: "Persistindo medições",
-  COMPLETED: "Concluída",
-  FAILED: "Falhou",
-  EXPIRED: "Dispositivo offline / prazo esgotado",
-  CANCELLED: "Cancelada",
-};
 export default function IoTDashboard() {
   const { user } = useAuth();
   const [params, setParams] = useSearchParams();
@@ -218,7 +210,7 @@ export default function IoTDashboard() {
       </header>
       <nav className="iot-tabs" aria-label="Áreas IoT">
         {[
-          ["dashboard", "Dashboard"],
+          ["dashboard", "Painel"],
           ["devices", "Meus dispositivos"],
           ["add", "Adicionar dispositivo"],
           ["history", "Histórico"],
@@ -267,7 +259,7 @@ export default function IoTDashboard() {
                 <h3>{d.nome}</h3>
                 <p>{d.descricao}</p>
                 <p>
-                  {d.status} · {d.sensores.length} sensores
+                  {deviceStatus(d.status)} · {d.sensores.length} sensores
                 </p>
                 <small>{d.deviceId}</small>
                 <p>Último contato: {date(d.ultimoContato)}</p>
@@ -317,7 +309,7 @@ export default function IoTDashboard() {
             <h2>{device.nome}</h2>
             <p>{device.descricao}</p>
             <p>
-              Status: {device.status} · Último contato:{" "}
+              Estado: {deviceStatus(device.status)} · Último contato:{" "}
               {date(device.ultimoContato)}
             </p>
             <p>
@@ -403,10 +395,10 @@ export default function IoTDashboard() {
                 <article className="iot-panel" key={sensor.sensorId}>
                   <h3>{sensor.nome}</h3>
                   <p className="iot-value">
-                    {m ? `${m.valor} ${unit(m.unidade)}` : "Sem medição"}
+                    {m ? `${number(m.valor)} ${unit(m.unidade)}` : "Sem medição"}
                   </p>
                   <p>
-                    {sensor.sensorId} · {sensor.tipo}
+                    {sensor.sensorId} · {sensorType(sensor.tipo)}
                   </p>
                   {m && (
                     <>
@@ -479,7 +471,7 @@ export default function IoTDashboard() {
               <p>
                 {date(r.createdAt)} · Prazo: {date(r.expiresAt)}
               </p>
-              {r.errorCode && <p>{r.errorCode}</p>}
+              {r.errorCode && <p>{requestError(r.errorCode)} <small>Código: {r.errorCode}</small></p>}
               {r.status === "COMPLETED" && (
                 <button onClick={() => openEvent(r.resultEventId)}>
                   Ver resultado
@@ -526,7 +518,7 @@ export default function IoTDashboard() {
           <button onClick={() => setResult(null)}>Fechar resultado</button>
           {result.map((m) => (
             <p key={m._id || m.id}>
-              <strong>{m.sensorId}</strong>: {m.valor} {unit(m.unidade)} ·{" "}
+              <strong>{m.sensorId}</strong>: {number(m.valor)} {unit(m.unidade)} ·{" "}
               {date(m.timestamp)} ·{" "}
               {m.metadata?.timestampOrigin === "collectedAt"
                 ? "Coleta"

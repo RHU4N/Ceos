@@ -32,13 +32,14 @@ export function Provisioning({ value, onClose }) {
       <h2>Configure o dispositivo</h2>
       <p>
         Este token de pareamento é exibido uma única vez e expira em 15 minutos.
-        Guarde-o somente no dispositivo. Se perder, use “Rotacionar credencial”.
+        Use-o somente em configuração privada; não publique em projetos Wokwi.
+        Se perder, use “Rotacionar credencial”.
       </p>
       <p>
         Identificador: <code>{value.device.deviceId}</code>
       </p>
       <p>
-        Token: <code className="iot-secret">{value.provisioningToken}</code>
+        Token de pareamento: <code className="iot-secret">{value.provisioningToken}</code>
       </p>
       <p>
         Envie deviceId e provisioningToken por HTTPS para{" "}
@@ -78,7 +79,7 @@ export default function IoTDeviceSetup({ onSaved }) {
       });
       onSaved(result.data);
     } catch (e) {
-      setError(e.message);
+      setError(e instanceof SyntaxError ? 'JSON dos sensores inválido. Verifique a lista antes de cadastrar.' : e.message);
     } finally {
       setBusy(false);
     }
@@ -109,7 +110,7 @@ export default function IoTDeviceSetup({ onSaved }) {
           checked={remote}
           onChange={(e) => setRemote(e.target.checked)}
         />{" "}
-        Firmware suporta READ_ONCE e consulta de comandos
+        Dispositivo permite medir sob demanda e consultar comandos
       </label>
       <label>
         Sensores (JSON editável)
