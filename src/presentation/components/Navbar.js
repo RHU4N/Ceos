@@ -29,6 +29,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
   const [loading, setLoading] = useState(false);
   const successTimerRef = useRef(null);
   const errorTimerRef = useRef(null);
+  const closeButtonRef = useRef(null);
 
   // A API devolve `id` no DTO. `_id` é aceito apenas para sessões antigas
   // que podem ter ficado salvas no navegador.
@@ -37,17 +38,33 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
   const getErrorMessage = (err, fallback) =>
     err?.response?.data?.error?.message || err?.response?.data?.message || err?.message || fallback;
 
-  // Impede scroll do body quando o modal está aberto
+  // Sincroniza campos ao abrir, impede scroll do body, fecha no Escape e move foco inicial
   useEffect(() => {
-    if (show) {
-      document.body.style.overflow = "hidden";
-    } else {
+    if (!show) {
       document.body.style.overflow = "";
+      return undefined;
     }
+    setNome(user?.nome || "");
+    setTelefone(user?.telefone || "");
+    setErro("");
+    setSucesso("");
+    document.body.style.overflow = "hidden";
+
+    const focusTimer = setTimeout(() => {
+      try { closeButtonRef.current?.focus(); } catch (err) {}
+    }, 0);
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+
     return () => {
+      clearTimeout(focusTimer);
+      window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
-  }, [show]);
+  }, [show, user?.nome, user?.telefone, onClose]);
 
   // Auto-dismiss toasts (sucesso / erro)
   useEffect(() => {
@@ -141,33 +158,37 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
         left: 0,
         width: "100vw",
         height: "100vh",
-        background: "rgba(0,0,0,0.35)",
+        background: "rgba(0,0,0,0.45)",
         zIndex: 99999,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        padding: "12px",
       }}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="edit-profile-modal-title"
         className="card p-4 shadow"
         style={{
-          maxWidth: 340,
+          maxWidth: 440,
           width: "100%",
           minHeight: "auto",
           maxHeight: "90vh",
           position: "relative",
           borderRadius: 18,
-          border: "2px solid #007bff",
-          boxShadow: "0 4px 32px #007bff22",
+          border: "2px solid #0b5ed7",
+          boxShadow: "0 4px 32px rgba(11, 94, 215, 0.2)",
           background: "#fafdff",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
           zIndex: 100000,
         }}
       >
         <button
+          ref={closeButtonRef}
           type="button"
           aria-label="Fechar"
           onClick={onClose}
@@ -178,7 +199,8 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
             border: "none",
             background: "none",
             fontSize: 28,
-            color: "#007bff",
+            lineHeight: 1,
+            color: "#0b5ed7",
             cursor: "pointer",
             fontWeight: 700,
             transition: "color 0.2s",
@@ -191,29 +213,32 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
           &times;
         </button>
 
-        {/* alert container: positioned absolutely so toasts don't change modal layout */}
+        <h2
+          id="edit-profile-modal-title"
+          className="h5 fw-bold mb-2 text-center"
+          style={{ color: "#1565c0" }}
+        >
+          Editar perfil
+        </h2>
+
+        {/* alert container */}
         <div
           aria-live="polite"
           style={{
-            position: "absolute",
-            top: 54,
-            left: 16,
-            right: 16,
             display: "flex",
             flexDirection: "column",
             gap: 8,
             alignItems: "stretch",
-            zIndex: 2000,
-            pointerEvents: "auto",
+            marginBottom: sucesso || erro ? 8 : 0,
           }}
         >
           {sucesso && (
-            <div className="alert alert-success" style={{ margin: 0 }}>
+            <div className="alert alert-success" role="status" style={{ margin: 0 }}>
               {sucesso}
             </div>
           )}
           {erro && (
-            <div className="alert alert-danger" style={{ margin: 0 }}>
+            <div className="alert alert-danger" role="alert" style={{ margin: 0 }}>
               {erro}
             </div>
           )}
@@ -221,6 +246,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
 
         <form onSubmit={handleSubmit}>
           <label
+            htmlFor="edit-profile-nome"
             className="form-label fw-bold mt-2"
             style={{
               color: "#222",
@@ -233,23 +259,25 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
             Nome
           </label>
           <div className="input-group mb-2">
-            <span className="input-group-text bg-light">
+            <span className="input-group-text bg-light" aria-hidden="true">
               <FaUserCircle />
             </span>
             <input
+              id="edit-profile-nome"
               type="text"
               className="form-control"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               required
               style={{
-                borderRadius: 8,
+                minWidth: 0,
                 fontFamily: "Montserrat, Arial, sans-serif",
                 fontWeight: 500,
               }}
             />
           </div>
           <label
+            htmlFor="edit-profile-email"
             className="form-label fw-bold"
             style={{
               color: "#222",
@@ -262,17 +290,18 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
             E-mail
           </label>
           <div className="input-group mb-2">
-            <span className="input-group-text bg-light">
+            <span className="input-group-text bg-light" aria-hidden="true">
               <FaEnvelope />
             </span>
             <input
+              id="edit-profile-email"
               type="email"
               className="form-control"
               value={email}
               disabled
               readOnly
               style={{
-                borderRadius: 8,
+                minWidth: 0,
                 fontFamily: "Montserrat, Arial, sans-serif",
                 fontWeight: 500,
               }}
@@ -280,6 +309,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
           </div>
           <small className="text-muted d-block mb-2">O e-mail não pode ser alterado nesta versão.</small>
           <label
+            htmlFor="edit-profile-telefone"
             className="form-label fw-bold"
             style={{
               color: "#222",
@@ -292,23 +322,25 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
             Telefone
           </label>
           <div className="input-group mb-2">
-            <span className="input-group-text bg-light">
+            <span className="input-group-text bg-light" aria-hidden="true">
               <FaEdit />
             </span>
             <input
+              id="edit-profile-telefone"
               type="text"
               className="form-control"
               value={telefone}
               onChange={(e) => setTelefone(e.target.value)}
               required
               style={{
-                borderRadius: 8,
+                minWidth: 0,
                 fontFamily: "Montserrat, Arial, sans-serif",
                 fontWeight: 500,
               }}
             />
           </div>
           <label
+            htmlFor="edit-profile-nova-senha"
             className="form-label fw-bold"
             style={{
               color: "#222",
@@ -321,17 +353,18 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
             Nova senha
           </label>
           <div className="input-group mb-2">
-            <span className="input-group-text bg-light">
+            <span className="input-group-text bg-light" aria-hidden="true">
               <FaLock />
             </span>
             <input
+              id="edit-profile-nova-senha"
               type="password"
               className="form-control"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               placeholder="Deixe em branco para não alterar"
               style={{
-                borderRadius: 8,
+                minWidth: 0,
                 fontFamily: "Montserrat, Arial, sans-serif",
                 fontWeight: 500,
               }}
@@ -340,6 +373,7 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
           {senha && (
             <>
               <label
+                htmlFor="edit-profile-senha-atual"
                 className="form-label fw-bold"
                 style={{
                   color: "#222",
@@ -349,13 +383,14 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
                   letterSpacing: 0.5,
                 }}
               >
-                Senha atual <span style={{ color: "#dc3545" }}>*</span>
+                Senha atual <span style={{ color: "#c82333" }}>*</span>
               </label>
               <div className="input-group mb-2">
-                <span className="input-group-text bg-light">
+                <span className="input-group-text bg-light" aria-hidden="true">
                   <FaLock />
                 </span>
                 <input
+                  id="edit-profile-senha-atual"
                   type="password"
                   className="form-control"
                   value={senhaAtual}
@@ -363,22 +398,26 @@ function EditProfileModal({ show, onClose, user, onUpdate, onDelete, onSessionIn
                   placeholder="Confirme sua senha atual"
                   required={!!senha}
                   style={{
-                    borderRadius: 8,
+                    minWidth: 0,
                     fontFamily: "Montserrat, Arial, sans-serif",
                     fontWeight: 500,
                   }}
                 />
               </div>
-              <label className="form-label fw-bold">Confirmar nova senha <span style={{ color: "#dc3545" }}>*</span></label>
+              <label htmlFor="edit-profile-confirma-senha" className="form-label fw-bold">
+                Confirmar nova senha <span style={{ color: "#c82333" }}>*</span>
+              </label>
               <div className="input-group mb-2">
-                <span className="input-group-text bg-light"><FaLock /></span>
+                <span className="input-group-text bg-light" aria-hidden="true"><FaLock /></span>
                 <input
+                  id="edit-profile-confirma-senha"
                   type="password"
                   className="form-control"
                   value={confirmaNovaSenha}
                   onChange={(e) => setConfirmaNovaSenha(e.target.value)}
                   placeholder="Repita a nova senha"
                   required={!!senha}
+                  style={{ minWidth: 0 }}
                 />
               </div>
             </>
@@ -425,8 +464,11 @@ function Navbar() {
   const { loading } = useLoading();
   const [showModal, setShowModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [studyMenuOpen, setStudyMenuOpen] = useState(false);
   const { enabled: ttsEnabled, toggle: toggleTTS } = useTTS();
   const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
+  const profileTriggerRef = useRef(null);
 
   useEffect(() => {
     function onToast(e) {
@@ -460,12 +502,29 @@ function Navbar() {
     return true;
   };
 
+  // Close menus on route change or Escape
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setStudyMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    function onKeyDown(e) {
+      if (e.key === 'Escape') {
+        setStudyMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   // Add a small scroll listener to apply a "scrolled" class when the page is scrolled.
   // Only active on wider screens (desktop) where the navbar is sticky.
   useEffect(() => {
     function onScroll() {
       if (typeof window === 'undefined') return;
-      if (window.innerWidth < 900) {
+      if (window.innerWidth < 992) {
         setScrolled(false);
         return;
       }
@@ -480,227 +539,268 @@ function Navbar() {
     };
   }, []);
 
+  const closeNavMenus = () => {
+    setMobileMenuOpen(false);
+    setStudyMenuOpen(false);
+  };
+
   return (
     <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
-      <div
-        className="logo"
-        style={{ display: "flex", alignItems: "center", gap: "12px" }}
-      >
-        <Link
-          to="/"
-          style={{
-            color: "inherit",
-            textDecoration: "none",
-            fontSize: "3.5rem",
-            fontFamily: "Times New Roman",
-            pointerEvents: loading ? "none" : undefined,
-            opacity: loading ? 0.6 : undefined,
-          }}
-          className="display-3"
-          tabIndex={loading ? -1 : 0}
-          onClick={(e) => {
-            preventIfLoading(e);
-            speak("Página inicial");
-          }}
+      <div className="navbar-brand-row">
+        <div
+          className="logo"
+          style={{ display: "flex", alignItems: "center", gap: "12px" }}
         >
-          <SiteImage
-            src="/logo.png"
-            alt="Logo Céos"
+          <Link
+            to="/"
             style={{
-              height: "4.9rem",
-              width: "4.9rem",
-              maxWidth: "12vw",
-              minWidth: 32,
+              color: "inherit",
+              textDecoration: "none",
+              fontSize: "2.2rem",
+              fontFamily: "Times New Roman",
               pointerEvents: loading ? "none" : undefined,
               opacity: loading ? 0.6 : undefined,
             }}
-          />
-          Céos
-        </Link>
-      </div>
-      <nav>
-        <ul className="menu">
-          <li
-            className="dropdown"
-            style={{
-              pointerEvents: loading ? "none" : undefined,
-              opacity: loading ? 0.6 : undefined,
+            className="display-3"
+            tabIndex={loading ? -1 : 0}
+            onClick={(e) => {
+              if (!preventIfLoading(e)) return;
+              closeNavMenus();
+              speak("Página inicial");
             }}
           >
-            <span
-              onMouseEnter={() => !loading && speak("Ambiente de estudo")}
-              onFocus={() => !loading && speak("Ambiente de estudo")}
-              tabIndex={loading ? -1 : 0}
-            >
-              Ambiente de Estudo ▼
-            </span>
+            <SiteImage
+              src="/logo.png"
+              alt="Logo Céos"
+              style={{
+                height: "3rem",
+                width: "3rem",
+                minWidth: 32,
+                pointerEvents: loading ? "none" : undefined,
+                opacity: loading ? 0.6 : undefined,
+              }}
+            />
+            Céos
+          </Link>
+        </div>
 
-            <ul className="submenu">
-              <li
-                className={
-                  location.pathname.startsWith("/matematica") ? "active" : ""
-                }
+        <button
+          type="button"
+          className="navbar-toggle"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="ceos-primary-nav"
+          aria-label={mobileMenuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+        >
+          <span aria-hidden="true">{mobileMenuOpen ? "✕" : "☰"}</span>
+          <span>Menu</span>
+        </button>
+      </div>
+
+      <div id="ceos-primary-nav" className={`navbar-collapse-panel ${mobileMenuOpen ? "is-open" : ""}`}>
+        <nav aria-label="Navegação principal">
+          <ul className="menu">
+            <li
+              className="dropdown"
+              style={{
+                pointerEvents: loading ? "none" : undefined,
+                opacity: loading ? 0.6 : undefined,
+              }}
+            >
+              <button
+                type="button"
+                className="navbar-dropdown-trigger"
+                aria-expanded={studyMenuOpen}
+                aria-haspopup="true"
+                aria-controls="ceos-study-submenu"
+                onClick={() => setStudyMenuOpen((prev) => !prev)}
+                onMouseEnter={() => !loading && speak("Ambiente de estudo")}
+                onFocus={() => !loading && speak("Ambiente de estudo")}
+                tabIndex={loading ? -1 : 0}
               >
-                <Link
-                  to="/matematica"
-                  tabIndex={loading ? -1 : 0}
-                  style={{
-                    pointerEvents: loading ? "none" : undefined,
-                    opacity: loading ? 0.6 : undefined,
-                  }}
-                  onClick={(e) => {
-                    preventIfLoading(e);
-                    speak("Matemática");
-                  }}
-                  onMouseEnter={() => !loading && speak("Matemática")}
-                  onFocus={() => !loading && speak("Matemática")}
+                Ambiente de Estudo <span aria-hidden="true">▼</span>
+              </button>
+
+              <ul
+                id="ceos-study-submenu"
+                className={`submenu ${studyMenuOpen ? "submenu--open" : ""}`}
+              >
+                <li
+                  className={
+                    location.pathname.startsWith("/matematica") ? "active" : ""
+                  }
                 >
-                  Matemática
-                </Link>
-              </li>
+                  <Link
+                    to="/matematica"
+                    tabIndex={loading ? -1 : 0}
+                    style={{
+                      pointerEvents: loading ? "none" : undefined,
+                      opacity: loading ? 0.6 : undefined,
+                    }}
+                    onClick={(e) => {
+                      if (!preventIfLoading(e)) return;
+                      closeNavMenus();
+                      speak("Matemática");
+                    }}
+                    onMouseEnter={() => !loading && speak("Matemática")}
+                    onFocus={() => !loading && speak("Matemática")}
+                  >
+                    Matemática
+                  </Link>
+                </li>
 
-              <li className={location.pathname.startsWith('/quimica') ? 'active' : ''}>
-                <Link
-                  to="/quimica"
-                  tabIndex={loading ? -1 : 0}
-                  style={{
-                    pointerEvents: loading ? 'none' : undefined,
-                    opacity: loading ? 0.6 : undefined,
-                  }}
-                  onClick={(e) => {
-                    preventIfLoading(e);
-                    speak('Química');
-                  }}
-                  onMouseEnter={() => !loading && speak('Química')}
-                  onFocus={() => !loading && speak('Química')}
-                >
-                  Química
-                </Link>
-              </li>
+                <li className={location.pathname.startsWith('/quimica') ? 'active' : ''}>
+                  <Link
+                    to="/quimica"
+                    tabIndex={loading ? -1 : 0}
+                    style={{
+                      pointerEvents: loading ? 'none' : undefined,
+                      opacity: loading ? 0.6 : undefined,
+                    }}
+                    onClick={(e) => {
+                      if (!preventIfLoading(e)) return;
+                      closeNavMenus();
+                      speak('Química');
+                    }}
+                    onMouseEnter={() => !loading && speak('Química')}
+                    onFocus={() => !loading && speak('Química')}
+                  >
+                    Química
+                  </Link>
+                </li>
 
-              <li className={location.pathname.startsWith('/fisica') ? 'active' : ''}>
-                <Link
-                  to="/fisica"
-                  tabIndex={loading ? -1 : 0}
-                  style={{
-                    pointerEvents: loading ? 'none' : undefined,
-                    opacity: loading ? 0.6 : undefined,
-                  }}
-                  onClick={(e) => {
-                    preventIfLoading(e);
-                    speak('Física');
-                  }}
-                  onMouseEnter={() => !loading && speak('Física')}
-                  onFocus={() => !loading && speak('Física')}
-                >
-                  Física
-                </Link>
-              </li>
-            </ul>
-          </li>
+                <li className={location.pathname.startsWith('/fisica') ? 'active' : ''}>
+                  <Link
+                    to="/fisica"
+                    tabIndex={loading ? -1 : 0}
+                    style={{
+                      pointerEvents: loading ? 'none' : undefined,
+                      opacity: loading ? 0.6 : undefined,
+                    }}
+                    onClick={(e) => {
+                      if (!preventIfLoading(e)) return;
+                      closeNavMenus();
+                      speak('Física');
+                    }}
+                    onMouseEnter={() => !loading && speak('Física')}
+                    onFocus={() => !loading && speak('Física')}
+                  >
+                    Física
+                  </Link>
+                </li>
+              </ul>
+            </li>
 
-          <li>
-            <Link
-              to="/calculadoras"
-              tabIndex={loading ? -1 : 0}
-              style={{
-                pointerEvents: loading ? 'none' : undefined,
-                opacity: loading ? 0.6 : undefined,
-              }}
-              onClick={(e) => {
-                preventIfLoading(e);
-                speak('Calculadoras');
-              }}
-              onMouseEnter={() => !loading && speak('Calculadoras')}
-              onFocus={() => !loading && speak('Calculadoras')}
-            >
-              Calculadoras
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/funcoes-personalizadas"
-              tabIndex={loading ? -1 : 0}
-              style={{
-                pointerEvents: loading ? 'none' : undefined,
-                opacity: loading ? 0.6 : undefined,
-              }}
-              onClick={(e) => {
-                preventIfLoading(e);
-                speak('Funções personalizadas');
-              }}
-              onMouseEnter={() => !loading && speak('Funções personalizadas')}
-              onFocus={() => !loading && speak('Funções personalizadas')}
-            >
-              Funções
-            </Link>
-          </li>
-
-          {user && (
             <li>
               <Link
-                to="/favoritos"
+                to="/calculadoras"
                 tabIndex={loading ? -1 : 0}
                 style={{
                   pointerEvents: loading ? 'none' : undefined,
                   opacity: loading ? 0.6 : undefined,
                 }}
                 onClick={(e) => {
-                  preventIfLoading(e);
-                  speak('Favoritos');
+                  if (!preventIfLoading(e)) return;
+                  closeNavMenus();
+                  speak('Calculadoras');
                 }}
-                onMouseEnter={() => !loading && speak('Favoritos')}
-                onFocus={() => !loading && speak('Favoritos')}
+                onMouseEnter={() => !loading && speak('Calculadoras')}
+                onFocus={() => !loading && speak('Calculadoras')}
               >
-                Favoritos
+                Calculadoras
               </Link>
             </li>
-          )}
 
-          <li>
-            <Link
-              to="/faq"
-              tabIndex={loading ? -1 : 0}
-              style={{
-                pointerEvents: loading ? "none" : undefined,
-                opacity: loading ? 0.6 : undefined,
-              }}
-              onClick={(e) => {
-                preventIfLoading(e);
-                speak("Central de ajuda");
-              }}
-              onMouseEnter={() => !loading && speak("Central de ajuda")}
-              onFocus={() => !loading && speak("Central de ajuda")}
-            >
-              Central de Ajuda
-            </Link>
-          </li>
+            <li>
+              <Link
+                to="/funcoes-personalizadas"
+                tabIndex={loading ? -1 : 0}
+                style={{
+                  pointerEvents: loading ? 'none' : undefined,
+                  opacity: loading ? 0.6 : undefined,
+                }}
+                onClick={(e) => {
+                  if (!preventIfLoading(e)) return;
+                  closeNavMenus();
+                  speak('Funções personalizadas');
+                }}
+                onMouseEnter={() => !loading && speak('Funções personalizadas')}
+                onFocus={() => !loading && speak('Funções personalizadas')}
+              >
+                Funções
+              </Link>
+            </li>
 
-          <li>
-            <Link
-              to="#"
-              tabIndex={loading ? -1 : 0}
-              style={{
-                pointerEvents: loading ? "none" : undefined,
-                opacity: loading ? 0.6 : undefined,
-              }}
-              onClick={(e) => {
-                preventIfLoading(e);
-                speak("Planos");
-              }}
-              onMouseEnter={() => !loading && speak("Planos")}
-              onFocus={() => !loading && speak("Planos")}
-            >
-              Planos
-            </Link>
-          </li>
-        </ul>
-      </nav>
+            {user && (
+              <li>
+                <Link
+                  to="/favoritos"
+                  tabIndex={loading ? -1 : 0}
+                  style={{
+                    pointerEvents: loading ? 'none' : undefined,
+                    opacity: loading ? 0.6 : undefined,
+                  }}
+                  onClick={(e) => {
+                    if (!preventIfLoading(e)) return;
+                    closeNavMenus();
+                    speak('Favoritos');
+                  }}
+                  onMouseEnter={() => !loading && speak('Favoritos')}
+                  onFocus={() => !loading && speak('Favoritos')}
+                >
+                  Favoritos
+                </Link>
+              </li>
+            )}
 
-      <div className="buttons">
-        <>
+            <li>
+              <Link
+                to="/faq"
+                tabIndex={loading ? -1 : 0}
+                style={{
+                  pointerEvents: loading ? "none" : undefined,
+                  opacity: loading ? 0.6 : undefined,
+                }}
+                onClick={(e) => {
+                  if (!preventIfLoading(e)) return;
+                  closeNavMenus();
+                  speak("Central de ajuda");
+                }}
+                onMouseEnter={() => !loading && speak("Central de ajuda")}
+                onFocus={() => !loading && speak("Central de ajuda")}
+              >
+                Central de Ajuda
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/faq#planos"
+                tabIndex={loading ? -1 : 0}
+                style={{
+                  pointerEvents: loading ? "none" : undefined,
+                  opacity: loading ? 0.6 : undefined,
+                }}
+                onClick={(e) => {
+                  if (!preventIfLoading(e)) return;
+                  closeNavMenus();
+                  speak("Planos");
+                }}
+                onMouseEnter={() => !loading && speak("Planos")}
+                onFocus={() => !loading && speak("Planos")}
+              >
+                Planos
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <div className="buttons">
           <button
+            type="button"
+            className="navbar-tts-btn"
+            aria-pressed={ttsEnabled}
+            aria-label={ttsEnabled ? "TTS: ON — Desativar leitor de voz" : "TTS: OFF — Ativar leitor de voz"}
             onClick={() => {
               toggleTTS();
             }}
@@ -712,7 +812,6 @@ function Navbar() {
 
           {!user ? (
           <>
-
             {/* ENTRAR */}
             <Link
               to="/login"
@@ -721,12 +820,13 @@ function Navbar() {
               style={{
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
-                borderRadius: 5,
-                padding: '8px 14px',
                 transition: 'all 0.12s ease',
               }}
-              onClick={preventIfLoading} // MANTIDO
-              onMouseEnter={() => !loading && speak("Entrar")} // ADICIONADO
+              onClick={(e) => {
+                if (!preventIfLoading(e)) return;
+                closeNavMenus();
+              }}
+              onMouseEnter={() => !loading && speak("Entrar")}
               onFocus={() => !loading && speak("Entrar")}
             >
               Entrar
@@ -740,12 +840,13 @@ function Navbar() {
               style={{
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
-                borderRadius: 5,
-                padding: '8px 14px',
                 transition: 'all 0.12s ease',
               }}
-              onClick={preventIfLoading} // MANTIDO
-              onMouseEnter={() => !loading && speak("Cadastre-se")} // ADICIONADO
+              onClick={(e) => {
+                if (!preventIfLoading(e)) return;
+                closeNavMenus();
+              }}
+              onMouseEnter={() => !loading && speak("Cadastre-se")}
               onFocus={() => !loading && speak("Cadastre-se")}
             >
               Cadastre-se
@@ -753,75 +854,68 @@ function Navbar() {
           </>
         ) : (
           <div className="d-flex align-items-center gap-2 navbar-user-actions">
-            <FaUserCircle size={32} />
+            <FaUserCircle size={28} aria-hidden="true" />
 
             {/* NOME DO USUÁRIO */}
-            <span
+            <button
+              ref={profileTriggerRef}
+              type="button"
               style={{
-                cursor: "pointer",
-                fontWeight: 600,
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
                 pointerEvents: loading ? "none" : undefined,
                 opacity: loading ? 0.6 : undefined,
               }}
-              onClick={() => !loading && setShowModal(true)} // MANTIDO
-              onMouseEnter={() => !loading && speak("Editar perfil")} // ADICIONADO
+              onClick={() => !loading && setShowModal(true)}
+              onMouseEnter={() => !loading && speak("Editar perfil")}
               onFocus={() => !loading && speak("Editar perfil")}
               title="Editar perfil"
+              aria-label={`Editar perfil: ${user.nome}`}
               className="navbar-user-name"
               tabIndex={loading ? -1 : 0}
-              aria-disabled={loading}
+              disabled={loading}
             >
-              {user.nome}
+              <span>{user.nome}</span>
               <FaEdit
+                aria-hidden="true"
                 style={{
                   fontSize: 20,
-                  marginLeft: 6,
-                  color: "#007bff",
+                  color: "#0d47a1",
                   background: "#e9f2ff",
                   borderRadius: "50%",
                   padding: 3,
-                  boxShadow: "0 1px 4px #007bff33",
+                  flexShrink: 0,
+                  boxShadow: "0 1px 4px rgba(13, 71, 161, 0.25)",
                 }}
               />
-            </span>
+            </button>
 
-            <IoTNotificationBell />
+            <IoTNotificationBell onNavigate={closeNavMenus} />
             {/* LINK PARA HISTÓRICO */}
             <Link
               to="/historico"
-              className="btn btn-primary btn-sm ms-2 d-flex align-items-center"
+              className="btn btn-primary btn-sm d-flex align-items-center"
               tabIndex={loading ? -1 : 0}
-              onClick={(e) => { preventIfLoading(e); speak('Histórico'); }}
+              onClick={(e) => {
+                if (!preventIfLoading(e)) return;
+                closeNavMenus();
+                speak('Histórico');
+              }}
               onMouseEnter={() => !loading && speak('Ver histórico')}
               onFocus={() => !loading && speak('Ver histórico')}
-              style={{ textDecoration: 'none', borderRadius: 20, padding: '6px 10px' }}
+              style={{ textDecoration: 'none', borderRadius: 20, padding: '6px 12px' }}
             >
-              <FaHistory style={{ marginRight: 6 }} />
+              <FaHistory aria-hidden="true" style={{ marginRight: 6 }} />
               Histórico
             </Link>
 
             {/* BOTÃO SAIR */}
             <button
-              className="btn btn-outline-secondary btn-sm ms-2 btn-sair-ceos"
-              style={{
-                borderColor: "#dc3545",
-                color: "#dc3545",
-                background: "white",
-                transition: "all 0.2s",
+              type="button"
+              className="btn btn-outline-secondary btn-sm btn-sair-ceos"
+              onClick={() => {
+                closeNavMenus();
+                logout();
               }}
-              onMouseOver={(e) => {
-                e.target.style.background = "#dc3545";
-                e.target.style.color = "white";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.background = "white";
-                e.target.style.color = "#dc3545";
-              }}
-              onClick={logout} // MANTIDO
-              onMouseEnter={() => !loading && speak("Sair")} // ADICIONADO
+              onMouseEnter={() => !loading && speak("Sair")}
               disabled={loading}
               tabIndex={loading ? -1 : 0}
             >
@@ -830,7 +924,12 @@ function Navbar() {
 
             <EditProfileModal
               show={showModal}
-              onClose={() => setShowModal(false)}
+              onClose={() => {
+                setShowModal(false);
+                setTimeout(() => {
+                  try { profileTriggerRef.current?.focus(); } catch (err) {}
+                }, 0);
+              }}
               user={user}
               onUpdate={handleUpdate}
               onDelete={handleDelete}
@@ -838,7 +937,7 @@ function Navbar() {
             />
           </div>
         )}
-        </>
+        </div>
       </div>
       {/* Toast container */}
       {toast.show && (
