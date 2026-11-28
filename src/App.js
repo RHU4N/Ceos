@@ -14,7 +14,6 @@ import Fisica from './presentation/pages/Fisica';
 import Cinetica from './presentation/pages/Cinetica';
 import Dinamica from './presentation/pages/Dinamica';
 import Energia from './presentation/pages/Energia';
-import FisicaNuclear from './presentation/pages/FisicaNuclear';
 import Termologia from './presentation/pages/Termologia';
 import PontoDeOrvalho from './presentation/pages/PontoDeOrvalho';
 import Footer from './presentation/components/Footer';
@@ -63,7 +62,6 @@ function App() {
                 <Route path="/fisica/cinetica" element={<Cinetica />} />
                 <Route path="/fisica/dinamica" element={<Dinamica />} />
                 <Route path="/fisica/energia" element={<Energia />} />
-                <Route path="/fisica/nuclear" element={<FisicaNuclear />} />
                 <Route path="/fisica/termologia" element={<Termologia />} />
                 <Route path="/fisica/termologia/ponto-de-orvalho" element={<PontoDeOrvalho />} />
                 <Route path="/faq" element={<FAQ />} />
