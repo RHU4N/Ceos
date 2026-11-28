@@ -4,10 +4,11 @@ import { useAuth } from "../context/AuthContext";
 import { iotApi } from "../../infrastructure/api/iotApi";
 import IoTChart, { date, unit } from "./IoTChart";
 import IoTDeviceSetup, { Provisioning } from "./IoTDeviceSetup";
+import IoTPairDevice from "./IoTPairDevice";
 import IoTHistory from "./IoTHistory";
 import IoTNotifications from "./IoTNotifications";
 import "./iot.css";
-import { statuses, deviceStatus, sensorType, requestError, number } from './presentation';
+import { statuses, deviceStatus, sensorType, requestError, number, connectionStatus } from './presentation';
 export { statuses } from './presentation';
 const pending = ["QUEUED", "WAITING_FOR_DEVICE", "MEASURING", "PROCESSING"];
 export default function IoTDashboard() {
@@ -171,18 +172,18 @@ export default function IoTDashboard() {
       setBusy(false);
     }
   }
-  async function action(name) {
-    if (
-      !window.confirm(
-        name === "rotate"
-          ? "Gerar novo pareamento e invalidar a credencial atual?"
-          : "Revogar o acesso deste dispositivo? As medições serão preservadas.",
-      )
-    )
-      return;
+  async function action(name, id = deviceId) {
+    const questions = {
+      rotate: "Gerar novo pareamento e invalidar a credencial atual?",
+      revoke: "Desconectar este dispositivo? Ele deixa de enviar medições até ser associado de novo. O histórico é preservado.",
+      unlink: "Remover este dispositivo da sua conta? As medições anteriores continuam disponíveis no histórico.",
+    };
+    if (!window.confirm(questions[name])) return;
     try {
-      const r = await iotApi.post(`/iot/devices/${deviceId}/${name}`, {});
+      const r = await iotApi.post(`/iot/devices/${id}/${name}`, {});
       if (r.data.provisioningToken) setProvision(r.data);
+      if (name === "revoke") setMessage("Dispositivo desconectado. Para reconectar, ligue-o e digite o novo código em Adicionar dispositivo.");
+      if (name === "unlink") setMessage("Dispositivo removido. O histórico foi preservado.");
       await refresh();
     } catch (e) {
       setError(e.message);
@@ -241,43 +242,83 @@ export default function IoTDashboard() {
         <Provisioning value={provision} onClose={() => setProvision(null)} />
       )}
       {tab === "add" && (
-        <IoTDeviceSetup
-          onSaved={(value) => {
-            setProvision(value);
-            setDeviceId(value.device.deviceId);
-            loadDevices();
-            setParams({ tab: "devices" });
-          }}
-        />
+        <>
+          <IoTPairDevice
+            onPaired={(value) => {
+              setDeviceId(value.device.deviceId);
+              setMessage(
+                value.reconnected
+                  ? "Dispositivo reconectado. O histórico foi mantido; a conexão é concluída em alguns segundos."
+                  : "Dispositivo associado. Ele concluirá a conexão em alguns segundos.",
+              );
+              loadDevices().catch((e) => setError(e.message));
+              setParams({ tab: "devices" });
+            }}
+          />
+          <details className="iot-panel iot-advanced">
+            <summary>Configuração manual (desenvolvimento)</summary>
+            <p>
+              Use somente para equipamentos sem suporte ao código de associação.
+              Exige copiar um token de pareamento para o firmware.
+            </p>
+            <IoTDeviceSetup
+              onSaved={(value) => {
+                setProvision(value);
+                setDeviceId(value.device.deviceId);
+                loadDevices();
+                setParams({ tab: "devices" });
+              }}
+            />
+          </details>
+        </>
       )}
       {tab === "devices" && (
         <section>
-          <h2>Meus dispositivos</h2>
+          <h2>Meus dispositivos IoT</h2>
           <div className="iot-grid">
             {devices.map((d) => (
-              <article key={d.deviceId} className="iot-panel">
+              <article key={d.deviceId} className="iot-panel iot-device">
                 <h3>{d.nome}</h3>
-                <p>{d.descricao}</p>
+                {d.conexao && (
+                  <p className={`iot-badge iot-badge-${d.conexao.toLowerCase()}`}>
+                    {connectionStatus(d.conexao)}
+                  </p>
+                )}
+                {d.descricao && <p>{d.descricao}</p>}
                 <p>
-                  {deviceStatus(d.status)} · {d.sensores.length} sensores
+                  {d.modelo || d.tipoDispositivo || deviceStatus(d.status)} · {d.sensores.length} sensores
                 </p>
-                <small>{d.deviceId}</small>
+                <small>
+                  Identificador: <code>{d.deviceId}</code>
+                </small>
                 <p>Último contato: {date(d.ultimoContato)}</p>
-                <button
-                  onClick={() => {
-                    setDeviceId(d.deviceId);
-                    setParams({ tab: "dashboard" });
-                  }}
-                >
-                  Abrir dispositivo
-                </button>
+                {"ultimaMedicao" in d && <p>Última medição: {d.ultimaMedicao ? date(d.ultimaMedicao) : "Nenhuma ainda"}</p>}
+                {d.conexao === "REVOGADO" && (
+                  <p>Para reconectar, ligue o dispositivo e digite o novo código em Adicionar dispositivo.</p>
+                )}
+                <div className="iot-actions">
+                  <button
+                    onClick={() => {
+                      setDeviceId(d.deviceId);
+                      setParams({ tab: "dashboard" });
+                    }}
+                  >
+                    Abrir painel
+                  </button>
+                  {d.status === "ACTIVE" && (
+                    <button onClick={() => action("revoke", d.deviceId)}>Desconectar</button>
+                  )}
+                  {!d.legacy && !d.historyOnly && (
+                    <button onClick={() => action("unlink", d.deviceId)}>Remover</button>
+                  )}
+                </div>
               </article>
             ))}
           </div>
           {!devices.length && (
             <p>
-              Nenhum dispositivo cadastrado. Adicione seu equipamento para
-              começar.
+              Nenhum dispositivo associado. Use “Adicionar dispositivo” e digite
+              o código exibido pelo equipamento.
             </p>
           )}
         </section>
@@ -309,7 +350,7 @@ export default function IoTDashboard() {
             <h2>{device.nome}</h2>
             <p>{device.descricao}</p>
             <p>
-              Estado: {deviceStatus(device.status)} · Último contato:{" "}
+              Estado: {device.conexao ? connectionStatus(device.conexao) : deviceStatus(device.status)} · Último contato:{" "}
               {date(device.ultimoContato)}
             </p>
             <p>
@@ -347,8 +388,8 @@ export default function IoTDashboard() {
                 <button onClick={() => action("rotate")}>
                   Rotacionar credencial
                 </button>
-                <button onClick={() => action("revoke")}>Revogar</button>
-                <button onClick={() => action("unlink")}>Desvincular</button>
+                <button onClick={() => action("revoke")}>Desconectar</button>
+                <button onClick={() => action("unlink")}>Remover</button>
               </div>
             )}
             {editing && (
