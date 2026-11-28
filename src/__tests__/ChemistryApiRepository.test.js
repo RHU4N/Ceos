@@ -1,13 +1,13 @@
-// Ensure api base is defined before module import (force deterministic URL for tests)
+import apiClient from '../infrastructure/api/mathApiClient';
+import ChemistryApiRepository from '../infrastructure/api/ChemistryApiRepository';
+
+// Os imports já eram içados pelo Babel antes desta linha; a ordem de execução não muda.
 process.env.REACT_APP_API_MATH_URL = 'http://api';
 
-import apiClient from '../infrastructure/api/mathApiClient';
 jest.mock('../infrastructure/api/mathApiClient', () => ({
   __esModule: true,
   default: { post: jest.fn() },
 }));
-
-import ChemistryApiRepository from '../infrastructure/api/ChemistryApiRepository';
 
 describe('ChemistryApiRepository (unit)', () => {
   beforeEach(() => jest.clearAllMocks());

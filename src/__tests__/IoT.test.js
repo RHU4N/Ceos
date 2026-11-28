@@ -53,10 +53,13 @@ test("charts preserve sensor and unit boundaries, dates, axes, tooltip and empty
       ]}
     />,
   );
+  // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- pontos do gráfico SVG não têm papel acessível
   expect(container.querySelectorAll("circle").length).toBe(1);
+  // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- idem (dica <title> do ponto)
   expect(container.querySelector("circle title").textContent).toContain(
     "23 °C",
   );
+  // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- linha do gráfico SVG
   expect(container.querySelector("svg path")).toBeTruthy();
 });
 test("device registration sends the edited sensor contract and receives single-use provisioning", async () => {
@@ -110,6 +113,7 @@ test("one global poll survives navigation, announces completion and opens persis
       </IoTNotificationProvider>
     </MemoryRouter>,
   );
+  // eslint-disable-next-line testing-library/no-unnecessary-act -- esvazia promessas pendentes com fake timers ativos
   await act(async () => {});
   fireEvent.click(screen.getByText("Calculadora"));
   expect(screen.getByText("Continuar calculando")).toBeTruthy();
@@ -121,6 +125,7 @@ test("one global poll survives navigation, announces completion and opens persis
     "Sua leitura foi concluída.",
   );
   fireEvent.click(screen.getByRole("link", { name: "Ver resultado" }));
+  // eslint-disable-next-line testing-library/no-unnecessary-act -- esvazia promessas pendentes com fake timers ativos
   await act(async () => {});
   expect(screen.getByText("Resultado persistido")).toBeTruthy();
   expect(iotApi.patch).toHaveBeenCalledWith("/notifications/note/read", {});
@@ -163,11 +168,11 @@ test("unlinked device history stays visible while reading controls remain disabl
       <IoTDashboard />
     </MemoryRouter>,
   );
-  await waitFor(() => expect(screen.getByText(/^Somente hist/)).toBeTruthy());
+  expect(await screen.findByText(/^Somente hist/)).toBeTruthy();
   expect(
     screen.getByRole("button", { name: "Solicitar leitura" }).disabled,
   ).toBe(true);
   fireEvent.click(screen.getByRole("button", { name: /^Hist/ }));
-  await waitFor(() => expect(screen.getByText(/^22 /)).toBeTruthy());
+  expect(await screen.findByText(/^22 /)).toBeTruthy();
   expect(screen.getByText("Abrir leitura")).toBeTruthy();
 });

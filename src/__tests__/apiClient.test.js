@@ -5,7 +5,7 @@ mockClient.interceptors = { response: { use: jest.fn() } };
 jest.mock('axios', () => ({ create: jest.fn(() => mockClient) }));
 
 let rejected;
-require('../infrastructure/api/apiClient').default;
+require('../infrastructure/api/apiClient');
 rejected = mockClient.interceptors.response.use.mock.calls[0][1];
 
 const unauthorized = (url) => ({

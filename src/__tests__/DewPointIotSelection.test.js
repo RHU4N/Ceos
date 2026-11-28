@@ -88,7 +88,7 @@ describe('PontoDeOrvalho IoT: seleção do evento sobrevive à atualização do 
     await waitFor(() => expect(select.value).toBe('ev-new'));
 
     fireEvent.change(select, { target: { value: 'ev-old' } });
-    await waitFor(() => expect(screen.getByText('24 °C')).toBeInTheDocument());
+    expect(await screen.findByText('24 °C')).toBeInTheDocument();
     expect(screen.getByText('40 %')).toBeInTheDocument();
 
     const measurementCalls = () =>

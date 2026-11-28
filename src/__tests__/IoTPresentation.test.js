@@ -25,9 +25,11 @@ test('gráfico mostra somente amostras válidas reais, sem ligar lacunas por int
     { id: '4', sensorId: 'other', unidade: 'C', valor: 99, timestamp: '2026-11-16T11:00:00Z' },
   ];
   const { container } = render(<IoTChart sensor={{ sensorId: 't', nome: 'Temperatura', unidade: 'C' }} measurements={rows} />);
+  /* eslint-disable testing-library/no-container, testing-library/no-node-access -- estrutura do gráfico SVG (pontos, linha e dica <title>) não tem papel acessível */
   expect(container.querySelectorAll('circle')).toHaveLength(2);
   expect(container.querySelector('polyline')).toBeNull();
   expect(container.querySelector('circle title').textContent).toContain('24,16 °C');
+  /* eslint-enable testing-library/no-container, testing-library/no-node-access */
   expect(container.textContent).toContain('Faixa observada: 24,16 a 25,16 °C.');
   expect(rows).toHaveLength(4);
 });
