@@ -1,64 +1,172 @@
-# Ceos Frontend (ceosFront)
+# CEOS Web — Calculadora Universal
 
-Breve descrição
-----------------
-Frontend da aplicação CEOS — coleção de calculadoras científicas e educacionais (Matemática, Física, Química, etc.). Fornece interfaces para cálculos, histórico de operações, exportação de resultados e acessibilidade (TTS — text-to-speech).
+Aplicação web do **CEOS — Calculadora Universal**, projeto integrador da Fatec Cotia. Reúne calculadoras de
+Matemática, Física e Química com explicação passo a passo, conta de usuário com histórico, favoritos e funções
+personalizadas, e um painel para os dispositivos IoT (ESP32) associados à conta.
 
-Principais funcionalidades
--------------------------
-- Conjunto de páginas para cálculos científicos (Estatística, Dinâmica, Energia, Cinetica, Matemática Financeira, Química, etc.).
-- Sistema de histórico (salva operações por usuário, exporta em JSON/CSV, copia/abre entradas).
-- Cartões de exemplo/explicação reutilizáveis (componente `ExplanationCard`).
-- Acessibilidade: suporte a TTS (hook `useTTS`).
+**Aplicação publicada:** https://ceos-puce.vercel.app/
 
-Colaboradores
--------------
-- Substitua pelos nomes reais dos integrantes do grupo:
-	- Leonardo Torres
-	- Mauricio Maia
-	- Rhuan Silva
- 	- Vitor Bastos 
+## Papel no ecossistema CEOS
 
-URL pública
------------
-[Céos](https://ceos-puce.vercel.app/)
+| Repositório | Função |
+|---|---|
+| **Ceos (este)** | Interface web (React), hospedada na Vercel |
+| [CeosApp](https://github.com/RHU4N/CeosApp) | Aplicativo Android (React Native + Expo) com as mesmas funcionalidades |
+| [LoginAPICeos](https://github.com/RHU4N/LoginAPICeos) | Autenticação, histórico, favoritos, funções personalizadas, dispositivos e medições IoT |
+| [MathAPI](https://github.com/RHU4N/MathAPI) | Cálculos (API sem estado) |
+| [ceos-mensageria](https://github.com/RHU4N/ceos-mensageria) | Ingestão IoT: firmware ESP32/Wokwi, Azure Functions e Queue Storage |
 
+## Funcionalidades
 
-Observações
------------
-- Atualize `Colaboradores` e `URL pública` com as informações do seu grupo.
-- Adapte as instruções de deploy caso você use uma plataforma específica.
-- React Icons
+- **12 calculadoras**, todas com cálculo feito pela MathAPI:
+  - Matemática: Função (1º e 2º grau), Matrizes, Análise Combinatória, Estatística e Matemática Financeira.
+  - Física: Cinemática, Dinâmica, Energia e Ponto de Orvalho.
+  - Química: Soluções, Estequiometria e Termoquímica.
+- **Explicação dos resultados**: fórmula, substituição e resolução, com números em pt-BR. Os erros de validação
+  mostram a mensagem da API (por exemplo, "O intervalo de tempo deve ser diferente de zero.").
+- **Conta de usuário**: cadastro, login, logout, edição de perfil e troca de senha.
+  - A sessão usa cookies HttpOnly emitidos pela LoginAPICeos; nenhum token fica no `localStorage`.
+  - Na Vercel, as chamadas passam pelo proxy `/api/login`, no mesmo domínio da aplicação.
+- **Histórico** de cálculos por usuário: listar, excluir item, limpar tudo e exportar em JSON ou CSV.
+- **Favoritos** (calculadoras e funções) e **funções personalizadas**: criar, validar, editar, executar e excluir
+  fórmulas como `0.5 * m * v^2`.
+- **Meu IoT**:
+  - associação de dispositivo pelo código `XXXX-XXXX` exibido no ESP32, sem copiar tokens;
+  - lista de dispositivos com estado de conexão;
+  - painel com temperatura, umidade e pressão, histórico, pedidos de leitura e notificações;
+  - opções para desconectar e remover um dispositivo.
+- **Ponto de orvalho com dados IoT**: a calculadora pode usar a temperatura e a umidade de uma medição real do
+  dispositivo.
+- **Acessibilidade**: leitura em voz alta (TTS, hook `useTTS`), `lang="pt-BR"`, textos alternativos nas
+  ilustrações e layout responsivo até 360 px.
+  - Na homologação de 28/11/2026, o axe-core (WCAG 2 A/AA) não apontou violações nas páginas inicial, catálogo,
+    Função e Login.
+- **Ilustrações** servidas pela LoginAPICeos a partir de um contêiner privado do Azure Blob Storage.
 
-## Como executar
+## Tecnologias
 
-1. Clone o repositório
-2. Instale as dependências com `npm install`
-3. Inicie o projeto com `npm start`
+- React 19 com **Create React App** (`react-scripts` 5)
+- React Router 7 e Axios
+- Bootstrap (via CDN)
+- Jest e Testing Library
+- Docker com Nginx, para execução em contêiner
+- Vercel, para hospedagem
 
-## Autores
+## Arquitetura
 
-Este site foi desenvolvido por:
+```text
+Navegador ──► Vercel (build estático do React)
+   │            └─ rewrite /api/login/* ──► LoginAPICeos (Azure App Service) ──► MongoDB Atlas / Azure Blob
+   └──────────────────────────────────────► MathAPI (Azure App Service)
+```
 
-- Rhuan
-- Leonardo
-- Mauricio
-- Vitor
+O código segue camadas:
 
-## Contato
+- `domain`: casos de uso e regras de apresentação;
+- `infrastructure`: clientes HTTP e repositórios;
+- `presentation`: páginas, componentes e IoT.
 
-Email de suporte: ceoscalculadora.suporte@gmail.com
+`src/config/resolveApiConfig.js` valida as URLs das APIs no build. Em build hospedado, recusa `localhost`, HTTP
+sem TLS e variáveis com nome de segredo.
 
-Acesse: [https://ceos-puce.vercel.app/](https://ceos-puce.vercel.app/)
+## Estrutura de pastas
 
-Nota: pequena alteração para testar o push.
+```text
+src/
+  config/            resolução e validação das URLs das APIs
+  constants/         catálogo das 12 calculadoras
+  domain/            casos de uso e regras (inclui pareamento do ponto de orvalho com IoT)
+  infrastructure/    clientes da MathAPI e da LoginAPICeos (apiClient, mathApiClient, iotApi)
+  presentation/      páginas, componentes, contexto de sessão e módulo IoT
+  __tests__/         testes Jest
+public/              HTML base e imagens estáticas
+scripts/             start/build com validação de configuração e verificações do toolchain
+docs/                notas técnicas (migração para Azure, Blob, IoT, auditorias)
+```
 
-## Testes e CI
+## Pré-requisitos
 
-- Testes unitários: Jest (arquivos em `src/__tests__`).
-- Performance smoke: `k6` em `tests/perf/k6_test.js` (usado em CI).
-- Segurança: Snyk + `npm audit` workflows estão configurados em `.github/workflows/`.
-- Deploy: `ceosFront` é configurado para deploy via Vercel (hook opcional no workflow).
+- Node.js 22 (ver `.nvmrc`) e npm.
+- Acesso às APIs. Para usar as APIs publicadas não é preciso executar nada além deste projeto.
 
+## Instalação e execução local
 
+```bash
+git clone https://github.com/RHU4N/Ceos.git
+cd Ceos
+npm ci
+cp .env.example .env    # no PowerShell: Copy-Item .env.example .env
+npm start               # http://localhost:3000
+```
 
+Variáveis (somente URLs públicas; nunca coloque segredos em `REACT_APP_*`):
+
+| Variável | Uso |
+|---|---|
+| `REACT_APP_API_MATH_URL` | URL da MathAPI (ex.: `https://mathapi-ceos.azurewebsites.net` ou `http://localhost:8080`) |
+| `REACT_APP_API_LOGIN_URL` | URL da LoginAPICeos (ex.: `http://localhost:8081`). Na Vercel, use `/api/login` |
+
+Atenção ao usar `localhost:3000` com a LoginAPICeos local: inclua `http://localhost:3000` em `CORS_ORIGIN` no
+`.env` da API. Apontar a Web local para as APIs de produção grava dados reais (histórico, favoritos, IoT).
+
+## Testes e build
+
+```bash
+CI=true npm test -- --watchAll=false   # PowerShell: $env:CI="true"; npm test -- --watchAll=false
+npm run build                          # exige REACT_APP_API_MATH_URL e REACT_APP_API_LOGIN_URL definidos
+```
+
+Em 28/11/2026 foram 100 testes em 23 suítes, todos aprovados. Docker: `docker compose up --build` (detalhes em
+[DOCKER.md](DOCKER.md)).
+
+GitHub Actions ativos:
+
+- `CI - ceosFront`: testes, build e smoke do build servido;
+- `Docker smoke`;
+- `Security - npm audit (ceosFront)`;
+- `Security - Snyk (ceosFront)`;
+- `CodeQL - Analysis (ceosFront)`.
+
+## Deploy
+
+A Vercel publica automaticamente o branch `main`. Configuração da produção:
+
+- `REACT_APP_API_LOGIN_URL=/api/login`;
+- `REACT_APP_API_MATH_URL=https://mathapi-ceos.azurewebsites.net`;
+- o rewrite em [`vercel.json`](vercel.json) encaminha `/api/login/*` para `https://loginapi-ceos.azurewebsites.net`.
+
+Histórico da migração: [docs/azure-api-migration.md](docs/azure-api-migration.md). As URLs antigas do Render
+foram substituídas pela Azure e não são mais usadas.
+
+## Limitações conhecidas
+
+- A recuperação de senha por e-mail não está disponível, porque a LoginAPICeos não tem essa rota. A troca de
+  senha é feita em **Editar perfil**, após o login.
+- A página usa o Microsoft Clarity (analytics de terceiros).
+- O Create React App não recebe mais atualizações do mantenedor; migrar o build (por exemplo, para Vite) é uma
+  evolução futura.
+
+## Links
+
+- Aplicação: https://ceos-puce.vercel.app/
+- LoginAPICeos: https://loginapi-ceos.azurewebsites.net/health
+- MathAPI: https://mathapi-ceos.azurewebsites.net/
+- Aplicativo Android: https://github.com/RHU4N/CeosApp/releases/latest
+
+## Equipe
+
+Projeto Integrador VI — Fatec Cotia:
+
+- Leonardo Torres
+- Maurício Maia
+- Rhuan Silva
+- Vitor Bastos
+
+Outras contribuições pontuais estão no
+[histórico de contribuidores](https://github.com/RHU4N/Ceos/graphs/contributors).
+
+Contato: ceoscalculadora.suporte@gmail.com
+
+## Licença
+
+Este repositório não declara licença. Todos os direitos estão reservados aos autores.
