@@ -20,6 +20,7 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - run: npm run lint
       - run: npm test -- --watchAll=false --runInBand
       - run: npm run test:build-loaders
       - run: npm run test:toolchain-network
