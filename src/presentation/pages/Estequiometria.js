@@ -8,6 +8,7 @@ import ChemistryApiRepository from '../../infrastructure/api/ChemistryApiReposit
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 import FavoriteButton from '../components/FavoriteButton';
+import { formatResult } from '../../domain/formatResult';
 
 const ACTIONS = [
   { value: 'balanceamento', label: 'Balanceamento de equação' },
@@ -228,16 +229,16 @@ function Estequiometria() {
       try {
         if (user) {
           const valores = Object.entries(data)
-            .map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : v}`)
+            .map(([k, v]) => `${k}=${formatResult(v)}`)
             .join(', ');
-          const resultadoStr = res?.resultado ? String(res.resultado) : JSON.stringify(res);
+          const resultadoStr = formatResult(res?.resultado ?? res);
           await saveHistorico({ tipo: `Quimica:Estequiometria:${act}`, valores, resultado: resultadoStr });
         }
       } catch (err) {
         console.warn('Não foi possível salvar histórico:', err?.message || err);
       }
 
-      speak('Resultado: ' + (res?.resultado || JSON.stringify(res)));
+      speak('Resultado: ' + (formatResult(res?.resultado ?? res)));
     } catch (err) {
       setErro(err.message || 'Erro ao calcular estequiometria');
       speak('Erro ao calcular');

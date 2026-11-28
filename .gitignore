@@ -24,3 +24,10 @@ Thumbs.db
 
 # Docker local overrides
 docker-compose.override.yml
+
+# Keys, caches and temporary files
+*.pem
+*.key
+*.pfx
+.cache/
+*.tmp

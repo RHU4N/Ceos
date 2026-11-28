@@ -11,6 +11,7 @@ import { speak as speakText } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 import FavoriteButton from '../components/FavoriteButton';
 import './Style.css';
+import { formatResult } from '../../domain/formatResult';
 
 function MatematicaFinanceira() {
 	const [tipo, setTipo] = useState('variacao');
@@ -207,7 +208,7 @@ function MatematicaFinanceira() {
 							</div>
 
 							{resultado !== null && (
-								<div className="alert alert-success mt-3">Resultado: {typeof resultado === 'object' ? JSON.stringify(resultado) : String(resultado)}</div>
+								<div className="alert alert-success mt-3">Resultado: {formatResult(resultado)}</div>
 							)}
 
 							{erro && (

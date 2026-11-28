@@ -9,6 +9,7 @@ import ChemistryApiRepository from '../../infrastructure/api/ChemistryApiReposit
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 import FavoriteButton from '../components/FavoriteButton';
+import { formatResult } from '../../domain/formatResult';
 
 function Solucoes() {
   const [action, setAction] = useState('molaridade');
@@ -56,13 +57,13 @@ function Solucoes() {
       try {
         if (user) {
           const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
-          const resultadoStr = typeof res === 'object' ? JSON.stringify(res) : String(res);
+          const resultadoStr = formatResult(res);
           await saveHistorico({ tipo: `Quimica:Solucoes:${act}`, valores, resultado: resultadoStr });
         }
       } catch (err) {
         console.warn('Não foi possível salvar histórico:', err?.message || err);
       }
-      speak('Resultado: ' + (typeof res === 'object' ? JSON.stringify(res) : String(res)));
+      speak('Resultado: ' + (formatResult(res)));
     } catch (err) {
       setErro(err.message || 'Erro ao calcular');
       speak('Erro ao calcular');
@@ -276,7 +277,7 @@ function Solucoes() {
             </div>
 
             {resultado !== null && (
-              <div className="alert alert-success mt-3">{typeof resultado === 'object' ? JSON.stringify(resultado) : String(resultado)}</div>
+              <div className="alert alert-success mt-3">{formatResult(resultado)}</div>
             )}
 
             {erro && (<div className="alert alert-danger mt-3">{erro}</div>)}

@@ -15,3 +15,11 @@ export const requestError = value => errors[value] || 'Não foi possível conclu
 export const number = value => Number.isFinite(value) ? new Intl.NumberFormat('pt-BR', { maximumSignificantDigits: 21 }).format(value) : '—';
 export const unit = value => value === 'C' ? '°C' : value;
 export const date = value => value && Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleString('pt-BR') : 'Sem comunicação';
+const connections = { CONECTADO: 'Conectado', AGUARDANDO_MEDICOES: 'Aguardando medições', DESCONECTADO: 'Desconectado', AGUARDANDO_PAREAMENTO: 'Aguardando o dispositivo concluir a conexão', REVOGADO: 'Desconectado pelo usuário', HISTORICO: 'Somente histórico' };
+export const connectionStatus = value => connections[value] || 'Estado desconhecido';
+// Código de associação exibido pelo dispositivo: 8 caracteres sem 0/O/1/I/L, formato XXXX-XXXX.
+export const formatPairingCode = value => {
+  const clean = String(value || '').toUpperCase().replace(/[^23456789ABCDEFGHJKMNPQRSTUVWXYZ]/g, '').slice(0, 8);
+  return clean.length > 4 ? `${clean.slice(0, 4)}-${clean.slice(4)}` : clean;
+};
+export const isPairingCodeComplete = value => formatPairingCode(value).length === 9;
