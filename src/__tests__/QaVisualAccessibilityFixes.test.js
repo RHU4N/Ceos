@@ -71,13 +71,13 @@ describe('QA Visual and Accessibility Fixes', () => {
   });
 
   test('BUG-01: ForgotPassword renders fallback content and exits cleanly without nested main', () => {
-    const { container } = render(
+    render(
       <MemoryRouter initialEntries={['/forgot-password']}>
         <ForgotPassword />
       </MemoryRouter>
     );
 
-    expect(container.querySelector('main')).toBeNull();
+    expect(screen.queryByRole('main')).toBeNull();
     expect(screen.getByRole('heading', { level: 1, name: 'Recuperar Senha' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Voltar para o login' })).toHaveAttribute('href', '/login');
     expect(screen.getByRole('link', { name: 'Central de Ajuda' })).toHaveAttribute('href', '/faq');
@@ -151,11 +151,12 @@ describe('QA Visual and Accessibility Fixes', () => {
       </MemoryRouter>
     );
 
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- verifica a ausência de elementos interativos aninhados (sem consulta acessível equivalente)
     expect(homeContainer.querySelector('a button, button a')).toBeNull();
     expect(screen.getByRole('link', { name: /Saiba Mais/i })).toHaveAttribute('href', '/faq#planos');
 
     const postSpy = jest.spyOn(apiClient, 'post').mockRejectedValueOnce(new Error('Credenciais inválidas'));
-    const { container: loginContainer } = render(
+    render(
       <MemoryRouter>
         <LoadingProvider>
           <Routes>
@@ -164,7 +165,7 @@ describe('QA Visual and Accessibility Fixes', () => {
         </LoadingProvider>
       </MemoryRouter>
     );
-    expect(loginContainer.querySelector('main')).toBeNull();
+    expect(screen.queryByRole('main')).toBeNull();
 
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'a@b.com' } });
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: '123456' } });
@@ -173,14 +174,14 @@ describe('QA Visual and Accessibility Fixes', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Credenciais inválidas');
     postSpy.mockRestore();
 
-    const { container: regContainer } = render(
+    render(
       <MemoryRouter>
         <LoadingProvider>
           <Register />
         </LoadingProvider>
       </MemoryRouter>
     );
-    expect(regContainer.querySelector('main')).toBeNull();
+    expect(screen.queryByRole('main')).toBeNull();
   });
 
   test('BUG-10: EditProfileModal exposes accessible dialog semantics, labeled inputs, and Escape dismissal', async () => {
@@ -211,7 +212,7 @@ describe('QA Visual and Accessibility Fixes', () => {
 
   test('BUG-11/12: FuncoesPersonalizadas places heading outside flex row and FAQ expands #planos on hash navigation', async () => {
     mockUser = { id: 'u-1', nome: 'Usuário QA' };
-    const { container } = render(
+    render(
       <MemoryRouter initialEntries={['/funcoes-personalizadas']}>
         <FuncoesPersonalizadas />
       </MemoryRouter>
@@ -219,8 +220,9 @@ describe('QA Visual and Accessibility Fixes', () => {
 
     await waitFor(() => expect(customFunctionsClient.listCustomFunctions).toHaveBeenCalled());
     const heading = screen.getByRole('heading', { level: 1, name: 'Funções Personalizadas' });
+    // eslint-disable-next-line testing-library/no-node-access -- garante que o título não está dentro da grade de cartões (estrutura de layout)
     expect(heading.closest('.row.g-4')).toBeNull();
-    expect(container.querySelector('.breadcrumb')).not.toHaveTextContent('Matemática');
+    expect(screen.getByRole('navigation', { name: 'breadcrumb' })).not.toHaveTextContent('Matemática');
 
     render(
       <MemoryRouter initialEntries={['/faq#planos']}>

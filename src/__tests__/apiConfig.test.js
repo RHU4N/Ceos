@@ -22,8 +22,11 @@ test('explicit local Docker build destinations remain supported', () => {
   expect(resolveApiConfig({ NODE_ENV: 'production', REACT_APP_API_MATH_URL: 'http://localhost:8080', REACT_APP_API_LOGIN_URL: 'http://localhost:8081' }).loginApiUrl).toBe('http://localhost:8081');
 });
 test.each(['https://user:private-value@example.com', 'https://example.com?token=private-value', 'file:///private-value'])('rejects unsafe URLs without disclosing their values', value => {
-  try { resolveApiConfig({ ...deployed, REACT_APP_API_MATH_URL: value }); throw new Error('accepted unsafe value'); }
-  catch (error) { expect(error.message).toContain('REACT_APP_API_MATH_URL'); expect(error.message).not.toContain('private-value'); }
+  let error;
+  try { resolveApiConfig({ ...deployed, REACT_APP_API_MATH_URL: value }); } catch (caught) { error = caught; }
+  expect(error).toBeInstanceOf(Error);
+  expect(error.message).toContain('REACT_APP_API_MATH_URL');
+  expect(error.message).not.toContain('private-value');
 });
 test('private variables cannot use the public CRA namespace', () => {
   expect(() => resolveApiConfig({ ...deployed, REACT_APP_JWT_SECRET: 'private-value' })).toThrow('REACT_APP_JWT_SECRET');

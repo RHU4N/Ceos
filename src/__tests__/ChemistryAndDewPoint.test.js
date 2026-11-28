@@ -58,10 +58,14 @@ describe('Quimica, Solucoes, Estequiometria, Termoquimica & PontoDeOrvalho', () 
   test('Quimica enables Estequiometria and Termoquimica links without disabled/Em breve placeholders', () => {
     const { container } = renderWithProviders(<Quimica />);
     expect(screen.queryByText('Em breve')).not.toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access -- o cartão desabilitado só é identificável pela classe CSS
     expect(container.querySelector('.card-disabled')).toBeNull();
 
+    // eslint-disable-next-line testing-library/no-node-access -- o título está na ilustração; o teste confere o link que a envolve
     const esteqLink = screen.getByTitle('Estequiometria').closest('a');
+    // eslint-disable-next-line testing-library/no-node-access -- idem
     const termoLink = screen.getByTitle('Termoquímica').closest('a');
+    // eslint-disable-next-line testing-library/no-node-access -- idem
     const solLink = screen.getByTitle('Soluções').closest('a');
 
     expect(esteqLink).toHaveAttribute('href', '/quimica/estequiometria');
@@ -352,13 +356,9 @@ describe('Quimica, Solucoes, Estequiometria, Termoquimica & PontoDeOrvalho', () 
 
     fireEvent.click(screen.getByRole('tab', { name: 'Modo IoT' }));
 
-    await waitFor(() =>
-      expect(screen.getByText(/Atenção: esta medição é antiga/)).toBeInTheDocument()
-    );
+    expect(await screen.findByText(/Atenção: esta medição é antiga/)).toBeInTheDocument();
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Solicitar nova leitura (READ_ONCE)' }));
-    });
+    fireEvent.click(screen.getByRole('button', { name: 'Solicitar nova leitura (READ_ONCE)' }));
 
     await waitFor(() =>
       expect(iotApi.post).toHaveBeenCalledWith(
@@ -372,12 +372,10 @@ describe('Quimica, Solucoes, Estequiometria, Termoquimica & PontoDeOrvalho', () 
       jest.advanceTimersByTime(2600);
     });
 
-    await waitFor(() => expect(screen.getByText('26 °C')).toBeInTheDocument());
+    expect(await screen.findByText('26 °C')).toBeInTheDocument();
     expect(screen.getByText('50 %')).toBeInTheDocument();
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Calcular Ponto de Orvalho (IoT)' }));
-    });
+    fireEvent.click(screen.getByRole('button', { name: 'Calcular Ponto de Orvalho (IoT)' }));
 
     await waitFor(() =>
       expect(physSpy).toHaveBeenCalledWith({
@@ -423,11 +421,9 @@ describe('Quimica, Solucoes, Estequiometria, Termoquimica & PontoDeOrvalho', () 
     renderWithProviders(<PontoDeOrvalho />);
     fireEvent.click(screen.getByRole('tab', { name: 'Modo IoT' }));
 
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Medição incompleta: este evento não possui temperatura e umidade simultâneas\./)
-      ).toBeInTheDocument()
-    );
+    expect(
+      await screen.findByText(/Medição incompleta: este evento não possui temperatura e umidade simultâneas\./)
+    ).toBeInTheDocument();
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Atualizar leituras' })).not.toBeDisabled()
     );

@@ -44,7 +44,7 @@ test("associa digitando o código, confirma os dados do equipamento e nunca most
   fireEvent.change(input, { target: { value: "k7p4qx9m" } });
   expect(input.value).toBe("K7P4-QX9M");
   fireEvent.click(next);
-  await waitFor(() => expect(screen.getByText("Confirmar dispositivo")).toBeTruthy());
+  expect(await screen.findByText("Confirmar dispositivo")).toBeTruthy();
   expect(iotApi.post).toHaveBeenCalledWith("/iot/claims/lookup", { code: "K7P4-QX9M" });
   expect(screen.getByText(preview.modelo)).toBeTruthy();
   expect(screen.getByText("Temperatura DHT22 (Temperatura, °C)")).toBeTruthy();

@@ -112,6 +112,7 @@ Atenção ao usar `localhost:3000` com a LoginAPICeos local: inclua `http://loca
 ## Testes e build
 
 ```bash
+npm run lint                           # ESLint (react-app + regras de testes), sem avisos tolerados
 CI=true npm test -- --watchAll=false   # PowerShell: $env:CI="true"; npm test -- --watchAll=false
 npm run build                          # exige REACT_APP_API_MATH_URL e REACT_APP_API_LOGIN_URL definidos
 ```
@@ -121,7 +122,7 @@ Em 28/11/2026 foram 100 testes em 23 suítes, todos aprovados. Docker: `docker c
 
 GitHub Actions ativos:
 
-- `CI - ceosFront`: testes, build e smoke do build servido;
+- `CI - ceosFront`: lint, testes, build e smoke do build servido;
 - `Docker smoke`;
 - `Security - npm audit (ceosFront)`;
 - `Security - Snyk (ceosFront)`;
