@@ -22,6 +22,7 @@ import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 import FavoriteButton from '../components/FavoriteButton';
 import './Style.css';
+import { formatResult } from '../../domain/formatResult';
 
 const PENDING_STATUSES = ['QUEUED', 'WAITING_FOR_DEVICE', 'MEASURING', 'PROCESSING'];
 const POLL_INTERVAL_MS = 2500;
@@ -219,7 +220,7 @@ function PontoDeOrvalho() {
             `T=${tempValue}`,
             `UR=${humidityValue}`,
           ];
-          const resultadoStr = res?.resultado ? String(res.resultado) : JSON.stringify(res);
+          const resultadoStr = formatResult(res?.resultado ?? res);
           await saveHistorico({
             tipo: 'Fisica:Termologia:PontoDeOrvalho',
             valores: pairs.join(', '),
@@ -230,7 +231,7 @@ function PontoDeOrvalho() {
         console.warn('Não foi possível salvar histórico:', err?.message || err);
       }
 
-      speak(`Ponto de orvalho calculado: ${res?.resultado || JSON.stringify(res)}`);
+      speak(`Ponto de orvalho calculado: ${formatResult(res?.resultado ?? res)}`);
     } catch (err) {
       setErro(err?.message || 'Erro ao calcular o ponto de orvalho.');
       speak('Erro ao calcular o ponto de orvalho');

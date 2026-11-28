@@ -11,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 import FavoriteButton from '../components/FavoriteButton';
+import { formatResult } from '../../domain/formatResult';
 
 function Funcao() {
   const [tipo, setTipo] = useState("funcao1");
@@ -346,7 +347,7 @@ function Funcao() {
                 }
                 if (resultado.value !== undefined) return String(resultado.value);
                 if (resultado.result !== undefined) return String(resultado.result);
-                return JSON.stringify(resultado);
+                return formatResult(resultado);
               }
 
               return String(resultado);

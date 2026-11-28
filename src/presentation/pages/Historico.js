@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLoading } from '../context/LoadingContext';
 import { fetchHistorico, deleteHistoricoItem, clearHistorico } from '../../infrastructure/api/historicoClient';
 import { speak, useTTS } from '../../hooks/useTTS';
+import { formatResult } from '../../domain/formatResult';
 
 function Historico() {
   const { user } = useAuth();
@@ -140,7 +141,7 @@ function Historico() {
         for (const k of valKeys) {
           row.push(escapeCsv(vals[k] !== undefined ? vals[k] : ''));
         }
-        row.push(escapeCsv(typeof h.resultado === 'object' ? JSON.stringify(h.resultado) : h.resultado));
+        row.push(escapeCsv(formatResult(h.resultado)));
         row.push(escapeCsv(h.data || h.date || h.createdAt || ''));
         return row;
       });
@@ -259,7 +260,7 @@ function Historico() {
 
   const copyCard = async (item) => {
     try {
-      const text = `valores: ${item.valores || ''}\nresultado: ${typeof item.resultado === 'object' ? JSON.stringify(item.resultado) : String(item.resultado)}`;
+      const text = `valores: ${item.valores || ''}\nresultado: ${formatResult(item.resultado)}`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
       } else {
@@ -355,7 +356,7 @@ function Historico() {
                     <div className="historico-item-content">
                       <div className="fw-bold">{item.tipo}</div>
                       <div className="text-muted small">{item.valores}</div>
-                      <div className="mt-1">Resultado: <strong>{typeof item.resultado === 'object' ? JSON.stringify(item.resultado) : String(item.resultado)}</strong></div>
+                      <div className="mt-1">Resultado: <strong>{formatResult(item.resultado)}</strong></div>
                       {dateText && <div className="text-muted small mt-1">{dateText}</div>}
                     </div>
                     <div className="historico-item-actions">

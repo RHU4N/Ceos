@@ -9,6 +9,7 @@ import { saveHistorico } from '../../infrastructure/api/historicoClient';
 import { speak } from '../../hooks/useTTS';
 import ExplanationCard from '../components/ExplanationCard';
 import FavoriteButton from '../components/FavoriteButton';
+import { formatResult } from '../../domain/formatResult';
 
 
 function Cinetica() {
@@ -68,13 +69,13 @@ function Cinetica() {
       try {
         if (user) {
           const valores = Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ');
-          const resultadoStr = typeof res === 'object' ? JSON.stringify(res) : String(res);
+          const resultadoStr = formatResult(res);
           await saveHistorico({ tipo: `Fisica:Cinetica:${tipo}`, valores, resultado: resultadoStr });
         }
       } catch (err) {
         console.warn('Não foi possível salvar histórico:', err?.message || err);
       }
-      speak(`Resultado: ${typeof res === 'object' ? JSON.stringify(res) : String(res)}`);
+      speak(`Resultado: ${formatResult(res)}`);
     } catch (err) {
       setErro(err.message || 'Erro ao calcular');
       speak('Erro ao calcular');
@@ -206,7 +207,7 @@ function Cinetica() {
             </div>
 
             {result !== null && (
-              <div className="alert alert-success mt-3">{typeof result === 'object' ? JSON.stringify(result) : String(result)}</div>
+              <div className="alert alert-success mt-3">{formatResult(result)}</div>
             )}
 
             {erro && (<div className="alert alert-danger mt-3">{erro}</div>)}
